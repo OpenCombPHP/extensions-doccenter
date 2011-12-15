@@ -2,7 +2,7 @@
 namespace org\opencomb\doccenter ;
 
 use org\jecat\framework\lang\aop\AOP;
-use org\opencomb\ext\Extension ;
+use org\opencomb\platform\ext\Extension ;
 
 class DocCenter extends Extension 
 {
