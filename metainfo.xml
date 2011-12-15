@@ -12,4 +12,6 @@
 	
 	<publicFolder folder="/public" />
 	
+	<beanFolder folder="/bean" />
+	
 </Extension>

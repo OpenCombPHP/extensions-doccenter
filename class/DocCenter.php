@@ -1,6 +1,7 @@
 <?php 
 namespace org\opencomb\doccenter ;
 
+use org\jecat\framework\lang\aop\AOP;
 use org\opencomb\ext\Extension ;
 
 class DocCenter extends Extension 
@@ -10,6 +11,6 @@ class DocCenter extends Extension
 	 */
 	public function load()
 	{
-		// todo ...
+		AOP::singleton()->register('org\\opencomb\\doccenter\\aspect\\ControlPanelFrameAspect') ;
 	}
 }
