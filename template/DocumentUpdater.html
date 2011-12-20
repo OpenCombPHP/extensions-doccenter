@@ -61,7 +61,7 @@
 
 <div id="message">
 	<div id="progress">
-	progress bar
+	<br/>
 	</div>
 	<p>Document Generator 日志:</p>
 	<div id="generator_log">
@@ -80,10 +80,10 @@ function loadTreeview(){
 function loadProgressBar(){
 	jQuery('#progress').progressBar({
 		barImage:'/extensions/doccenter/0.1/public/progressbg_red.gif',
+		boxImage:'/extensions/doccenter/0.1/public/progressbar.gif',
 	});
 }
 jQuery(loadTreeview);
-jQuery(loadProgressBar);
 //@param t : a , all ; n , none ; o , opposite
 function setChecked(o,t){
 	var closest_li = jQuery(o).closest('li');
@@ -108,9 +108,21 @@ var totalCount = 1;
 var finishCount=0;
 var postlength = 5;
 
+// 0 : init or finished
+// 1 : sending
+var postState = 0;
+
 function createDoc(){
+	if(postState != 0){
+		return;
+	}
+	postState = 1;
+	// clean progress bar
 	finishCount = 0;
+	loadProgressBar();
+	// clean generator log
 	document.getElementById('generator_log').innerHTML='';
+	// get path list
 	var arrPath = new Array();
 	jQuery('input[type=checkbox]').each(
 		function(){
@@ -120,6 +132,7 @@ function createDoc(){
 			}
 		}
 	);
+	// post path list
 	totalCount = arrPath.length;
 	var arrPost = new Array();
 	for(var i=0;i<arrPath.length;++i){
@@ -139,13 +152,23 @@ function postArrPath(arr){
 		'/?c=org.opencomb.doccenter.DocumentGenerator&noframe=1',
 		{path:arr},
 		function(data){
-			jQuery("#generator_log").append('<p>'+data+'</p>');
 			var div=document.getElementById('generator_log');
-			if(div.scrollHeight>div.offsetHeight){
-				div.scrollTop=div.scrollHeight-div.offsetHeight;
+			for(var i=0;i<data.length;++i){
+				// display error message
+				if(typeof(data[i].error)!='undefined' && data[i].error == true){
+					jQuery("#generator_log").append('<p>error '+data[i].path+' : '+data[i].errorString+'</p>');
+				}
+				if(div.scrollHeight>div.offsetHeight){
+					div.scrollTop=div.scrollHeight-div.offsetHeight;
+				}
+				// progress bar
+				finishCount ++;//= data.length;
+				jQuery('#progress').progressBar( finishCount*100 / totalCount);
+				// has finished ?
+				if(finishCount == totalCount){
+					postState = 0;
+				}
 			}
-			finishCount += data.length;
-			jQuery('#progress').progressBar( finishCount*100 / totalCount);
 		},
 		'json'
 	);
