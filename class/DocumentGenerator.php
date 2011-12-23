@@ -7,6 +7,9 @@ use org\jecat\framework\lang\compile\Compiler ;
 use org\jecat\framework\fs\FileSystem ;
 use org\jecat\framework\lang\Exception ;
 use org\opencomb\platform\ext\ExtensionManager ;
+use org\jecat\framework\db\DB ;
+use org\jecat\framework\db\sql\StatementFactory ;
+use org\jecat\framework\db\ExecuteException ;
 
 // /?c=org.opencomb.doccenter.DocumentGenerator&noframe=1&path[]=/framework/class/util/match/ResultSet.php&path[]=/framework/class/util/match/RegExp.php&path[]=/framework/class/util/match/Result.php
 // /?c=org.opencomb.doccenter.DocumentGenerator&debug=1&noframe=1&path[]=/extensions/doccenter/0.1/class/testCompiler.php
@@ -15,32 +18,21 @@ class DocumentGenerator  extends ControlPanel
 {
 	public function process(){
 		$arrPath = $this->params['path'];
-		$arrResult = array();
+		$arrResultList = array();
 		
 		foreach($arrPath as $path){
-			$arrResult [] = $this->generate($path);
+			$arrGenerate = $this->generate($path);
+			$arrResult = $this->cleanInDatabase($arrGenerate);
+			if($arrResult['success']){
+				$arrResult = $this->saveToDatabase($arrGenerate);
+			}
+			$arrResultList[] = $arrResult ;
 		}
-		if(empty($this->params['debug'])){
-			echo json_encode($arrResult);
-		}else{
-			echo "<pre>";
-			var_dump($arrResult);
-			echo "</pre>";
-		}
+		echo json_encode($arrResultList);
 		$this->mainView()->disable(); 
 	}
 	
 	public function generate($path){
-		// for debug
-		if(substr($path,-5,1) === 'r'){
-			return array(
-				'path' => $path,
-				'error'=>true,
-				'errorString' => 'for debug : '.substr($path,-5,1),
-			);
-		}// for debug end
-		
-		
 		$arrGenerate = array();
 		$arrGenerate['path'] = $path;
 		$arrGenerate['classlist'] = array();
@@ -165,5 +157,141 @@ class DocumentGenerator  extends ControlPanel
 		return $extensionMetainfo->version();
 	}
 	
-	private $aExtensionManager = null;
+	private function cleanInDatabase($arrGenerate){
+		$arrResult = array(
+			'success' => true,
+			'errorString' => 'clean succeed',
+		);
+		$version = $arrGenerate['classlist'][0]['version'];
+		$namespace = $arrGenerate['classlist'][0]['namespace'];
+		$name = $arrGenerate['classlist'][0]['name'];
+		
+		// model
+		try{
+			$aDB = DB::singleton();
+			
+			// create table
+			$aClassTable = StatementFactory::singleton()->createTable('doccenter_class');
+			$aFunctionTable = StatementFactory::singleton()->createTable('doccenter_method');
+			$aParamTable = StatementFactory::singleton()->createTable('doccenter_parameter');
+			// create join
+			$aClassFunctionJoin = StatementFactory::singleton()->createTablesJoin();
+			$aFunctionParamJoin = StatementFactory::singleton()->createTablesJoin();
+			// create restriction
+			$aClassFunctionRestriction = StatementFactory::singleton()->createRestriction();
+			$aFunctionParamRestriction = StatementFactory::singleton()->createRestriction();
+			// set restriction
+			$aClassFunctionRestriction->eqColumn('`doccenter_class`.`name`','`doccenter_method`.`class`');
+			$aClassFunctionRestriction->eqColumn('`doccenter_class`.`namespace`','`doccenter_method`.`namespace`');
+			$aClassFunctionRestriction->eqColumn('`doccenter_class`.`version`','`doccenter_method`.`version`');
+			
+			$aFunctionParamRestriction->eqColumn('`doccenter_method`.`version`','`doccenter_parameter`.`version`');
+			$aFunctionParamRestriction->eqColumn('`doccenter_method`.`name`','`doccenter_parameter`.`method`');
+			$aFunctionParamRestriction->eqColumn('`doccenter_method`.`class`','`doccenter_parameter`.`class`');
+			$aFunctionParamRestriction->eqColumn('`doccenter_method`.`namespace`','`doccenter_parameter`.`namespace`');
+			// join them !
+			$aClassTable->addJoin($aClassFunctionJoin);
+			$aClassFunctionJoin->addTable($aFunctionTable,$aClassFunctionRestriction);
+			$aFunctionTable->addJoin($aFunctionParamJoin);
+			$aFunctionParamJoin->addTable($aParamTable,$aFunctionParamRestriction);
+			// create delete
+			$aDelete = StatementFactory::singleton()->createDelete();
+			$aDelete->addTable($aClassTable);
+			// execute
+			$aDB->execute('DELETE doccenter_class , doccenter_method , doccenter_parameter FROM  `doccenter_class` LEFT JOIN ( `doccenter_method` LEFT JOIN ( `doccenter_parameter` ) ON ((`doccenter_method`.`version` = `doccenter_parameter`.`version` AND `doccenter_method`.`name` = `doccenter_parameter`.`method` AND `doccenter_method`.`class` = `doccenter_parameter`.`class` AND `doccenter_method`.`namespace` = `doccenter_parameter`.`namespace`)) ) ON ((`doccenter_class`.`name` = `doccenter_method`.`class` AND `doccenter_class`.`namespace` = `doccenter_method`.`namespace` AND `doccenter_class`.`version` = `doccenter_method`.`version`)) ');
+		}catch(ExecuteException $e){
+			$arrResult['success'] = false;
+			$arrResult['errorString'] = $e->message();
+			$arrResult['executeLog'] = DB::singleton()->executeLog(false);
+		}catch(Exception $e){
+			$arrResult['success'] = false;
+			$arrResult['errorString'] = $e->message();
+		}catch(\Exception $e){
+			$arrResult['success'] = false;
+			$arrResult['errorString'] = $e->message();
+		}
+		
+		// result
+		return $arrResult;
+	}
+	
+	private function saveToDatabase($arrGenerate){
+		$arrResult = array(
+			'success' => true,
+			'errorString' => 'save succeed',
+		);
+		
+		try{
+			foreach($arrGenerate['classlist'] as $classInfo){
+				$aClassInsert = StatementFactory::singleton()->createInsert('doccenter_class');
+				$aClassInsert->setData('namespace',$classInfo['namespace']);
+				$aClassInsert->setData('name',$classInfo['name']);
+				$aClassInsert->setData('version',$classInfo['version']);
+				$aClassInsert->setData('abstract',$classInfo['abstract']);
+				$aClassInsert->setData('comment',$classInfo['comment']);
+				DB::singleton()->execute($aClassInsert);
+				
+				// insert function
+				foreach($classInfo['functionlist'] as $functionInfo){
+					$aFunctionInsert = StatementFactory::singleton()->createInsert('doccenter_method');
+					foreach($functionInfo as $key=>$value){
+						if(!is_array($value)){
+							$aFunctionInsert->setData($key,$value);
+						}
+					}
+					DB::singleton()->execute($aFunctionInsert);
+					
+					// insert param
+					foreach($functionInfo['parameterlist'] as $paramInfo){
+						$aParamInsert = StatementFactory::singleton()->createInsert('doccenter_parameter');
+						foreach($paramInfo as $key=>$value){
+							if(!is_array($value)){
+								$aParamInsert->setData('`'.$key.'`',$value);
+							}
+						}
+						DB::singleton()->execute($aParamInsert);
+					}
+				}
+			}
+		}catch(ExecuteException $e){
+			$arrResult['success'] = false;
+			$arrResult['errorString'] = $e->message();
+			$arrResult['executeLog'] = DB::singleton()->executeLog(false);
+		}catch(Exception $e){
+			$arrResult['success'] = false;
+			$arrResult['errorString'] = $e->message();
+		}catch(\Exception $e){
+			$arrResult['success'] = false;
+			$arrResult['errorString'] = $e->message();
+		}
+		
+		// result
+		return $arrResult;
+	}
+	
+#	private function getPrototype(){
+#		if(null === $this->aPrototype){
+#			$this->aPrototype =
+#			Prototype::create("doccenter_class",null,array('version','name','abstract','namespace','comment'))
+#				->setName('class')
+#				->setKeys(array('namespace','name','version'))
+#	
+#				->hasMany('doccenter_method',array('version','name','namespace'),array('version','class','namespace'))
+#					->setName('function')
+#					->setKeys(array('namespace','class','name','version'))
+#					->addColumns('version','name','class','namespace','access','abstract','static','returnType','returnByRef','comment')
+
+#					->hasMany('doccenter_parameter',array('version','name','class','namespace'),array('version','method','class','namespace'))
+#						->setName('param')
+#						->setKeys(array('version','namespace','class','method','name'))
+#						->addColumns('version','namespace','class','method','name','type','default','byRef','comment')
+#					->done()
+#				->done()
+#			->done() ;
+#		}
+#		return $this->aPrototype;
+#	}
+	
+	private $aExtensionManager = null ;
+	private $aPrototype = null ;
 }
