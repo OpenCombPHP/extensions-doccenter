@@ -32,7 +32,7 @@
 			<continue />
 		</if>
 		<li>
-			<if 'isset($branch["fileinfo"]) && is_object($branch["fileinfo"])'>
+			<if 'isset($branch["FSO"])'>
 				<input type='checkbox' path='{=$branch['path']}' />
 				{=$name}
 			<else/>

@@ -198,7 +198,7 @@ class DocumentGenerator  extends ControlPanel
 			$aDelete = StatementFactory::singleton()->createDelete();
 			$aDelete->addTable($aClassTable);
 			// execute
-			$aDB->execute('DELETE doccenter_class , doccenter_method , doccenter_parameter FROM  `doccenter_class` LEFT JOIN ( `doccenter_method` LEFT JOIN ( `doccenter_parameter` ) ON ((`doccenter_method`.`version` = `doccenter_parameter`.`version` AND `doccenter_method`.`name` = `doccenter_parameter`.`method` AND `doccenter_method`.`class` = `doccenter_parameter`.`class` AND `doccenter_method`.`namespace` = `doccenter_parameter`.`namespace`)) ) ON ((`doccenter_class`.`name` = `doccenter_method`.`class` AND `doccenter_class`.`namespace` = `doccenter_method`.`namespace` AND `doccenter_class`.`version` = `doccenter_method`.`version`)) ');
+			$aDB->execute('DELETE doccenter_class , doccenter_method , doccenter_parameter FROM  `doccenter_class` LEFT JOIN ( `doccenter_method` LEFT JOIN ( `doccenter_parameter` ) ON ((`doccenter_method`.`version` = `doccenter_parameter`.`version` AND `doccenter_method`.`name` = `doccenter_parameter`.`method` AND `doccenter_method`.`class` = `doccenter_parameter`.`class` AND `doccenter_method`.`namespace` = `doccenter_parameter`.`namespace`)) ) ON ((`doccenter_class`.`name` = `doccenter_method`.`class` AND `doccenter_class`.`namespace` = `doccenter_method`.`namespace` AND `doccenter_class`.`version` = `doccenter_method`.`version`)) WHERE (`doccenter_class`.`name` = "'.$name.'" AND `doccenter_class`.`namespace` = "'.$namespace.'" AND `doccenter_class`.`version` = "'.$version.'")');
 		}catch(ExecuteException $e){
 			$arrResult['success'] = false;
 			$arrResult['errorString'] = $e->message();
@@ -268,29 +268,6 @@ class DocumentGenerator  extends ControlPanel
 		// result
 		return $arrResult;
 	}
-	
-#	private function getPrototype(){
-#		if(null === $this->aPrototype){
-#			$this->aPrototype =
-#			Prototype::create("doccenter_class",null,array('version','name','abstract','namespace','comment'))
-#				->setName('class')
-#				->setKeys(array('namespace','name','version'))
-#	
-#				->hasMany('doccenter_method',array('version','name','namespace'),array('version','class','namespace'))
-#					->setName('function')
-#					->setKeys(array('namespace','class','name','version'))
-#					->addColumns('version','name','class','namespace','access','abstract','static','returnType','returnByRef','comment')
-
-#					->hasMany('doccenter_parameter',array('version','name','class','namespace'),array('version','method','class','namespace'))
-#						->setName('param')
-#						->setKeys(array('version','namespace','class','method','name'))
-#						->addColumns('version','namespace','class','method','name','type','default','byRef','comment')
-#					->done()
-#				->done()
-#			->done() ;
-#		}
-#		return $this->aPrototype;
-#	}
 	
 	private $aExtensionManager = null ;
 	private $aPrototype = null ;

@@ -4,6 +4,8 @@ namespace org\opencomb\doccenter ;
 use org\opencomb\coresystem\mvc\controller\ControlPanel ;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\compile\CompilerFactory;
+use org\jecat\framework\fs\IFolder ;
+use org\jecat\framework\fs\FSIterator ;
 
 class DocumentUpdater  extends ControlPanel
 {
@@ -38,26 +40,24 @@ class DocumentUpdater  extends ControlPanel
 				$arrExp = &$arrExp[$ns_cl];
 			}
 			$aFolder = $package->folder();
-			$this->getFileTree($aFolder->url(false),$arrExp,$aFolder->path());
+			$this->getFileTree($aFolder,$arrExp);
 			$arrExp[] = $ns;
 		}
 		return $arrTree;
 	}
 	
-	private function getFileTree($pathname , &$arr,$path){
-		$aDirectoryIterator = new \DirectoryIterator($pathname);
-		foreach($aDirectoryIterator as $fileinfo){
-			if($fileinfo->isDot()) continue;
-			
+	private function getFileTree(IFolder $aFolder, &$arr){
+		$aFSIterator = $aFolder->iterator( ( FSIterator::FLAG_DEFAULT ^ FSIterator::RECURSIVE_SEARCH ) | FSIterator::RETURN_FSO );
+		foreach($aFSIterator as $aFSO){
 			$arrChild = array();
-			if($fileinfo->isDir()){
-				$this->getFileTree($fileinfo->getPathname(),$arrChild,$path.'/'.$fileinfo->getFilename());
+			if($aFSO instanceof IFolder ){
+				$this->getFileTree($aFSO,$arrChild);
 			}else{
 				$arrChild['ns'] = '';
-				$arrChild['path'] = $path.'/'.$fileinfo->getFilename();
-				$arrChild['fileinfo'] = $fileinfo;
+				$arrChild['path'] = $aFSO->path();
+				$arrChild['FSO'] = $aFSO;
 			}
-			$arr[$fileinfo->getFileName()] = $arrChild;
+			$arr[$aFSO->name()] = $arrChild;
 		}
 	}
 }
