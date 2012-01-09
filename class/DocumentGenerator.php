@@ -10,11 +10,13 @@ use org\opencomb\platform\ext\ExtensionManager ;
 use org\jecat\framework\db\DB ;
 use org\jecat\framework\db\sql\StatementFactory ;
 use org\jecat\framework\db\ExecuteException ;
+use org\jecat\framework\util\Version ;
+use org\opencomb\platform\Platform ;
 
 // /?c=org.opencomb.doccenter.DocumentGenerator&noframe=1&path[]=/framework/class/util/match/ResultSet.php&path[]=/framework/class/util/match/RegExp.php&path[]=/framework/class/util/match/Result.php
 // /?c=org.opencomb.doccenter.DocumentGenerator&debug=1&noframe=1&path[]=/extensions/doccenter/0.1/class/testCompiler.php
 
-class DocumentGenerator  extends ControlPanel
+class DocumentGenerator extends ControlPanel
 {
 	public function process(){
 		$arrPath = $this->params['path'];
@@ -159,7 +161,17 @@ class DocumentGenerator  extends ControlPanel
 		}
 		$extensionName = $this->aExtensionManager->extensionNameByClass($classname);
 		if(empty($extensionName)){
-			return null;
+			$strFrameworkNs = 'org\\jecat\\framework' ;
+			$nFNLength = strlen($strFrameworkNs) ;
+			$strPlatformNs = 'org\\opencomb\\platform' ;
+			$nPNLength = strlen($strPlatformNs) ;
+			if( substr($classname,0,$nFNLength) === $strFrameworkNs ){
+				return Version::FromString(\org\jecat\framework\VERSION) ;
+			}else if ( substr($classname,0,$nPNLength) === $strPlatformNs ){
+				return Platform::singleton()->version();
+			}else{
+				return null;
+			}
 		}
 		$extensionMetainfo = $this->aExtensionManager->extensionMetainfo($extensionName);
 		return $extensionMetainfo->version();
