@@ -48,7 +48,12 @@ class DocumentGenerator  extends ControlPanel
 		foreach($aTokenPool->classIterator() as $aClassToken){
 			$classInfo = array();
 			$classInfo['name'] = $aClassToken->name();
-			$classInfo['version'] = $this->getVersionByClassName($aClassToken->fullName())->to32Integer();
+			$aVersion = $this->getVersionByClassName($aClassToken->fullName());
+			if( null === $aVersion ){
+				$classInfo['version'] = 123;
+			}else{
+				$classInfo['version'] = $aVersion->to32Integer();
+			}
 			$classInfo['abstract'] = $aClassToken->isAbstract();
 			$classInfo['namespace'] = $aClassToken->belongsNamespace()->name();
 			$classInfo['comment'] = ( null === $aClassToken->docToken() )?'':$aClassToken->docToken()->docComment()->description();
@@ -111,7 +116,7 @@ class DocumentGenerator  extends ControlPanel
 					// param type
 					if($parameterToken->type() !== ''){
 						$parameterInfo['type'] = $parameterToken->type() ;
-					}else if(isset($arrInfoFromFunctionComment['paramlist'][$parameterToken->name()])){
+					}else if(isset($arrInfoFromFunctionComment['paramlist'][$parameterToken->name()]['type'])){
 						$parameterInfo['type'] = $arrInfoFromFunctionComment['paramlist'][$parameterToken->name()]['type'] ;
 					}else{
 						$parameterInfo['type'] = '' ;
@@ -153,6 +158,9 @@ class DocumentGenerator  extends ControlPanel
 			$this->aExtensionManager = ExtensionManager::singleton() ;
 		}
 		$extensionName = $this->aExtensionManager->extensionNameByClass($classname);
+		if(empty($extensionName)){
+			return null;
+		}
 		$extensionMetainfo = $this->aExtensionManager->extensionMetainfo($extensionName);
 		return $extensionMetainfo->version();
 	}
@@ -162,6 +170,9 @@ class DocumentGenerator  extends ControlPanel
 			'success' => true,
 			'errorString' => 'clean succeed',
 		);
+		if(!isset($arrGenerate['classlist'][0])){
+			return $arrResult;
+		}
 		$version = $arrGenerate['classlist'][0]['version'];
 		$namespace = $arrGenerate['classlist'][0]['namespace'];
 		$name = $arrGenerate['classlist'][0]['name'];
@@ -198,7 +209,26 @@ class DocumentGenerator  extends ControlPanel
 			$aDelete = StatementFactory::singleton()->createDelete();
 			$aDelete->addTable($aClassTable);
 			// execute
-			$aDB->execute('DELETE doccenter_class , doccenter_method , doccenter_parameter FROM  `doccenter_class` LEFT JOIN ( `doccenter_method` LEFT JOIN ( `doccenter_parameter` ) ON ((`doccenter_method`.`version` = `doccenter_parameter`.`version` AND `doccenter_method`.`name` = `doccenter_parameter`.`method` AND `doccenter_method`.`class` = `doccenter_parameter`.`class` AND `doccenter_method`.`namespace` = `doccenter_parameter`.`namespace`)) ) ON ((`doccenter_class`.`name` = `doccenter_method`.`class` AND `doccenter_class`.`namespace` = `doccenter_method`.`namespace` AND `doccenter_class`.`version` = `doccenter_method`.`version`)) WHERE (`doccenter_class`.`name` = "'.$name.'" AND `doccenter_class`.`namespace` = "'.$namespace.'" AND `doccenter_class`.`version` = "'.$version.'")');
+			$aDB->execute(
+				'DELETE doccenter_class,
+				doccenter_method,
+				doccenter_parameter FROM  `doccenter_class` LEFT JOIN (
+					`doccenter_method`
+						LEFT JOIN `doccenter_parameter` ON (
+							`doccenter_method`.`version` =  `doccenter_parameter`.`version`
+							AND  `doccenter_method`.`name` =  `doccenter_parameter`.`method`
+							AND  `doccenter_method`.`class` =  `doccenter_parameter`.`class`
+							AND  `doccenter_method`.`namespace` = `doccenter_parameter`.`namespace`
+						)
+					) ON (
+						`doccenter_class`.`name` =  `doccenter_method`.`class`
+						AND `doccenter_class`.`namespace` = `doccenter_method`.`namespace`
+						AND `doccenter_class`.`version` = `doccenter_method`.`version`
+					)
+				WHERE (
+					`doccenter_class`.`name` = "'.$name.'"
+					AND `doccenter_class`.`namespace` = "'.addslashes($namespace).'"
+					AND `doccenter_class`.`version` = "'.$version.'")');
 		}catch(ExecuteException $e){
 			$arrResult['success'] = false;
 			$arrResult['errorString'] = $e->message();

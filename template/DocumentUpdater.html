@@ -155,7 +155,7 @@ function postArrPath(arr){
 			var div=document.getElementById('generator_log');
 			for(var i=0;i<data.length;++i){
 				// display error message
-				if(typeof(data[i].error)!='undefined' && data[i].error == true){
+				if(typeof(data[i].success)=='undefined' || data[i].success == false){
 					jQuery("#generator_log").append('<p>error '+data[i].path+' : '+data[i].errorString+'</p>');
 				}
 				if(div.scrollHeight>div.offsetHeight){
