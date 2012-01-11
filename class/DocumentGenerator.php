@@ -12,6 +12,8 @@ use org\jecat\framework\db\sql\StatementFactory ;
 use org\jecat\framework\db\ExecuteException ;
 use org\jecat\framework\util\Version ;
 use org\opencomb\platform\Platform ;
+use org\jecat\framework\lang\compile\object\TokenPool ;
+use org\jecat\framework\lang\compile\object\NamespaceDeclare ;
 
 // /?c=org.opencomb.doccenter.DocumentGenerator&noframe=1&path[]=/framework/class/util/match/ResultSet.php&path[]=/framework/class/util/match/RegExp.php&path[]=/framework/class/util/match/Result.php
 // /?c=org.opencomb.doccenter.DocumentGenerator&debug=1&noframe=1&path[]=/extensions/doccenter/0.1/class/testCompiler.php
@@ -56,6 +58,12 @@ class DocumentGenerator extends ControlPanel
 			}else{
 				$classInfo['version'] = $aVersion->to32Integer();
 			}
+			$sExtName = $this->getExtNameByClassName($aClassToken->fullName());
+			if( null === $sExtName ){
+				$classInfo['extension'] = 'error' ;
+			}else{
+				$classInfo['extension'] = $sExtName ;
+			}
 			$classInfo['abstract'] = $aClassToken->isAbstract();
 			$classInfo['namespace'] = $aClassToken->belongsNamespace()->name();
 			$classInfo['comment'] = ( null === $aClassToken->docToken() )?'':$aClassToken->docToken()->docComment()->description();
@@ -94,11 +102,11 @@ class DocumentGenerator extends ControlPanel
 				$functionInfo['version'] = $classInfo['version'];
 				$functionInfo['class'] = $classInfo['name'];
 				$functionInfo['namespace'] = $classInfo['namespace'];
+				$functionInfo['extension'] = $classInfo['extension'];
 				$functionInfo['access'] = (string)$aFunctionToken->accessToken();
 				$functionInfo['abstract'] = (int)(null !== $aFunctionToken->abstractToken());
 				$functionInfo['static'] = (int)(null !== $aFunctionToken->staticToken());
-				// @todo
-				$functionInfo['returnType'] = $aTokenPool->findName($arrInfoFromFunctionComment['return'],$aFunctionToken->belongsNamespace());
+				$functionInfo['returnType'] = $this->getTypeName($arrInfoFromFunctionComment['return'] , $aTokenPool , $aFunctionToken->belongsNamespace() , self::IN_COMMENT );
 				$functionInfo['returnByRef'] = (int)$aFunctionToken->isReturnByRef();
 				$functionInfo['comment'] = ( null === $aFunctionToken->docToken() )?'':$aFunctionToken->docToken()->docComment()->description();
 				
@@ -113,16 +121,22 @@ class DocumentGenerator extends ControlPanel
 					$parameterInfo['namespace'] = $classInfo['namespace'];
 					$parameterInfo['class'] = $classInfo['name'];
 					$parameterInfo['method'] = $functionInfo['name'];
+					$parameterInfo['extension'] = $functionInfo['extension'];
 					$parameterInfo['default'] = ('' === $parameterToken->defaultValue())?'':$parameterToken->defaultValue();
 					
 					// param type
+					$sType = '';
+					$iFrom = 0;
 					if($parameterToken->type() !== ''){
-						$parameterInfo['type'] = $parameterToken->type() ;
+						$sType = $parameterToken->type() ;
+						$iFrom = self::IN_CODE ;
 					}else if(isset($arrInfoFromFunctionComment['paramlist'][$parameterToken->name()]['type'])){
-						$parameterInfo['type'] = $arrInfoFromFunctionComment['paramlist'][$parameterToken->name()]['type'] ;
+						$sType = $arrInfoFromFunctionComment['paramlist'][$parameterToken->name()]['type'] ;
+						$iFrom = self::IN_COMMENT ;
 					}else{
-						$parameterInfo['type'] = '' ;
+						$sType = '' ;
 					}
+					$parameterInfo['type'] = $this->getTypeName($sType,$aTokenPool,$parameterToken->belongsFunction()->belongsNamespace(),$iFrom);
 					
 					$parameterInfo['name'] = $parameterToken->name();
 					$parameterInfo['byRef'] = (int)$parameterToken->isReference();
@@ -177,6 +191,28 @@ class DocumentGenerator extends ControlPanel
 		return $extensionMetainfo->version();
 	}
 	
+	private function getExtNameByClassName($sClassName){
+		if(null === $this->aExtensionManager){
+			$this->aExtensionManager = ExtensionManager::singleton() ;
+		}
+		$extensionName = $this->aExtensionManager->extensionNameByClass($sClassName);
+		if(empty($extensionName)){
+			$strFrameworkNs = 'org\\jecat\\framework' ;
+			$nFNLength = strlen($strFrameworkNs) ;
+			$strPlatformNs = 'org\\opencomb\\platform' ;
+			$nPNLength = strlen($strPlatformNs) ;
+			if( substr($sClassName,0,$nFNLength) === $strFrameworkNs ){
+				return 'framework' ;
+			}else if ( substr($sClassName,0,$nPNLength) === $strPlatformNs ){
+				return 'platform' ;
+			}else{
+				return null;
+			}
+		}
+		$extensionMetainfo = $this->aExtensionManager->extensionMetainfo($extensionName);
+		return $extensionMetainfo->name();
+	}
+	
 	private function cleanInDatabase($arrGenerate){
 		$arrResult = array(
 			'success' => true,
@@ -188,6 +224,7 @@ class DocumentGenerator extends ControlPanel
 		$version = $arrGenerate['classlist'][0]['version'];
 		$namespace = $arrGenerate['classlist'][0]['namespace'];
 		$name = $arrGenerate['classlist'][0]['name'];
+		$extname = $arrGenerate['classlist'][0]['extension'];
 		
 		// model
 		try{
@@ -231,16 +268,19 @@ class DocumentGenerator extends ControlPanel
 							AND  `doccenter_method`.`name` =  `doccenter_parameter`.`method`
 							AND  `doccenter_method`.`class` =  `doccenter_parameter`.`class`
 							AND  `doccenter_method`.`namespace` = `doccenter_parameter`.`namespace`
+							AND  `doccenter_method`.`extension` = `doccenter_parameter`.`extension`
 						)
 					) ON (
 						`doccenter_class`.`name` =  `doccenter_method`.`class`
 						AND `doccenter_class`.`namespace` = `doccenter_method`.`namespace`
 						AND `doccenter_class`.`version` = `doccenter_method`.`version`
+						AND `doccenter_class`.`extension` = `doccenter_method`.`extension`
 					)
 				WHERE (
 					`doccenter_class`.`name` = "'.$name.'"
 					AND `doccenter_class`.`namespace` = "'.addslashes($namespace).'"
-					AND `doccenter_class`.`version` = "'.$version.'")');
+					AND `doccenter_class`.`version` = "'.$version.'"
+					AND `doccenter_class`.`extension` = "'.$extname.'")');
 		}catch(ExecuteException $e){
 			$arrResult['success'] = false;
 			$arrResult['errorString'] = $e->message();
@@ -271,6 +311,7 @@ class DocumentGenerator extends ControlPanel
 				$aClassInsert->setData('version',$classInfo['version']);
 				$aClassInsert->setData('abstract',$classInfo['abstract']);
 				$aClassInsert->setData('comment',$classInfo['comment']);
+				$aClassInsert->setData('extension',$classInfo['extension']);
 				DB::singleton()->execute($aClassInsert);
 				
 				// insert function
@@ -309,6 +350,35 @@ class DocumentGenerator extends ControlPanel
 		
 		// result
 		return $arrResult;
+	}
+	
+	const IN_COMMENT = 0x371 ;
+	const IN_CODE = 0x372 ;
+	
+	private function getTypeName($sTypeName , TokenPool $aTokenPool , NamespaceDeclare $aNamespace , $iFrom ){
+		$sTypeRtn = $sTypeName ;
+		$sTypeNameFromTokenPool = $aTokenPool->findName( $sTypeName , $aNamespace );
+		switch($iFrom){
+		case self::IN_COMMENT :
+			if( in_array( $sTypeName , array( '' , 'integer' , 'array' , 'boolean' , 'string' ) ) ){
+				$sTypeRtn = $sTypeName ;
+			}else if( strpos($sTypeName,"\\") !== false ){
+				$sTypeRtn = $sTypeName ;
+			}else{
+				$sTypeRtn = $sTypeNameFromTokenPool ;
+			}
+			break;
+		case self::IN_CODE :
+			if( in_array( $sTypeName , array( '' , 'array' ) ) ){
+				$sTypeRtn = $sTypeName ;
+			}else if( substr($sTypeName,0,1) === "\\" ){
+				$sTypeRtn = $sTypeName ;
+			}else{
+				$sTypeRtn = $sTypeNameFromTokenPool ;
+			}
+			break;
+		}
+		return $sTypeRtn ;
 	}
 	
 	private $aExtensionManager = null ;
