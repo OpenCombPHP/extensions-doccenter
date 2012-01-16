@@ -360,7 +360,7 @@ class DocumentGenerator extends ControlPanel
 		$sTypeNameFromTokenPool = $aTokenPool->findName( $sTypeName , $aNamespace );
 		switch($iFrom){
 		case self::IN_COMMENT :
-			if( in_array( $sTypeName , array( '' , 'integer' , 'array' , 'boolean' , 'string' ) ) ){
+			if( in_array( $sTypeName , array( '' , 'integer' , 'array' , 'boolean' , 'string' , 'int' , 'bool' ) ) ){
 				$sTypeRtn = $sTypeName ;
 			}else if( strpos($sTypeName,"\\") !== false ){
 				$sTypeRtn = $sTypeName ;

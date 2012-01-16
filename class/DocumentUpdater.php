@@ -48,16 +48,21 @@ class DocumentUpdater  extends ControlPanel
 	
 	private function getFileTree(IFolder $aFolder, &$arr){
 		$aFSIterator = $aFolder->iterator( ( FSIterator::FLAG_DEFAULT ^ FSIterator::RECURSIVE_SEARCH ) | FSIterator::RETURN_FSO );
+		if(!isset($arr['files'])){
+			$arr['files'] = array();
+		}
 		foreach($aFSIterator as $aFSO){
 			$arrChild = array();
 			if($aFSO instanceof IFolder ){
 				$this->getFileTree($aFSO,$arrChild);
+				$arr[$aFSO->name()] = $arrChild;
 			}else{
 				$arrChild['ns'] = '';
 				$arrChild['path'] = $aFSO->path();
 				$arrChild['FSO'] = $aFSO;
+				$arrChild['name'] = $aFSO->name();
+				$arr['files'][] = $arrChild ;
 			}
-			$arr[$aFSO->name()] = $arrChild;
 		}
 	}
 }

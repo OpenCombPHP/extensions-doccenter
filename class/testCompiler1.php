@@ -1,20 +1,31 @@
 <?php
 namespace org\opencomb\doccenter ;
 
+
 /**
-  * aoskdjfa
-	sdfasd
-	fas
-	df
-	asd
-	fa
-	sdf
-	as
-	df
-*/
+ * @example /xxx/ooo:name[1]
+ * @forclass xxx\ooo
+ * @formethod xxx\ooo
+ * @forwiki xxx\ooo
+ * 
+ *  xxxxxxxxxxxxxx
+ *  xxxxxxxxxxxxxx
+ *  xxxxxxxxxxxxxx
+ */
 // asdfj;askdf
 // o9234rlkagv
 abstract class testCompiler1{
+	/**
+	 * @example /xxx/ooo:name[1]
+	 * @forclass xxx\ooo
+	 * @formethod xxx\ooo
+	 * @forwiki xxx\ooo
+	 * 
+	 *  xxxxxxxxxxxxxx
+	 *  xxxxxxxxxxxxxx
+	 *  xxxxxxxxxxxxxx
+	 */
+
 	// text
 	public function text(){
 		return true;
@@ -52,7 +63,28 @@ abstract class testCompiler1{
 	*/
 	static public function text6();
 	
+	
+	
+	/**
+	 * @example
+	 *
+	 *
+	 */
+	
+	// xxx
 	private function &testReturnByRef(){
 		return $this;
+		
+		
+		/**
+		 * @example
+		 *
+		 *
+		 */
+		
+		$this = null ;
+		
+		if( xxx ){
+		}
 	}
 }

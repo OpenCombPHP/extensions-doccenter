@@ -31,18 +31,22 @@
 		<if 'empty($name)'>
 			<continue />
 		</if>
-		<li>
-			<if 'isset($branch["FSO"])'>
-				<input type='checkbox' path='{=$branch['path']}' />
-				{=$name}
-			<else/>
+		<if '$name === "files" '>
+			<foreach for='$branch' item='file'>
+				<li>
+					<input type='checkbox' path='{=$file['path']}' />
+					{=$file['name']}
+				</li>
+			</foreach>
+		<else/>
+			<li>
 				{=$name}
 				<a href='#' onclick='setChecked(this,"a")'>全选</a>
 				<a href='#' onclick='setChecked(this,"n")'>全取消</a>
 				<a href='#' onclick='setChecked(this,"o")'>反选</a>
 				<subtemplate:call name='namespacetree' var.tree='$branch' />
-			</if>
-		</li>
+			</li>
+		</if>
 	</foreach>
 </ul>
 </subtemplate:define>
