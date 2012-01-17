@@ -16,7 +16,7 @@ namespace org\opencomb\doccenter ;
 // o9234rlkagv
 abstract class testCompiler1{
 	/**
-	 * @example /xxx/ooo:name[1]
+	 * @example /xxx/ooo:name[2]
 	 * @forclass xxx\ooo
 	 * @formethod xxx\ooo
 	 * @forwiki /xxx/ooo
@@ -90,14 +90,51 @@ abstract class testCompiler1{
 }
 
 /**
- * @example /xxx/ooo:name[1]
- * @forclass xxx\ooo
- * @formethod xxx\ooo
- * @forwiki xxx\ooo
+ * @example /xxx/ooo2:name[1]
+ * @forclass xxx\ooo2
+ * @formethod xxx\ooo2
+ * @forwiki /xxx/ooo2
  * 
  *  xxxxxxxxxxxxxx
  *  xxxxxxxxxxxxxx
  *  xxxxxxxxxxxxxx
  */
 class A{
+}
+
+/**
+ * @example /xxx2/ooo:name[1]
+ * @forclass xxx2\aaa
+ * @formethod xxx2\aaa
+ * @forwiki /xxx2/ooo
+ *
+ *  xxxxxxxxxxxxxx
+ *  xxxxxxxxxxxxxx
+ *  xxxxxxxxxxxxxx
+ */
+class B{
+}
+/**
+ * @example /xxx2/ccc:name[1]
+ * @forclass xxx2\aaa
+ * @formethod xxx2\aaa
+ * @forwiki /xxx2/ccc
+ *
+ *  xxxxxxxxxxxxxx
+ *  xxxxxxxxxxxxxx
+ *  xxxxxxxxxxxxxx
+ */
+class C{
+}
+/**
+ * @example /xxx2/ccc/ddd:name[1]
+ * @forclass xxx2\ccc
+ * @formethod xxx2\ccc
+ * @forwiki /xxx2/ccc/ddd
+ *
+ *  xxxxxxxxxxxxxx
+ *  xxxxxxxxxxxxxx
+ *  xxxxxxxxxxxxxx
+ */
+class D{
 }
