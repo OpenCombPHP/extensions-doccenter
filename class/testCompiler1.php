@@ -6,7 +6,7 @@ namespace org\opencomb\doccenter ;
  * @example /xxx/ooo:name[1]
  * @forclass xxx\ooo
  * @formethod xxx\ooo
- * @forwiki xxx\ooo
+ * @forwiki /xxx/ooo
  * 
  *  xxxxxxxxxxxxxx
  *  xxxxxxxxxxxxxx
@@ -19,7 +19,7 @@ abstract class testCompiler1{
 	 * @example /xxx/ooo:name[1]
 	 * @forclass xxx\ooo
 	 * @formethod xxx\ooo
-	 * @forwiki xxx\ooo
+	 * @forwiki /xxx/ooo
 	 * 
 	 *  xxxxxxxxxxxxxx
 	 *  xxxxxxxxxxxxxx

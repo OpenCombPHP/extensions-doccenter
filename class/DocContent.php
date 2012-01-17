@@ -16,30 +16,46 @@ class DocContent extends DocFrontController{
 				'model'=>'api',
 			),
 			'model:api'=>array(
-				'config'=>'model/api'
+				'class'=>'model',
+				'list'=>true,
+				'orm'=>array(
+					'table'=>'class',
+					'keys'=>array( 'extension','namespace','name','version' ),
+					'hasMany:methods'=>array(
+						'fromkeys'=>array( 'extension','namespace','name','version' ),
+						'tokeys'=>array( 'extension','namespace','name','version' ),
+						'table'=>'method',
+						'keys'=>array('extension', 'namespace','class','name','version'),
+						'orm'=>array(
+							'hasMany:parameters'=>array(
+								'fromkeys'=>array('version','name','class','namespace'),
+								'tokeys'=>array('version','method','class','namespace'),
+								'table'=>'parameter',
+								'orm'=>array(
+									'keys'=>array('extension', 'namespace','class','method','name','version'),
+								)
+							)
+						)
+					)
+				)
 			),
 		);
 	}
 	
 	public function process()
 	{
-// 		if($this->params->has("aid")){
-// 			if(!$this->modelArticle->load(array($this->params->get("aid")),array('aid'))){
-// 				$this->messageQueue ()->create ( Message::error, "错误的文章编号" );
-// 			}
-// 		}else{
-// 			$this->messageQueue ()->create ( Message::error, "未指定文章" );
-// 		}
-	
-// 		//浏览次数
-// 		$this->modelArticle->setData("views",(int)$this->modelArticle->data("views")+1);
-// 		$this->modelArticle->save();
-	
-// 		$this->viewArticle->variables()->set('article',$this->modelArticle) ;
-	
-// 		$this->setTitle($this->modelArticle->title);
-	
-// 		//把cid传给frame
-// 		$this->frame()->params()->set('cid',$this->modelArticle->cid);
+		$sExtensionName = $this->params->has('extension') ? $this->params->get('extension') : "";
+		$sNamespace = $this->params->has('namespace') ? $this->params->get('namespace') : "";
+		$sName = $this->params->has('name') ? $this->params->get('name') : "";
+		$sVersion = $this->params->has('version') ? $this->params->get('version') : "";
+		
+		if(empty($sExtensionName) || empty($sNamespace) ||empty($sName)){
+			$this->messageQueue ()->create ( Message::error, "缺少信息,无法定位到指定文档" );
+			return;
+		}
+		
+		$this->modelApi->load(array($sExtensionName,$sNamespace,$sName),array('extension','namespace','name'));
+		
+		$this->viewClassContent->variables()->set('aModelApi',$this->modelApi) ;
 	}
 }

@@ -77,12 +77,12 @@ pre {
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 }
-#doc_index a {
+/*#doc_index a {
 	font-size:12px;
 	padding: 1px 1px 1px 3px;
 	display: block;
 	margin-right: 10px;
-}
+}*/
 #doc_index a:hover {
 	background: #eee;
 	border-radius: 2px;

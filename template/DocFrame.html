@@ -1,7 +1,14 @@
 <css src="doccenter:css/style.css" />
-<lib name='jquery'/>
+<lib name='jquery.ztree'/>
 <script>
 jQuery(function() {
+	var api_info = {=$arrApiTree};
+	jquery.fn.zTree.init(jquery("#api_index_tree"), {
+		view: {
+			expandSpeed: 0
+		},
+	}, api_info);
+	
 	var doc_index = jQuery('#doc_index');
 	var doc_height = jQuery('#doc_index').outerHeight();
 	// doc手册目录的高度
@@ -54,6 +61,9 @@ jQuery(function() {
 </div>
 <div id='api_index' class='indexs'>
 <h3>API</h3>
+<div id='api_index_tree' class='ztree'>
+
+</div>
 </div>
 <div id='manual_index' class='indexs'>
 <h3>手册</h3>
