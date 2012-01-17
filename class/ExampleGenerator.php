@@ -15,8 +15,11 @@ use org\jecat\framework\db\sql\StatementFactory ;
 
 class ExampleGenerator extends ControlPanel{
 	public function process(){
-		echo 'example';
 		$arrPath = $this->params['path'];
+		
+		echo count($arrPath);
+		echo ' ';
+		echo "\n";
 		
 		foreach($arrPath as $path){
 			$arrGenerate = $this->generate($path);

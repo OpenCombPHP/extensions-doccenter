@@ -137,7 +137,7 @@ function createDoc(){
 		}
 	);
 	// post path list
-	totalCount = arrPath.length;
+	totalCount = arrPath.length * 2;
 	var arrPost = new Array();
 	for(var i=0;i<arrPath.length;++i){
 		arrPost.push(arrPath[i]);
@@ -152,6 +152,7 @@ function createDoc(){
 }
 
 function postArrPath(arr){
+	// generate document
 	jQuery.post(
 		'/?c=org.opencomb.doccenter.DocumentGenerator&noframe=1',
 		{path:arr},
@@ -175,6 +176,28 @@ function postArrPath(arr){
 			}
 		},
 		'json'
+	);
+	
+	// generate example
+	jQuery.post(
+		'/?c=org.opencomb.doccenter.ExampleGenerator&noframe=1',
+		{path:arr},
+		function(data){
+			var arrError = data.split('\n');
+			console.log(arrError);
+			for(var i=1;i<arrError.length;++i){
+				if(arrError[i].length>0){
+					jQuery("#generator_log").append('<p>error '+arrError[i]+'</p>');
+				}
+			}
+			var count = parseInt(data.substr(0,1));
+			finishCount += count ;
+			jQuery('#progress').progressBar( finishCount*100 / totalCount);
+			// has finished ?
+			if(finishCount == totalCount){
+				postState = 0;
+			}
+		}
 	);
 }
 </script>
