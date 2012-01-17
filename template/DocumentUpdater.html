@@ -137,7 +137,7 @@ function createDoc(){
 		}
 	);
 	// post path list
-	totalCount = arrPath.length * 2;
+	totalCount = arrPath.length * 3;
 	var arrPost = new Array();
 	for(var i=0;i<arrPath.length;++i){
 		arrPost.push(arrPath[i]);
@@ -181,6 +181,27 @@ function postArrPath(arr){
 	// generate example
 	jQuery.post(
 		'/?c=org.opencomb.doccenter.ExampleGenerator&noframe=1',
+		{path:arr},
+		function(data){
+			var arrError = data.split('\n');
+			for(var i=1;i<arrError.length;++i){
+				if(arrError[i].length>0){
+					jQuery("#generator_log").append('<p>error '+arrError[i]+'</p>');
+				}
+			}
+			var count = parseInt(data.substr(0,1));
+			finishCount += count ;
+			jQuery('#progress').progressBar( finishCount*100 / totalCount);
+			// has finished ?
+			if(finishCount == totalCount){
+				postState = 0;
+			}
+		}
+	);
+	
+	// generate wiki
+	jQuery.post(
+		'/?c=org.opencomb.doccenter.WikiGenerator&noframe=1',
 		{path:arr},
 		function(data){
 			var arrError = data.split('\n');

@@ -101,3 +101,10 @@ abstract class testCompiler1{
  */
 class A{
 }
+
+/**
+ * @wiki elephant's showtime
+ * a;lksdjfasdf
+ * wiiqjekqw
+ *  qkka;sldfn askldlw
+ */

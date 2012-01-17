@@ -53,6 +53,7 @@ class ExampleGenerator extends ControlPanel{
 		$sSourceClass = '';
 		foreach($aTokenPool->classIterator() as $aClassToken){
 			$sSourceClass = $aClassToken->fullName();
+			break ;
 		}
 		
 		$arrDoc = $this->generateDoc($aTokenPool);
@@ -137,7 +138,7 @@ class ExampleGenerator extends ControlPanel{
 					$aExtensionMetainfo = ExtensionManager::singleton()->extensionMetainfo($sExtension);
 					$aVersion = $aExtensionMetainfo->version();
 				}
-				$sVersion = $aVersion->toString();
+				$sVersion = $aVersion->to32Integer();
 				$arrExample['version'] = $sVersion ;
 				
 				$iLine = $aToken->line();
