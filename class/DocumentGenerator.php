@@ -218,47 +218,45 @@ class DocumentGenerator extends ControlPanel
 			'success' => true,
 			'errorString' => 'clean succeed',
 		);
-		if(!isset($arrGenerate['classlist'][0])){
-			return $arrResult;
-		}
-		$version = $arrGenerate['classlist'][0]['version'];
-		$namespace = $arrGenerate['classlist'][0]['namespace'];
-		$name = $arrGenerate['classlist'][0]['name'];
-		$extname = $arrGenerate['classlist'][0]['extension'];
 		
 		// model
 		try{
 			$aDB = DB::singleton();
+			foreach($arrGenerate['classlist'] as $classInfo){
+				$version = $classInfo['version'];
+				$namespace = $classInfo['namespace'];
+				$name = $classInfo['name'];
+				$extname = $classInfo['extension'];
+				
+				// create table
+				$aClassTable = StatementFactory::singleton()->createTable('doccenter_class');
+				$aFunctionTable = StatementFactory::singleton()->createTable('doccenter_method');
+				$aParamTable = StatementFactory::singleton()->createTable('doccenter_parameter');
+				// create join
+				$aClassFunctionJoin = StatementFactory::singleton()->createTablesJoin();
+				$aFunctionParamJoin = StatementFactory::singleton()->createTablesJoin();
+				// create restriction
+				$aClassFunctionRestriction = StatementFactory::singleton()->createRestriction();
+				$aFunctionParamRestriction = StatementFactory::singleton()->createRestriction();
+				// set restriction
+				$aClassFunctionRestriction->eqColumn('`doccenter_class`.`name`','`doccenter_method`.`class`');
+				$aClassFunctionRestriction->eqColumn('`doccenter_class`.`namespace`','`doccenter_method`.`namespace`');
+				$aClassFunctionRestriction->eqColumn('`doccenter_class`.`version`','`doccenter_method`.`version`');
 			
-			// create table
-			$aClassTable = StatementFactory::singleton()->createTable('doccenter_class');
-			$aFunctionTable = StatementFactory::singleton()->createTable('doccenter_method');
-			$aParamTable = StatementFactory::singleton()->createTable('doccenter_parameter');
-			// create join
-			$aClassFunctionJoin = StatementFactory::singleton()->createTablesJoin();
-			$aFunctionParamJoin = StatementFactory::singleton()->createTablesJoin();
-			// create restriction
-			$aClassFunctionRestriction = StatementFactory::singleton()->createRestriction();
-			$aFunctionParamRestriction = StatementFactory::singleton()->createRestriction();
-			// set restriction
-			$aClassFunctionRestriction->eqColumn('`doccenter_class`.`name`','`doccenter_method`.`class`');
-			$aClassFunctionRestriction->eqColumn('`doccenter_class`.`namespace`','`doccenter_method`.`namespace`');
-			$aClassFunctionRestriction->eqColumn('`doccenter_class`.`version`','`doccenter_method`.`version`');
-			
-			$aFunctionParamRestriction->eqColumn('`doccenter_method`.`version`','`doccenter_parameter`.`version`');
-			$aFunctionParamRestriction->eqColumn('`doccenter_method`.`name`','`doccenter_parameter`.`method`');
-			$aFunctionParamRestriction->eqColumn('`doccenter_method`.`class`','`doccenter_parameter`.`class`');
-			$aFunctionParamRestriction->eqColumn('`doccenter_method`.`namespace`','`doccenter_parameter`.`namespace`');
-			// join them !
-			$aClassTable->addJoin($aClassFunctionJoin);
-			$aClassFunctionJoin->addTable($aFunctionTable,$aClassFunctionRestriction);
-			$aFunctionTable->addJoin($aFunctionParamJoin);
-			$aFunctionParamJoin->addTable($aParamTable,$aFunctionParamRestriction);
-			// create delete
-			$aDelete = StatementFactory::singleton()->createDelete();
-			$aDelete->addTable($aClassTable);
-			// execute
-			$aDB->execute(
+				$aFunctionParamRestriction->eqColumn('`doccenter_method`.`version`','`doccenter_parameter`.`version`');
+				$aFunctionParamRestriction->eqColumn('`doccenter_method`.`name`','`doccenter_parameter`.`method`');
+				$aFunctionParamRestriction->eqColumn('`doccenter_method`.`class`','`doccenter_parameter`.`class`');
+				$aFunctionParamRestriction->eqColumn('`doccenter_method`.`namespace`','`doccenter_parameter`.`namespace`');
+				// join them !
+				$aClassTable->addJoin($aClassFunctionJoin);
+				$aClassFunctionJoin->addTable($aFunctionTable,$aClassFunctionRestriction);
+				$aFunctionTable->addJoin($aFunctionParamJoin);
+				$aFunctionParamJoin->addTable($aParamTable,$aFunctionParamRestriction);
+				// create delete
+				$aDelete = StatementFactory::singleton()->createDelete();
+				$aDelete->addTable($aClassTable);
+				// execute
+				$aDB->execute(
 				'DELETE doccenter_class,
 				doccenter_method,
 				doccenter_parameter FROM  `doccenter_class` LEFT JOIN (
@@ -281,6 +279,7 @@ class DocumentGenerator extends ControlPanel
 					AND `doccenter_class`.`namespace` = "'.addslashes($namespace).'"
 					AND `doccenter_class`.`version` = "'.$version.'"
 					AND `doccenter_class`.`extension` = "'.$extname.'")');
+			}
 		}catch(ExecuteException $e){
 			$arrResult['success'] = false;
 			$arrResult['errorString'] = $e->message();

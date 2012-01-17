@@ -184,7 +184,6 @@ function postArrPath(arr){
 		{path:arr},
 		function(data){
 			var arrError = data.split('\n');
-			console.log(arrError);
 			for(var i=1;i<arrError.length;++i){
 				if(arrError[i].length>0){
 					jQuery("#generator_log").append('<p>error '+arrError[i]+'</p>');
