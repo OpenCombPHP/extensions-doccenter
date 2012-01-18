@@ -245,7 +245,7 @@ class ExampleGenerator extends ControlPanel{
 			}
 			
 			// topic
-			if(!empty($generate['formethod'])){
+			if(!empty($generate['forwiki'])){
 				$aExampleTopicInsert = StatementFactory::singleton()->createInsert('doccenter_example_topic');
 				$aExampleTopicInsert->setData('eid',$eid);
 				$aExampleTopicInsert->setData('topic_title',$generate['forwiki']);
