@@ -12,6 +12,8 @@ use org\jecat\framework\fs\IFSO ;
 use org\jecat\framework\fs\IFolder ;
 use org\jecat\framework\db\DB ;
 use org\jecat\framework\db\sql\StatementFactory ;
+use org\jecat\framework\util\Version ;
+use org\opencomb\platform\Platform ;
 
 class ExampleGenerator extends ControlPanel{
 	public function process(){
@@ -121,7 +123,6 @@ class ExampleGenerator extends ControlPanel{
 				$sNamespace = $aToken->belongsNamespace()->name();
 				
 				$sExtension = ExtensionManager::singleton()->extensionNameByNamespace($sNamespace);
-				$arrExample['extension'] = $sExtension ;
 				
 				$aVersion = null ;
 				if(empty($sExtension)){
@@ -129,16 +130,20 @@ class ExampleGenerator extends ControlPanel{
 					$nFNLength = strlen($strFrameworkNs) ;
 					$strPlatformNs = 'org\\opencomb\\platform' ;
 					$nPNLength = strlen($strPlatformNs) ;
-					if( substr($classname,0,$nFNLength) === $strFrameworkNs ){
+					if( substr($sNamespace,0,$nFNLength) === $strFrameworkNs ){
 						$aVersion = Version::FromString(\org\jecat\framework\VERSION) ;
-					}else if ( substr($classname,0,$nPNLength) === $strPlatformNs ){
+						$sExtension = 'framework';
+					}else if ( substr($sNamespace,0,$nPNLength) === $strPlatformNs ){
 						$aVersion = Platform::singleton()->version();
+						$sExtension = 'platform';
 					}
 				}else{
 					$aExtensionMetainfo = ExtensionManager::singleton()->extensionMetainfo($sExtension);
 					$aVersion = $aExtensionMetainfo->version();
 				}
 				$sVersion = $aVersion->to32Integer();
+				
+				$arrExample['extension'] = $sExtension ;
 				$arrExample['version'] = $sVersion ;
 				
 				$iLine = $aToken->line();
