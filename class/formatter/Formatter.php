@@ -67,6 +67,7 @@ class Formatter extends Object{
 			array (
 				new \org\opencomb\doccenter\formatter\FileExampleTransformer,
 				new \org\opencomb\doccenter\formatter\InCodeExampleTransformer,
+				new \org\opencomb\doccenter\formatter\ByTitleExampleTransformer,
 			),
 		) ;
 		

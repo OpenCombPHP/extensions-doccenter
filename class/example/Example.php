@@ -8,10 +8,21 @@ use org\jecat\framework\mvc\model\db\Model ;
 
 class Example extends Object{
 	
+	static public function loadByTitle($sTitle){
+		$aModel = self::createModel('/xxx/ooo');
+		$arr = self::processModel($aModel);
+		return $arr ;
+	}
+	
+	static public function loadByModel(IModel $aModel){
+		$arr = self::processModel($aModel);
+		return $arr ;
+	}
+	
 	/**
 	 * @return array
 	 */
-	static public function processModel(IModel $aModel){
+	static private function processModel(IModel $aModel){
 		$arrExample = array();
 		foreach($aModel->childIterator() as $aChildModel){
 			$sName = $aChildModel->data('name');
@@ -37,7 +48,7 @@ class Example extends Object{
 	/**
 	 * @return IModel
 	 */
-	static public function createModel($sTitle , $sName = ''){
+	static private function createModel($sTitle , $sName = ''){
 		$aPrototype = 
 			Prototype::create(
 				"doccenter_example",
@@ -63,6 +74,8 @@ class Example extends Object{
 		}
 		return $aModel ;
 	}
+	
+
 	
 	public function addSnippet(Snippet $aSnippet){
 		$this->arrSnippet[] = $aSnippet ;
