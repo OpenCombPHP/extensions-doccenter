@@ -22,18 +22,14 @@ class ApiContent extends DocFrontController{
 					'keys'=>array( 'extension','namespace','name','version' ),
 					'hasMany:methods'=>array(
 						'fromkeys'=>array( 'extension','namespace','name','version' ),
-						'tokeys'=>array( 'extension','namespace','name','version' ),
+						'tokeys'=>array( 'extension','namespace','class','version' ),
 						'table'=>'method',
 						'keys'=>array('extension', 'namespace','class','name','version'),
-						'orm'=>array(
-							'hasMany:parameters'=>array(
-								'fromkeys'=>array('version','name','class','namespace'),
-								'tokeys'=>array('version','method','class','namespace'),
-								'table'=>'parameter',
-								'orm'=>array(
-									'keys'=>array('extension', 'namespace','class','method','name','version'),
-								)
-							)
+						'hasMany:parameters'=>array(
+							'fromkeys'=>array('version','name','class','namespace'),
+							'tokeys'=>array('version','method','class','namespace'),
+							'table'=>'parameter',
+							'keys'=>array('extension', 'namespace','class','method','name','version'),
 						)
 					)
 				)
@@ -54,6 +50,14 @@ class ApiContent extends DocFrontController{
 		}
 		
 		$this->modelApi->load(array($sExtensionName,$sNamespace,$sName),array('extension','namespace','name'));
-		$this->viewClassContent->variables()->set('aModelApi',$this->modelApi) ;
+		
+		if(!$this->modelApi){
+			$this->messageQueue ()->create ( Message::error, "无法定位到指定文档,信息错误或文档缺失" );
+			return;
+		}
+// 		$this->modelApi->printStruct();
+		$this->viewClassContent->variables()->set('sNamespace',$sNamespace) ;
+		$this->viewClassContent->variables()->set('sVersion',$sVersion) ;
+		$this->viewClassContent->variables()->set('sName',$sName) ;
 	}
 }

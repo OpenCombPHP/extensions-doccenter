@@ -48,7 +48,7 @@ class WikiContent extends DocFrontController{
 			$this->messageQueue ()->create ( Message::error, "无法定位到指定文档,不存在的title" );
 			return;
 		}
-		
+// 		$this->modelWiki->printStruct();
 		$this->viewWikiContent->variables()->set('sTitle',array_pop(explode('/',$sTitle)) ) ;
 		$this->viewWikiContent->variables()->set('sVersion',$sVersion) ;
 	}
