@@ -17,7 +17,7 @@
 	</div>
 	
 	<div class='content'>
-		{=nl2br($aContentModel['text'])}
+		{=org\opencomb\doccenter\formatter\Formatter::singleton()->format($aContentModel['text'])}
 	</div>
 	
 	<div class='exampleList'>

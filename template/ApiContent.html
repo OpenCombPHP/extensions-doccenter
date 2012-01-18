@@ -21,7 +21,7 @@
 	</div>
 	
 	<div class='comment'>
-		{=$aContentModel['comment']}
+		{=org\opencomb\doccenter\formatter\Formatter::singleton()->format($aContentModel['comment'])}
 	</div>
 	
 	<div class='methodList'>
