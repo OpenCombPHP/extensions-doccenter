@@ -1,59 +1,34 @@
 <lib name='syntaxhighlighter:php'/>
-<msgqueue for="$theController->messageQueue()" />
-
 <div class='page'>
-	<h1><span class='title'></span></h1>
-	<blockquote class="prepare">
-		准备:<br />
-		* 如果你还没有在自己的开发环境中部署Jecat,请先部署Jecat.部署的方法参见教程的第一章<br />
-		* 如果你不想自己构建程序的目录,可以直接下载<a href='../code/MVC_start.zip'>代码包</a>,这样你可以直接从<a href='#s3'>step 3</a> 开始<br />
-	</blockquote>
+	<msgqueue for="$theController->messageQueue()" />
+	<h1><span class='title'></span>{=$sTitle}</h1>
+	<label>版本: </label>
+	<select class='version'>
+		<model:foreach>
+			<option value="{='?c=org.opencomb.doccenter.WikiContent&version=' . $theModel['version'] . '&title=' . $theParams->get('title')}" {=$sVersion == $theModel['version'] ? 'selected' : ''}>{=org\jecat\framework\util\Version::from32Integer($theModel['version'])}</option>
+			<if "$sVersion == $theModel['version']">
+				{?$aContentModel=$theModel}
+			</if>
+		</model:foreach>
+	</select>
 	
-	<h3 id='s1'>step 1.</h3>
-	<div class='step'>
-		<p class='purpose'>首先构建用户注册的目录结构.</p>
-			<ul class='todo'>
-				<li>进入framework同级的文件夹下,新建user文件夹</li>
-				<li>进入user文件夹,建立inc.common.php文件</li>
-			</ul>
-		<p>都建立好后工程文件夹的结构看起来就像这样:</p>
-		<pre class='code'>
-			<code class='plain'>
-			</code>
-		</pre>
-	</div>
-	<h3 id='s2'>step 2.</h3>
-	<div class='step'>
-		<p>然后我们向这些文件添加一些初始代码</p>
-		<ul>
-		<li>
-			打开inc.common.php文件,添加如下代码:
-			<pre class='code'>
-				<code class='php'>
-&lt; <
-&#123; {
-				</code>
-			</pre>
-		</li>
-		<li>
-			进入template文件夹,打开register.template.html文件,添加如下代码:
-			<pre class='code'>
-				<code class='html'>
-				</code>
-			</pre>
-		</li>
-		</ul>
+	<div class='extension'>
+		<label>扩展: </label>{=$aContentModel['extension']}
 	</div>
 	
-	<h3 id='s3'>step 3.</h3>
-	<div class='step'>
-		<p>验证构建的代码是否正确</p>
-		<ul>
-			<li>运行你的浏览器,在地址栏输入这些:  http://你的域名/user/Register.php 然后回车来访问你刚刚构建的页面</li>
-			<li>看看Register.php的输出内容,如果你一个名为"提交表单"的按钮,你就可以开始下一节了.如果报错,你很可能看到了Jecat的异常提示,不要灰心,看看Jecat提供的强大异常处理功能是如何帮你解决问题的.仔细读一下错误提示,找到问题并解决它!</li>
-		</ul>
+	<div class='content'>
+		{=nl2br($aContentModel['text'])}
 	</div>
-	<blockquote class="prepare">
-		由于Jecat的标签和HTML的标签混合编写,所以代码的可读性非常重要,上面的代码缩进整齐合理,就降低了维护时的复杂程度,哪怕你正在开发只有自己才会维护的项目,也一定要注意这些代码的格式
-	</blockquote>
+	
+	<script type="text/javascript">
+		SyntaxHighlighter.defaults['toolbar'] = false;
+		SyntaxHighlighter.all();
+		
+		//版本跳转
+		jQuery(function(){
+			jQuery('select.version').change(function(){
+				location.href=jQuery(this).val();
+			});
+		});
+	</script>
 </div>

@@ -1,11 +1,8 @@
 <?php
 namespace org\opencomb\doccenter ;
 
-use org\jecat\framework\db\DB;
-
 use org\opencomb\doccenter\frame\DocFrontController;
 use org\jecat\framework\message\Message;
-use org\opencomb\coresystem\mvc\controller\Controller;
 
 class WikiContent extends DocFrontController{
 	public function createBeanConfig()
@@ -22,6 +19,7 @@ class WikiContent extends DocFrontController{
 				'list'=>true,
 				'orm'=>array(
 					'table'=>'topic',
+					'orderAsc'=>'version',
 					'hasAndBelongsToMany:examples'=>array(
 						'fromkeys'=>array( 'title' ),
 						'tobridgekeys'=>array( 'topic_title' ),
@@ -37,23 +35,21 @@ class WikiContent extends DocFrontController{
 	
 	public function process()
 	{
-		$sTid = $this->params->has('tid') ? $this->params->get('tid') : "";
+		$sTitle = $this->params->has('title') ? $this->params->get('title') : "";
 		$sVersion = $this->params->has('version') ? $this->params->get('version') : "";
 		
-		if(empty($sTid)){
-			$this->messageQueue ()->create ( Message::error, "缺少信息,无法定位到指定文档" );
+		if(empty($sTitle)){
+			$this->messageQueue ()->create ( Message::error, "无法定位到指定文档,缺少信息" );
 			return;
 		}
 		
-		if($sVersion == ''){
-			$this->modelWiki->load(array($sTid),array('tid'));
-		}else{
-			$this->modelWiki->load(array($sTid,$sVersion),array('tid','version'));
+		$this->modelWiki->load(array($sTitle),array('title'));
+		if(!$this->modelWiki){
+			$this->messageQueue ()->create ( Message::error, "无法定位到指定文档,不存在的title" );
+			return;
 		}
 		
-// 		DB::singleton()->executeLog();
-// 		$this->modelWiki->printStruct();
-		
-		$this->viewWikiContent->variables()->set('aModelWiki',$this->modelWiki) ;
+		$this->viewWikiContent->variables()->set('sTitle',array_pop(explode('/',$sTitle)) ) ;
+		$this->viewWikiContent->variables()->set('sVersion',$sVersion) ;
 	}
 }

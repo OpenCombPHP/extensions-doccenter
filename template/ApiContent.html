@@ -1,8 +1,7 @@
 <lib name='syntaxhighlighter:php'/>
-<msgqueue for="$theController->messageQueue()" />
-
 <div class='page'>
 	<h1><span class='title'></span>构建注册页面前的准备工作</h1>
+	<msgqueue for="$theController->messageQueue()" />
 	<blockquote class="prepare">
 		准备:<br />
 		* 如果你还没有在自己的开发环境中部署Jecat,请先部署Jecat.部署的方法参见教程的第一章<br />
@@ -48,9 +47,8 @@
 			<li>看看Register.php的输出内容,如果你一个名为"提交表单"的按钮,你就可以开始下一节了.如果报错,你很可能看到了Jecat的异常提示,不要灰心,看看Jecat提供的强大异常处理功能是如何帮你解决问题的.仔细读一下错误提示,找到问题并解决它!</li>
 		</ul>
 	</div>
+	<script type="text/javascript">
+		SyntaxHighlighter.defaults['toolbar'] = false;
+	    SyntaxHighlighter.all();
+	</script>
 </div>
-
-<script type="text/javascript">
-	SyntaxHighlighter.defaults['toolbar'] = false;
-    SyntaxHighlighter.all();
-</script>

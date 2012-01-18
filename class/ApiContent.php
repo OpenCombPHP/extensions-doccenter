@@ -3,7 +3,6 @@ namespace org\opencomb\doccenter ;
 
 use org\opencomb\doccenter\frame\DocFrontController;
 use org\jecat\framework\message\Message;
-use org\opencomb\coresystem\mvc\controller\Controller;
 
 class ApiContent extends DocFrontController{
 	public function createBeanConfig()
@@ -55,7 +54,6 @@ class ApiContent extends DocFrontController{
 		}
 		
 		$this->modelApi->load(array($sExtensionName,$sNamespace,$sName),array('extension','namespace','name'));
-// 		$this->modelApi->printStruct();
 		$this->viewClassContent->variables()->set('aModelApi',$this->modelApi) ;
 	}
 }

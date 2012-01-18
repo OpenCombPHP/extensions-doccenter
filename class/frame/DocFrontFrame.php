@@ -105,7 +105,7 @@ class DocFrontFrame extends FrontFrame
 			}
 			$arrParentChildren[] = array(
 					'name' => $sTitle
-					,'url' => '?c=org.opencomb.doccenter.WikiContent&tid='.$aTopic['tid']
+					,'url' => '?c=org.opencomb.doccenter.WikiContent&title='.$aTopic['title']
 					,'target' => '_self'
 			);
 			$arrParentChildren = &$arrTree;
