@@ -5,13 +5,13 @@ use org\opencomb\doccenter\frame\DocFrontController;
 use org\jecat\framework\message\Message;
 use org\opencomb\coresystem\mvc\controller\Controller;
 
-class DocContent extends DocFrontController{
+class ApiContent extends DocFrontController{
 	public function createBeanConfig()
 	{
 		return array(
 			'title'=> '文档内容',
 			'view:classContent'=>array(
-				'template'=>'DocContent.html',
+				'template'=>'ApiContent.html',
 				'class'=>'view',
 				'model'=>'api',
 			),
@@ -55,7 +55,7 @@ class DocContent extends DocFrontController{
 		}
 		
 		$this->modelApi->load(array($sExtensionName,$sNamespace,$sName),array('extension','namespace','name'));
-		
+// 		$this->modelApi->printStruct();
 		$this->viewClassContent->variables()->set('aModelApi',$this->modelApi) ;
 	}
 }

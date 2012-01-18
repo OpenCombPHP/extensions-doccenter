@@ -2,7 +2,6 @@
 namespace org\opencomb\doccenter\frame ;
 
 use org\jecat\framework\mvc\model\db\IModel;
-
 use org\jecat\framework\db\DB;
 use org\jecat\framework\message\Message;
 use org\opencomb\coresystem\mvc\controller\FrontFrame;
@@ -24,23 +23,24 @@ class DocFrontFrame extends FrontFrame
 					'keys'=>array( 'extension','namespace','name','version' ),
 				)
 			),
+			'model:wiki'=>array(
+				'class'=>'model',
+				'list'=>true,
+				'orm'=>array(
+					'table'=>'topic',
+					'limit'=>-1,
+				)
+			),
 		);
 	}
 	
 	public function process(){
 		$this->modelApi->load();
-		
-// 		$this->modelApi->printStruct();
-// 		DB::singleton()->executeLog();
-		
-// 		$this->viewDocFrameView->variables()->set('aModelApi',$this->modelApi) ;
-
 		$arrApiTree = $this->makeApiTree($this->modelApi);
 		$this->viewDocFrameView->variables()->set('arrApiTree',json_encode($arrApiTree)) ;
-		
-// 		$arrWikiTree = $this->makeWikiTree($this->modelTree);
-// 		$this->viewDocFrameView->variables()->set('arrWikiTree',$arrWikiTree) ;
-		
+		$this->modelWiki->load();
+		$arrWikiTree = $this->makeWikiTree($this->modelWiki);
+		$this->viewDocFrameView->variables()->set('arrManualTree',json_encode($arrWikiTree)) ;
 	}
 	
 	private function makeApiTree(IModel $aModelApi){
@@ -70,7 +70,7 @@ class DocFrontFrame extends FrontFrame
 			//类
 			$arrParentChildren[] = array(
 					'name' => $aClass['name']
-					,'url' => '?c=org.opencomb.doccenter.DocContent&extension='.$aClass['extension'].'&namespace='.$aClass['namespace'].'&name='.$aClass['name']
+					,'url' => '?c=org.opencomb.doccenter.ApiContent&extension='.$aClass['extension'].'&namespace='.$aClass['namespace'].'&name='.$aClass['name']
 					,'target' => '_self'
 			);
 			$arrParentChildren = &$arrTree;
@@ -80,8 +80,11 @@ class DocFrontFrame extends FrontFrame
 	private function makeWikiTree(IModel $aModelWiki){
 		$arrTree = array();
 		$arrParentChildren = &$arrTree;
-		foreach($aModelWiki->childIterator() as $aClass){
-			$arrNamespace = explode('\\',$aClass['namespace']);
+		foreach($aModelWiki->childIterator() as $aTopic){
+			$arrNamespace = explode('/',$aTopic['title']);
+			array_shift($arrNamespace); //弹出空的项
+			$sTitle = array_pop($arrNamespace); //弹出标题项并另外保存
+			
 			$nKeyFound = -1; //-1 代表 "未找到",因为无法用 0
 			foreach($arrNamespace as $aPath){
 				foreach($arrParentChildren as $nKey => $aChild){
@@ -101,8 +104,8 @@ class DocFrontFrame extends FrontFrame
 				$nKeyFound=-1;
 			}
 			$arrParentChildren[] = array(
-					'name' => $aClass['name']
-					,'url' => '?c=org.opencomb.doccenter.DocContent&extension='.$aClass['extension'].'&namespace='.$aClass['namespace'].'&name='.$aClass['name']
+					'name' => $sTitle
+					,'url' => '?c=org.opencomb.doccenter.WikiContent&tid='.$aTopic['tid']
 					,'target' => '_self'
 			);
 			$arrParentChildren = &$arrTree;

@@ -2,12 +2,21 @@
 <lib name='jquery.ztree'/>
 <script>
 jQuery(function() {
+	//api tree
 	var api_info = {=$arrApiTree};
 	jquery.fn.zTree.init(jquery("#api_index_tree"), {
 		view: {
 			expandSpeed: 0
 		},
 	}, api_info);
+	
+	//手册 tree
+	var manual_info = {=$arrManualTree};
+	jquery.fn.zTree.init(jquery("#manual_index_tree"), {
+		view: {
+			expandSpeed: 0
+		},
+	}, manual_info);
 	
 	var doc_index = jQuery('#doc_index');
 	var doc_height = jQuery('#doc_index').outerHeight();
@@ -26,7 +35,7 @@ jQuery(function() {
 
 	function replaceIndexs() {
 		doc_index.css({
-			'top' : -doc_height, // +indexs_top_for_tilte) ,
+			'top' : -doc_height,
 			'left' : getDocLeft()
 		});
 		function getDocLeft() {
@@ -42,7 +51,7 @@ jQuery(function() {
 	function resetIndexScroll() {
 		jQuery('#doc_index .index_scroll').css(
 				{
-					'height' : window.innerHeight - 30 //???
+					'height' : window.innerHeight - 30
 				});
 	}
 
@@ -53,53 +62,32 @@ jQuery(function() {
 	});
 });
 </script>
-
 <div id="doc_index">
-<div class='index_scroll'>
-<div id='quick_index' class='indexs'>
-<h3>速查</h3>
+	<div class='index_scroll'>
+		<div id='quick_index' class='indexs'>
+			<h3>速查</h3>
+			<div id='_index_tree' class='ztree'>
+			
+			</div>
+		</div>
+		<div id='api_index' class='indexs'>
+			<h3>API</h3>
+			<div id='api_index_tree' class='ztree'>
+			
+			</div>
+		</div>
+		<div id='manual_index' class='indexs'>
+			<h3>手册</h3>
+			<div id='manual_index_tree' class='ztree'>
+			
+			</div>
+		</div>
+	</div>
+	<div id="doc_index_title">文档</div>
+	<div class='block'></div>
 </div>
-<div id='api_index' class='indexs'>
-<h3>API</h3>
-<div id='api_index_tree' class='ztree'>
-
-</div>
-</div>
-<div id='manual_index' class='indexs'>
-<h3>手册</h3>
-<ol>
-	<li><a href="manual_start.html">开始</a>
-	<ul>
-		<li><a href='manual_install.html'>安装 JeCat Toolkit</a></li>
-		<li><a href='manual_build_project.html'>创建 JeCat 项目</a></li>
-	</ul>
-	</li>
-	<li><a href='manual_system.html'>系统</a>
-	<ul>
-		<li><a href='manual_jc_init_php.html'>jc.init.php文件</a></li>
-		<li><a href='manual_applicmanual_n.html'>应用程序对象</a></li>
-		<li><a href='manual_request_response.html'>请求/回应</a></li>
-		<li><a href='manual_auto_include.html'>自动加载类</a></li>
-		<li><a href='manual_const.html'>常量</a></li>
-	</ul>
-	</li>
-	<li><a href='manual_file_system.html'>文件系统</a>
-	<ul>
-		<li><a href='manual_file_object.html'>创建文件系统对象</a></li>
-		<li><a href='manual_file_controll.html'>文件操作</a>
-		<ul>
-			<li><a href='manual_new_file.html'>新建文件</a></li>
-			<li><a href='manual_load_file.html'>取得已有文件对象</a></li>
-			<li><a href='manual_read_file.html'>读取文件内容</a></li>
-			<li><a href='manual_write_file.html'>向文件写入内容</a></li>
-			<li><a href='manual_file_property.html'>文件各项属性</a></li>
-		</ul>
-		</li>
-	</ul>
-	</li>
-</ol>
-</div>
-</div>
-<div id="doc_index_title">文档</div>
-<div class='block'></div>
+<div class="wrapper">
+	<div class="bodyText">
+		<views/>
+	</div>
 </div>
