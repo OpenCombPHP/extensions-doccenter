@@ -5,7 +5,7 @@ use org\opencomb\doccenter\formatter\ITransformer ;
 
 class TableEndTransformer implements ITransformer{
 	public function pattern(){
-		return '`\|}(.*?)<br />`';
+		return '`\|}(.*?)(<br />|$)`';
 	}
 	
 	public function replacement(array $arrMatch){
