@@ -65,9 +65,14 @@ class Formatter extends Object{
 			),
 			'transformer' => 
 			array (
-				new \org\opencomb\doccenter\formatter\FileExampleTransformer,
-				new \org\opencomb\doccenter\formatter\InCodeExampleTransformer,
-				new \org\opencomb\doccenter\formatter\ByTitleExampleTransformer,
+				new FileExampleTransformer,
+				new InCodeExampleTransformer,
+				new ByTitleExampleTransformer,
+				new table\TableBeginTransformer,
+				new table\TableEndTransformer,
+				new table\TableRowTransformer,
+				new table\TableHeadTransformer,
+				new table\TableCellTransformer,
 			),
 		) ;
 		
