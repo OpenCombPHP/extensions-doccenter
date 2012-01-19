@@ -4,32 +4,32 @@
 	<h1><span class='title'></span>{=$sTitle}</h1>
 	<label>版本: </label>
 	<select class='version'>
-		<model:foreach idx='wikiIndex'>
-			<option value="{='?c=org.opencomb.doccenter.WikiContent&version=' . $theModel['version'] . '&title=' . $theParams->get('title')}" {=$sVersion == $theModel['version'] ? 'selected' : ''}>{=org\jecat\framework\util\Version::from32Integer($theModel['version'])}</option>
-			<if "($sVersion && $sVersion == $theModel['version']) || (!$sVersion && $wikiIndex==0)">{*如果没有版本号就显示最新版本的内容,如果有版本号就显示对应版本号内容*}
-				{?$aContentModel=$theModel}
-			</if>
-		</model:foreach>
+		<foreach for='$arrVersions' item='sVersions'>
+			<option value="{='?c=org.opencomb.doccenter.WikiContent&version=' . $sVersions . '&title=' . $theParams->get('title')}" 
+			{=$sSelectedVersion == $sVersions ? 'selected' : ''}>{=$sVersions}</option>
+		</foreach>
 	</select>
 	
-	<div class='extension'>
-		<label>扩展: </label>{=$aContentModel['extension']}
-	</div>
-	
-	<div class='content'>
-		{=org\opencomb\doccenter\formatter\Formatter::singleton()->format($aContentModel['text'])}
-	</div>
-	
-	<div class='exampleList'>
-		<foreach for="$aContentModel->child('examples')->childIterator()" item='aExample' idx='nExampleIndex'>
-			<div class='example'>
-				<h3>例子{=$nExampleIndex+1}: </h3>
-				<pre class="brush: php;">
-{=$aExample['code']}
-				</pre>
-			</div>
-		</foreach>
-	</div>
+	<foreach for='$theModel->childIterator()' item='aContentModel'>
+		<div class='extension'>
+			<label>扩展: </label>{=$aContentModel['extension']}
+		</div>
+		
+		<div class='content'>
+			{=org\opencomb\doccenter\formatter\Formatter::singleton()->format($aContentModel['text'])}
+		</div>
+		
+		<div class='exampleList'>
+			<foreach for="$aContentModel->child('examples')->childIterator()" item='aExample' idx='nExampleIndex'>
+				<div class='example'>
+					<h3>例子{=$nExampleIndex+1}: </h3>
+					<pre class="brush: php;">
+	{=$aExample['code']}
+					</pre>
+				</div>
+			</foreach>
+		</div>
+	</foreach>
 	
 	<script type="text/javascript">
 		SyntaxHighlighter.defaults['toolbar'] = false;
