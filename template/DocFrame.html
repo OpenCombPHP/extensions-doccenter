@@ -10,8 +10,8 @@ jQuery(function() {
 		},
 	}, api_info);
 	//适当展开
-	expandNodes(apiTree,apiTree.getNodesByParam('level',0,null));
-	expandNodes(apiTree,apiTree.getNodesByParam('level',1,null));
+	expandNodes(apiTree,apiTree.getNodesByParam('level',0,null),true);
+	expandNodes(apiTree,apiTree.getNodesByParam('level',1,null),true);
 	
 	//手册 tree
 	var manual_info = {=$arrManualTree};
@@ -20,12 +20,13 @@ jQuery(function() {
 			expandSpeed: 0
 		},
 	}, manual_info);
-	expandNodes(wikiTree,wikiTree.getNodesByParam('level',0,null));
-	expandNodes(wikiTree,wikiTree.getNodesByParam('level',1,null));
+	//适当展开
+	expandNodes(wikiTree,wikiTree.getNodesByParam('level',0,null),true);
+	expandNodes(wikiTree,wikiTree.getNodesByParam('level',1,null),true);
 	
-	function expandNodes(tree,nodes){
+	function expandNodes(tree,nodes,isExpand){
 		jQuery.each(nodes,function(b,v){
-			tree.expandNode(v,true,false,false);
+			tree.expandNode(v,isExpand,false,false);
 		});
 	}
 	
@@ -76,8 +77,10 @@ jQuery(function() {
 		nodeLis.show();
 		
 		var sKeyWord = jquery.trim(jquery(this).val());
-		if(sKeyWord.length < 2){
+		if(sKeyWord.length < 1){
 			aRunningZTree.expandAll(false);
+			expandNodes(aRunningZTree,aRunningZTree.getNodesByParam('level',0,null),true);
+			expandNodes(aRunningZTree,aRunningZTree.getNodesByParam('level',1,null),true);
 			aRunningZTree.cancelSelectedNode();
 			return;
 		}
@@ -87,6 +90,8 @@ jQuery(function() {
 		
 		var arrSelectNode = aRunningZTree.getNodesByParamFuzzy('name', sKeyWord);
 		aRunningZTree.expandAll(false);
+		expandNodes(aRunningZTree,aRunningZTree.getNodesByParam('level',0,null),true);
+		expandNodes(aRunningZTree,aRunningZTree.getNodesByParam('level',1,null),true);
 		for(var i = 0 ; i< arrSelectNode.length; i++){
 			//区分大小写
 			if(arrSelectNode[i].name.indexOf(sKeyWord) == -1){
