@@ -103,6 +103,16 @@ class DocFrontFrame extends FrontFrame
 				}
 				$nKeyFound=-1;
 			}
+			//如果有同名的文档就不再重复添加
+			$bHasThisDoc = false;
+			foreach($arrParentChildren as $aChild){
+				$bHasThisDoc = $bHasThisDoc || $aChild['name']==$sTitle;
+			}
+			if($bHasThisDoc){
+				$arrParentChildren = &$arrTree;
+				continue;
+			}
+			//添加新文档
 			$arrParentChildren[] = array(
 					'name' => $sTitle
 					,'url' => '?c=org.opencomb.doccenter.WikiContent&title='.$aTopic['title']
