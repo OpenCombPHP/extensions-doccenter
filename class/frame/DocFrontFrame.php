@@ -105,8 +105,10 @@ class DocFrontFrame extends FrontFrame
 			}
 			//如果有同名的文档就不再重复添加
 			$bHasThisDoc = false;
-			foreach($arrParentChildren as $aChild){
-				$bHasThisDoc = $bHasThisDoc || $aChild['name']==$sTitle;
+			if(is_array($arrParentChildren)){
+				foreach($arrParentChildren as $aChild){
+					$bHasThisDoc = $bHasThisDoc || $aChild['name']==$sTitle;
+				}
 			}
 			if($bHasThisDoc){
 				$arrParentChildren = &$arrTree;
