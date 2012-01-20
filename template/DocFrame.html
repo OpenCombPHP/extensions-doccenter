@@ -4,19 +4,30 @@
 jQuery(function() {
 	//api tree
 	var api_info = {=$arrApiTree};
-	jquery.fn.zTree.init(jquery("#api_index_tree"), {
+	var apiTree = jquery.fn.zTree.init(jquery("#api_index_tree"), {
 		view: {
 			expandSpeed: 0
 		},
 	}, api_info);
+	//适当展开
+	expandNodes(apiTree,apiTree.getNodesByParam('level',0,null));
+	expandNodes(apiTree,apiTree.getNodesByParam('level',1,null));
 	
 	//手册 tree
 	var manual_info = {=$arrManualTree};
-	jquery.fn.zTree.init(jquery("#manual_index_tree"), {
+	var wikiTree = jquery.fn.zTree.init(jquery("#manual_index_tree"), {
 		view: {
 			expandSpeed: 0
 		},
 	}, manual_info);
+	expandNodes(wikiTree,wikiTree.getNodesByParam('level',0,null));
+	expandNodes(wikiTree,wikiTree.getNodesByParam('level',1,null));
+	
+	function expandNodes(tree,nodes){
+		jQuery.each(nodes,function(b,v){
+			tree.expandNode(v,true,false,false);
+		});
+	}
 	
 	var doc_index = jQuery('#doc_index');
 	var doc_height = jQuery('#doc_index').outerHeight();
@@ -28,10 +39,6 @@ jQuery(function() {
 
 	resetIndexScroll();
 	replaceIndexs();
-
-	(function() {
-		jQuery('#manual_index').find("ul").hide(0);
-	})();
 
 	function replaceIndexs() {
 		doc_index.css({
