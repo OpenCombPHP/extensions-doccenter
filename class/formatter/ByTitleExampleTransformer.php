@@ -7,7 +7,7 @@ use org\opencomb\doccenter\example\Example ;
 
 class ByTitleExampleTransformer implements ITransformer{
 	public function pattern(){
-		return '`\[example title=["\']([a-zA-Z0-9/]*)["\']\]`';
+		return '`\[example title=["\'](.*?)["\']\]`';
 	}
 	
 	public function replacement(array $arrMatch){
