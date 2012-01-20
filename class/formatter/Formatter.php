@@ -48,7 +48,7 @@ class Formatter extends Object{
 				6 => '`\\[a(.*)\\](.*)\\[/a\\]`',
 				7 => '`\\[img(.*)\\](.*)\\[/img\\]`',
 				8 => '`^(.*)\n\\s*\n`',
-				9 => '`[\\n\\r]+`',
+				9 => '`(\\r\\n|\\n|\\r)`',
 			),
 			'replacement' =>
 			array (
