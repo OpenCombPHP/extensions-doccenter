@@ -5,11 +5,11 @@ use org\opencomb\doccenter\formatter\ITransformer ;
 
 class TableHeadTransformer implements ITransformer{
 	public function pattern(){
-		return '`\s*!(.*?)(<br />)`';
+		return '`\s*!(.*?)(?:<br />)`';
 	}
 	
 	public function replacement(array $arrMatch){
-		list($sAll , $sText , $sTail) = $arrMatch ;
+		list($sAll , $sText ) = $arrMatch ;
 		
 		$str = '<th>'.$sText.'</th>';
 		return $str ;

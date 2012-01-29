@@ -48,7 +48,8 @@ class Formatter extends Object{
 				6 => '`\\[a(.*)\\](.*)\\[/a\\]`',
 				7 => '`\\[img(.*)\\](.*)\\[/img\\]`',
 				8 => '`^(.*)\n\\s*\n`',
-				9 => '`(\\r\\n|\\n|\\r)`',
+				9 => '`\\\\(\\r\\n|\\n|\\r)`',
+				10 => '`(\\r\\n|\\n|\\r)`',
 			),
 			'replacement' =>
 			array (
@@ -61,7 +62,8 @@ class Formatter extends Object{
 				6 => '<a\\1>\\2</a>',
 				7 => '<img\\1>',
 				8 => '<p>\\1</p>',
-				9 => '<br />',
+				9 => '',
+				10 => '<br />',
 			),
 			'transformer' => 
 			array (
@@ -73,6 +75,11 @@ class Formatter extends Object{
 				new table\TableRowTransformer,
 				new table\TableHeadTransformer,
 				new table\TableCellTransformer,
+				
+				new font\SingleTagsTransformer,
+				new font\AttrTagsTransformer,
+				
+				new warning\WarningBlock,
 			),
 		) ;
 		
@@ -87,8 +94,8 @@ class Formatter extends Object{
 		}
 	}
 	
-	static public function singleton(){
-		if( self::$aInstance === null ){
+	static public function singleton($bCreateNew=true,$createArgvs=null,$sClass=null){
+		if( self::$aInstance === null && $bCreateNew){
 			self::$aInstance = parent::singleton();
 			self::$aInstance->readParamFromSetting();
 		}
