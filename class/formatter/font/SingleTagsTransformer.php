@@ -1,9 +1,9 @@
 <?php
 namespace org\opencomb\doccenter\formatter\font ;
 
-use org\opencomb\doccenter\formatter\ITransformer ;
+use org\opencomb\doccenter\formatter\AbstractMultiLineTransformer ;
 
-class SingleTagsTransformer implements ITransformer{
+class SingleTagsTransformer extends AbstractMultiLineTransformer{
 	public function pattern(){
 		return '`\[(b|i|u|s)\](.*?)\[/(b|i|u|s)\]`';
 	}

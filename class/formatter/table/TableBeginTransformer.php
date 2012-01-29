@@ -1,11 +1,11 @@
 <?php
 namespace org\opencomb\doccenter\formatter\table ;
 
-use org\opencomb\doccenter\formatter\ITransformer ;
+use org\opencomb\doccenter\formatter\AbstractSingleLineTransformer ;
 
-class TableBeginTransformer implements ITransformer{
+class TableBeginTransformer extends AbstractSingleLineTransformer{
 	public function pattern(){
-		return '`{\|(.*?)<br />`';
+		return '`^\s*{\|(.*?)$`';
 	}
 	
 	public function replacement(array $arrMatch){
