@@ -1,0 +1,171 @@
+<?php
+namespace org\opencomb\doccenter\generator ;
+
+use org\jecat\framework\lang\compile\object\TokenPool;
+use org\jecat\framework\lang\compile\object\Token ;
+use org\jecat\framework\db\DB ;
+use org\jecat\framework\db\sql\StatementFactory ;
+
+class ExampleGenerator implements IGenerator{
+	public function generate(TokenPool $aTokenPool , FileInfo $aFileInfo){
+		$arrDoc = array();
+		$aIterator = $aTokenPool -> iterator() ;
+		foreach( $aIterator as $aToken ){
+			if($aToken->tokenType() === T_DOC_COMMENT){
+				if( ! $aToken instanceof \org\jecat\framework\lang\compile\object\DocCommentDeclare ){
+					$aToken = new \org\jecat\framework\lang\compile\object\DocCommentDeclare($aToken) ;
+				}
+				$aDocComment = $aToken->docComment();
+				if(!$aDocComment->hasItem('example')) continue;
+				
+				$arrExample = array();
+				
+				$sTitle = '';
+				$sName = '';
+				$iIndex = 0;
+				$sCode = '';
+				
+				$sExample = $aDocComment->item('example');
+				$arrExampleMatch = array();
+				if(preg_match('|^(.*):(.*)\[(.*)\]$|',$sExample,$arrExampleMatch)){
+					$sTitle = $arrExampleMatch[1] ;
+					$sName = $arrExampleMatch[2] ;
+					$iIndex = (int)$arrExampleMatch[3] ;
+				}else if(preg_match('|^(.*):(.*)$|',$sExample,$arrExampleMatch)){
+					$sTitle = $arrExampleMatch[1] ;
+					$sName = $arrExampleMatch[2] ;
+				}else{
+					$arrExampleMatch[]=$sExample ;
+					$sTitle = $sExample ;
+				}
+				$arrExample['title'] = $sTitle ;
+				$arrExample['name'] = $sName ;
+				$arrExample['index'] = $iIndex ;
+				
+				$sForClass = $aDocComment->item('forclass') ;
+				$arrExample['forclass'] = $sForClass ;
+				
+				$sForMethod = $aDocComment->item('formethod') ;
+				$arrExample['formethod'] = $sForMethod ;
+				
+				$sForWiki = $aDocComment->item('forwiki') ;
+				$arrExample['forwiki'] = $sForWiki ;
+				
+				$arrExample['extension'] = $aFileInfo->extension() ;
+				$arrExample['version'] = $aFileInfo->version() ;
+				
+				$iLine = $aToken->line();
+				$arrExample['sourceLine'] = $iLine ;
+				
+				$aCodeBeginToken = null;
+				$aCodeEndToken = null;
+				$aFolIterator = clone $aIterator ;
+				while( $aFolIterator->valid ()){
+					$aFolToken = $aFolIterator->current();
+					switch($aFolToken->tokenType() ){
+					case Token::T_BRACE_OPEN:
+						if($aCodeBeginToken === null){
+							$aCodeBeginToken = $aFolToken ;
+						}
+						break;
+					case Token::T_BRACE_CLOSE:
+						if($aCodeBeginToken !== null and $aCodeBeginToken->theOther() === $aFolToken){
+							$aCodeEndToken = $aFolToken ;
+							break;
+						}
+						break;
+					}
+					$sCode .= $aFolToken->__toString();
+					if($aCodeEndToken !== null){
+						break;
+					}
+					
+					$aFolIterator->next() ;
+				}
+				$arrExample['code'] = $sCode ;
+				
+				$arrExample['sourcePackageNamespace']=$aFileInfo->sourcePackageNamespace() ;
+				$arrExample['sourceClass']=$aFileInfo->sourceClass() ;
+				
+				$arrDoc [] = $arrExample ;
+			}
+		}
+		return $arrDoc ;
+	}
+	
+	public function cleanInDB(array $arrGenerate ,DB $aDB){
+		foreach($arrGenerate as $generate){
+			$extension = $generate ['extension'] ;
+			$version = $generate ['version'] ;
+			$sourcePackageNamespace = $generate ['sourcePackageNamespace'] ;
+			$sourceClass = $generate ['sourceClass'] ;
+			$aDB->execute(
+					'DELETE 
+						doccenter_example,
+						doccenter_example_class,
+						doccenter_example_method ,
+						doccenter_example_topic
+					FROM 
+						`doccenter_example`
+							LEFT JOIN `doccenter_example_class` ON `doccenter_example`.`eid` = `doccenter_example_class`.`eid`
+							LEFT JOIN `doccenter_example_method` ON `doccenter_example`.`eid` = `doccenter_example_method`.`eid`
+							LEFT JOIN `doccenter_example_topic` ON `doccenter_example`.`eid` = `doccenter_example_topic`.`eid`
+					WHERE (
+						`doccenter_example`.`extension` = "'.$extension.'"
+						AND `doccenter_example`.`version` = "'.$version.'"
+						AND `doccenter_example`.`sourcePackageNamespace` = "'.addslashes($sourcePackageNamespace).'"
+						AND `doccenter_example`.`sourceClass` = "'.addslashes($sourceClass).'"
+					)'
+			);
+		}
+		return TRUE;
+	}
+	
+	public function saveInDB(array $arrGenerate , DB $aDB){
+		$arrKeyExample = array(
+			'extension',
+			'version',
+			'title',
+			'name',
+			'index',
+			'code',
+			'sourcePackageNamespace',
+			'sourceClass',
+			'sourceLine',
+		);
+		foreach($arrGenerate as $generate){
+			// example
+			$aExampleInsert = StatementFactory::singleton()->createInsert('doccenter_example');
+			foreach($arrKeyExample as $sKey){
+				$aExampleInsert->setData('`'.$sKey.'`',$generate[$sKey]);
+			}
+			$aDB->execute($aExampleInsert);
+			$eid = $aDB->lastInsertId();
+			
+			// class
+			if(!empty($generate['forclass'])){
+				$aExampleClassInsert = StatementFactory::singleton()->createInsert('doccenter_example_class');
+				$aExampleClassInsert->setData('eid',$eid);
+				$aExampleClassInsert->setData('class',$generate['forclass']);
+				$aDB->execute($aExampleClassInsert);
+			}
+			
+			// method
+			if(!empty($generate['formethod'])){
+				$aExampleMethodInsert = StatementFactory::singleton()->createInsert('doccenter_example_method');
+				$aExampleMethodInsert->setData('eid',$eid);
+				$aExampleMethodInsert->setData('method',$generate['formethod']);
+				$aDB->execute($aExampleMethodInsert);
+			}
+			
+			// topic
+			if(!empty($generate['forwiki'])){
+				$aExampleTopicInsert = StatementFactory::singleton()->createInsert('doccenter_example_topic');
+				$aExampleTopicInsert->setData('eid',$eid);
+				$aExampleTopicInsert->setData('topic_title',$generate['forwiki']);
+				$aDB->execute($aExampleTopicInsert);
+			}
+		}
+		return TRUE ;
+	}
+}

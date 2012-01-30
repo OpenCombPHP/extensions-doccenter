@@ -25,6 +25,7 @@ class DocumentUpdater  extends ControlPanel
 		
 		$this->DocumentUpdater->variables()->set('packageIterator',$aPackageIterator) ;
 		$this->DocumentUpdater->variables()->set('arrtree',$arrTree);
+		$this->DocumentUpdater->variables()->set('classJson',json_encode( $this->getTree($aPackageIterator) )) ;
 	}
 	
 	private function getNamespaceTree($aPackageIterator){
@@ -64,6 +65,49 @@ class DocumentUpdater  extends ControlPanel
 				$arr['files'][] = $arrChild ;
 			}
 		}
+	}
+	
+	private function getTree($aPackageIterator){
+		$arrTree =  array();
+		foreach($aPackageIterator as $package){
+			$ns = $package->ns();
+			$arrNs = explode('\\',$ns);
+			$arrExp = &$arrTree;
+			foreach($arrNs as $ns_cl){
+				$bFound= false;
+				for($i = 0; $i < count($arrExp) ;$i++){
+					if( isset($arrExp[$i]['name']) && $arrExp[$i]['name'] == $ns_cl){
+						$arrExp = &$arrExp[$i]['children'];
+						$bFound = true;
+						break;
+					}
+				}
+				if(!$bFound){
+					$arrExp[] = array('name'=>$ns_cl , 'children'=>array());
+					$arrExp = &$arrExp[count($arrExp)-1]['children'];
+				}
+			}
+			$aFolder = $package->folder();
+			$arrExp = $this->buildNode($aFolder);
+		}
+		return $arrTree;
+	}
+	
+	private function buildNode(IFolder $aFolder){
+		$arrNode = array();
+		$aFSIterator = $aFolder->iterator( ( FSIterator::FLAG_DEFAULT ^ FSIterator::RECURSIVE_SEARCH ) | FSIterator::RETURN_FSO );
+		foreach($aFSIterator as $aFSO){
+			if($aFSIterator->isFolder()){
+				$arrNode[]['children'] = $this->buildNode( $aFSO);
+				$arrNode[count($arrNode)-1]['name'] = $aFSO->name();
+			}else{
+				$arrNode[] = array(
+					'name' => substr($aFSO->name() , 0 ,strlen($aFSO->name())-4) ,
+					'filepath' => $aFSO->path(),
+				) ;
+			}
+		}
+		return $arrNode;
 	}
 }
 
