@@ -60,8 +60,9 @@ class DocFrontFrame extends FrontFrame
 					$arrParentChildren = &$arrParentChildren[$nKeyFound]['children'];
 				}else{
 					$arrParentChildren[] = array(
-							'name' => $aPath,
-							'children' => array(),
+							'name' => $aPath
+							,'wholeName' => $aClass['namespace']
+							,'children' => array()
 					);
 					$arrParentChildren = &$arrParentChildren[count($arrParentChildren)-1]['children'];
 				}
@@ -70,6 +71,7 @@ class DocFrontFrame extends FrontFrame
 			//类
 			$arrParentChildren[] = array(
 					'name' => $aClass['name']
+					,'wholeName' => $aClass['namespace']
 					,'url' => '?c=org.opencomb.doccenter.ApiContent&extension='.$aClass['extension'].'&namespace='.$aClass['namespace'].'&name='.$aClass['name']
 					,'target' => '_self'
 			);
@@ -84,8 +86,7 @@ class DocFrontFrame extends FrontFrame
 			$arrNamespace = explode('/',$aTopic['title']);
 			array_shift($arrNamespace); //弹出空的项
 			$sTitle = array_pop($arrNamespace); //弹出标题项并另外保存
-			
-			$nKeyFound = -1; //-1 代表 "未找到",因为无法用 0
+			$nKeyFound = -1; //-1 代表 "未找到",因为无法用 0 做if判断
 			foreach($arrNamespace as $aPath){
 				foreach($arrParentChildren as $nKey => $aChild){
 					if($aChild['name'] == $aPath){
@@ -96,8 +97,9 @@ class DocFrontFrame extends FrontFrame
 					$arrParentChildren = &$arrParentChildren[$nKeyFound]['children'];
 				}else{
 					$arrParentChildren[] = array(
-							'name' => $aPath,
-							'children' => array(),
+							'name' => $aPath
+							,'wholeName' => '/'.implode('/', $arrNamespace)
+							,'children' => array()
 					);
 					$arrParentChildren = &$arrParentChildren[count($arrParentChildren)-1]['children'];
 				}
@@ -117,6 +119,7 @@ class DocFrontFrame extends FrontFrame
 			//添加新文档
 			$arrParentChildren[] = array(
 					'name' => $sTitle
+					,'wholeName' => $aTopic['title']
 					,'url' => '?c=org.opencomb.doccenter.WikiContent&title='.$aTopic['title']
 					,'target' => '_self'
 			);

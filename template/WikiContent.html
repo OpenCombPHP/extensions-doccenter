@@ -1,21 +1,18 @@
 <lib name='syntaxhighlighter:php'/>
 <lib name='jquery.ui'/>
-<script>
-	jquery(function() {
-		jquery( ".example" ).accordion({
-			collapsible: true,
-			autoHeight: false
-		});
-	});
-</script>
-<div class='page'>
+<div class='sidebar'>
+	<div id='brotherWikiTree' class='ztree'>
+		
+	</div>
+</div>
+<div class='main'>
 	<msgqueue for="$theController->messageQueue()" />
 	<h1><span class='title'></span>{=$sTitle}</h1>
 	<div>
 	{? $sWholePath}
 	<foreach for='explode("/",$theParams->get("title"))' item='sPath' idx='nIdx'><if '$nIdx==0'>{? continue}</if>{? $sWholePath=$sWholePath.'/'.$sPath}/<a href='?c=org.opencomb.doccenter.WikiContent&title={=$sWholePath}'>{=$sPath}</a></foreach>
 	</div>
-	<div class='normalfloat methodlist'>
+	<div class='methodlist'>
 	<foreach for='$theModel->childIterator()' item='aContentModel'>
 	<div class='method-detail-item'>
 		<div class='extension'>
@@ -45,15 +42,49 @@
 	<br/>
 	</foreach>
 	</div>
-	<script type="text/javascript">
-		SyntaxHighlighter.defaults['toolbar'] = false;
-		SyntaxHighlighter.all();
-		
-		//版本跳转
-		jQuery(function(){
-			jQuery('select.version').change(function(){
-				location.href=jQuery(this).val();
-			});
-		});
-	</script>
 </div>
+
+<div class="block"></div>
+
+<script type="text/javascript">
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+	
+	jQuery(function(){
+		//版本跳转
+		jQuery('select.version').change(function(){
+			location.href=jQuery(this).val();
+		});
+		//例子展示
+		jquery( ".example" ).accordion({
+			autoHeight: false,
+			animated: false,
+			collapsible: true
+		});
+		//例子默认收起
+		jquery( ".example" ).find('a:first').click();
+		
+		//兄弟项的菜单
+		var aBrotherTreeData = wikiTree.transformToArray(wikiTree.getNodesByParam('wholeName','{=$theParams->get("title")}',null)[0].getParentNode()) ;
+		var aBrotherWikiTree = jquery.fn.zTree.init(jquery("#brotherWikiTree"), {
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			view: {
+				expandSpeed: 0,
+				showIcon:false
+			}
+		}, aBrotherTreeData);
+		//适当展开
+		expandNodes(aBrotherWikiTree,aBrotherWikiTree.getNodesByParam('level',0,null),true);
+		expandNodes(aBrotherWikiTree,aBrotherWikiTree.getNodesByParam('level',1,null),true);
+		
+		function expandNodes(tree,nodes,isExpand){
+			jQuery.each(nodes,function(b,v){
+				tree.expandNode(v,isExpand,false,false);
+			});
+		}
+	});
+</script>

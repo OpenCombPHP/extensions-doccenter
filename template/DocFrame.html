@@ -4,7 +4,7 @@
 jQuery(function() {
 	//api tree
 	var api_info = {=$arrApiTree};
-	var apiTree = jquery.fn.zTree.init(jquery("#api_index_tree"), {
+	apiTree = jquery.fn.zTree.init(jquery("#api_index_tree"), {
 		view: {
 			expandSpeed: 0,
 			showIcon:false
@@ -16,7 +16,7 @@ jQuery(function() {
 	
 	//手册 tree
 	var manual_info = {=$arrManualTree};
-	var wikiTree = jquery.fn.zTree.init(jquery("#manual_index_tree"), {
+	wikiTree = jquery.fn.zTree.init(jquery("#manual_index_tree"), {
 		view: {
 			expandSpeed: 0,
 			showIcon:false
@@ -141,8 +141,6 @@ jQuery(function() {
 	<div id="doc_index_title">文档</div>
 	<div class='block'></div>
 </div>
-<div class="wrapper">
-	<div class="bodyText">
-		<views/>
-	</div>
+<div id='wrapper'>
+<views/>
 </div>
