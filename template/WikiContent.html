@@ -2,17 +2,18 @@
 <div class='page'>
 	<msgqueue for="$theController->messageQueue()" />
 	<h1><span class='title'></span>{=$sTitle}</h1>
-	<label>版本: </label>
-	<select class='version'>
-		<foreach for='$arrVersions' item='sVersions'>
-			<option value="{='?c=org.opencomb.doccenter.WikiContent&version=' . $sVersions . '&title=' . $theParams->get('title')}" 
-			{=$sSelectedVersion == $sVersions ? 'selected' : ''}>{=$sVersions}</option>
-		</foreach>
-	</select>
-	
+	<div>
+	{? $sWholePath}
+	<foreach for='explode("/",$theParams->get("title"))' item='sPath' idx='nIdx'><if '$nIdx==0'>{? continue}</if>{? $sWholePath=$sWholePath.'/'.$sPath}/<a href='?c=org.opencomb.doccenter.WikiContent&title={=$sWholePath}'>{=$sPath}</a></foreach>
+	</div>
+	<div class='normalfloat methodlist'>
 	<foreach for='$theModel->childIterator()' item='aContentModel'>
+	<div class='method-detail-item'>
 		<div class='extension'>
 			<label>扩展: </label>{=$aContentModel['extension']}
+			<label>版本: </label>{=org\jecat\framework\util\Version::from32Integer($aContentModel['version'])}
+			<label>类: </label>{=$aContentModel['sourceClass']}
+			<label>行: </label>{=$aContentModel['sourceLine']}
 		</div>
 		
 		<div class='content'>
@@ -22,15 +23,17 @@
 		<div class='exampleList'>
 			<foreach for="$aContentModel->child('examples')->childIterator()" item='aExample' idx='nExampleIndex'>
 				<div class='example'>
-					<h3>例子{=$nExampleIndex+1}: </h3>
+					<h3>例子{=$nExampleIndex+1}: {=$aExample['title']}</h3>
 					<pre class="brush: php;">
 	{=htmlentities($aExample['code'],ENT_QUOTES, "UTF-8")}
 					</pre>
 				</div>
 			</foreach>
 		</div>
+	</div>
+	<br/>
 	</foreach>
-	
+	</div>
 	<script type="text/javascript">
 		SyntaxHighlighter.defaults['toolbar'] = false;
 		SyntaxHighlighter.all();

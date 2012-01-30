@@ -6,7 +6,8 @@ jQuery(function() {
 	var api_info = {=$arrApiTree};
 	var apiTree = jquery.fn.zTree.init(jquery("#api_index_tree"), {
 		view: {
-			expandSpeed: 0
+			expandSpeed: 0,
+			showIcon:false
 		},
 	}, api_info);
 	//适当展开
@@ -17,7 +18,8 @@ jQuery(function() {
 	var manual_info = {=$arrManualTree};
 	var wikiTree = jquery.fn.zTree.init(jquery("#manual_index_tree"), {
 		view: {
-			expandSpeed: 0
+			expandSpeed: 0,
+			showIcon:false
 		},
 	}, manual_info);
 	//适当展开

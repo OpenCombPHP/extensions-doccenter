@@ -152,7 +152,8 @@ pre {
 }
 .bodyText h1 {
 	font-weight: bold;
-	padding-bottom: 4px;
+	padding: 0px;
+	margin: 5px auto;
 }
 blockquote {
 	display: block;
@@ -197,3 +198,20 @@ td{ height:30px; vertical-align: middle; padding:0 8px;}
 .tGray{color:gray;}
 .tGreen{color:green;}
 .tBlue{color:blue;}
+
+/*wiki 文字块区分*/
+.title{ display:block; float:left; width:6px;  height: 15px; margin: 1px 5px 0 0;background:#108ac6}
+.method-detail-item{
+	border:1px solid #d5d5d5;
+    padding:12px 6px 12px 16px;
+}
+.method-list-item,.method-list li{
+	width: 290px ;
+	height:21px;
+	line-height:21px;
+	padding-left:10px;
+	float: left ;
+}
+.normalfloat{float:left;width:100%;margin-bottom:10px;}
+.methodlist{font-size:13px; line-height:20px;}
+.extension label{font-weight: bold;}

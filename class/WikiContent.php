@@ -90,3 +90,17 @@ class WikiContent extends DocFrontController{
 		$this->viewWikiContent->variables()->set('sSelectedVersion',$sVersion) ;
 	}
 }
+
+
+
+/*
+ * 暂时废除的版本切换部分
+<label>版本: </label>
+<select class='version'>
+<foreach for='$arrVersions' item='sVersions'>
+<option value="{='?c=org.opencomb.doccenter.WikiContent&version=' . $sVersions . '&title=' . $theParams->get('title')}"
+{=$sSelectedVersion == $sVersions ? 'selected' : ''}>{
+	=$sVersions}</option>
+	</foreach>
+	</select>
+	*/
