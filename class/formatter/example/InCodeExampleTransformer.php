@@ -27,7 +27,9 @@ class InCodeExampleTransformer extends AbstractMultiLineTransformer{
 		$sCode = htmlentities($sCode,ENT_QUOTES, "UTF-8");
 		return '<div class="example">
 					<h3>例子: </h3>
-					<pre class="brush:'.$sLang.'">'.$sCode.'</pre>
+					<div>
+						<pre class="brush:'.$sLang.'">'.$sCode.'</pre>
+					</div>
 				</div>';
 	}
 }

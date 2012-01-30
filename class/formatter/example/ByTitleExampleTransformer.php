@@ -38,8 +38,12 @@ class ByTitleExampleTransformer extends AbstractSingleLineTransformer{
 		
 		$str = htmlentities($str,ENT_QUOTES, "UTF-8");
 		return '<div class="example">
-					<h3>例子: '.$sTitle.'</h3>
-					<pre class="brush:php">'.$str.'</pre>
+					<h3><a href="#">例子:'.$sTitle.'</a></h3>
+					<div>
+						<pre class="brush: php;">
+							'.$str.'
+						</pre>
+					</div>
 				</div>';
 	}
 }
