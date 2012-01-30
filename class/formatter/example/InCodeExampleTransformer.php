@@ -24,6 +24,7 @@ class InCodeExampleTransformer extends AbstractSingleLineTransformer{
 	
 	public function replacement(array $arrMatch){
 		list($sAll , $sLang , $sCode) = $arrMatch ;
+		$sCode = htmlentities($sCode,ENT_QUOTES, "UTF-8");
 		return '<pre class="brush:'.$sLang.'">'.$sCode.'</pre>';
 	}
 }

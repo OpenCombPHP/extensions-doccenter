@@ -37,6 +37,7 @@ class FileExampleTransformer extends AbstractSingleLineTransformer{
 			$str .= $arrFile[$i];
 		}
 		
+		$str = htmlentities($str,ENT_QUOTES, "UTF-8");
 		return '<pre class="brush:'.$sLang.'">'.$str.'</pre>';
 	}
 }

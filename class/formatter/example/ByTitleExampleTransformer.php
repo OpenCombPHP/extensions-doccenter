@@ -35,6 +35,8 @@ class ByTitleExampleTransformer extends AbstractSingleLineTransformer{
 				$str .= $aS->code();
 			}
 		}
+		
+		$str = htmlentities($str,ENT_QUOTES, "UTF-8");
 		return '<pre class="brush:php">'.$str.'</pre>';
 	}
 }
