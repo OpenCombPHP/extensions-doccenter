@@ -1,10 +1,11 @@
 <?php
-namespace org\opencomb\doccenter\formatter ;
+namespace org\opencomb\doccenter\formatter\example ;
 
+use org\opencomb\doccenter\formatter\AbstractSingleLineTransformer ;
 use org\opencomb\platform\ext\ExtensionManager ;
 use org\jecat\framework\fs\FileSystem ;
 
-class FileExampleTransformer implements ITransformer{
+class FileExampleTransformer extends AbstractSingleLineTransformer{
 	public function pattern(){
 		return '`\[example (\w*) (\w*) ([a-zA-z0-9/.]*) (\d*) (\d*)\]`';
 	}

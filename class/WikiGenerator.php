@@ -87,13 +87,7 @@ class WikiGenerator extends ControlPanel{
 				$aDocComment = $aToken->docComment();
 				if(!$aDocComment->hasItem('wiki')) continue;
 				
-				$arrWiki = array();
-				
-				$sWiki = $aDocComment->item('wiki');
-				$arrWiki['title'] = $sWiki ;
-				
 				$sText = $aDocComment->description();
-				$arrWiki['text'] = $sText ;
 				
 				$sNamespace = $aToken->belongsNamespace()->name();
 				$sExtension = ExtensionManager::singleton()->extensionNameByNamespace($sNamespace);
@@ -117,13 +111,26 @@ class WikiGenerator extends ControlPanel{
 				}
 				$sVersion = $aVersion->to32Integer();
 				
-				$arrWiki['extension'] = $sExtension ;
-				$arrWiki['version'] = $sVersion ;
-				
 				$iLine = $aToken->line();
-				$arrWiki['sourceLine'] = $iLine ;
 				
-				$arrWikis [] = $arrWiki ;
+				$arrCommentItemWiki = $aDocComment->items('wiki');
+				foreach($arrCommentItemWiki as $sCommentItemWiki){
+					$arrWiki = array();
+					
+					$arrSWiki = explode(':',$sCommentItemWiki);
+					$arrWiki['title'] = $arrSWiki[0] ;
+					if(isset($arrSWiki[1])){
+						$arrWiki['index'] = $arrSWiki[1];
+					}else{
+						$arrWiki['index'] = '' ;
+					}
+					$arrWiki['text'] = $sText ;
+					$arrWiki['extension'] = $sExtension ;
+					$arrWiki['version'] = $sVersion ;
+					$arrWiki['sourceLine'] = $iLine ;
+					
+					$arrWikis [] = $arrWiki ;
+				}
 			}
 		}
 		return $arrWikis ;
@@ -155,6 +162,7 @@ class WikiGenerator extends ControlPanel{
 			'extension',
 			'version',
 			'title',
+			'index',
 			'text',
 			'sourcePackageNamespace',
 			'sourceClass',
@@ -163,12 +171,11 @@ class WikiGenerator extends ControlPanel{
 		$aDB = DB::singleton() ;
 		foreach($arrGenerate as $generate){
 			// wiki
-			$aExampleInsert = StatementFactory::singleton()->createInsert('doccenter_topic');
+			$aWikiInsert = StatementFactory::singleton()->createInsert('doccenter_topic');
 			foreach($arrKeyExample as $sKey){
-				$aExampleInsert->setData('`'.$sKey.'`',$generate[$sKey]);
+				$aWikiInsert->setData('`'.$sKey.'`',$generate[$sKey]);
 			}
-			$aDB->execute($aExampleInsert);
-			$eid = $aDB->lastInsertId();
+			$aDB->execute($aWikiInsert);
 		}
 	}
 }

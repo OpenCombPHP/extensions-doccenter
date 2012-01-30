@@ -1,11 +1,12 @@
 <?php
-namespace org\opencomb\doccenter\formatter ;
+namespace org\opencomb\doccenter\formatter\example ;
 
+use org\opencomb\doccenter\formatter\AbstractSingleLineTransformer ;
 use org\opencomb\platform\ext\ExtensionManager ;
 use org\jecat\framework\fs\FileSystem ;
 use org\opencomb\doccenter\example\Example ;
 
-class ByTitleExampleTransformer implements ITransformer{
+class ByTitleExampleTransformer extends AbstractSingleLineTransformer{
 	public function pattern(){
 		return '`\[example title=["\'](.*?)["\']\]`';
 	}

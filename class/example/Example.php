@@ -9,7 +9,7 @@ use org\jecat\framework\mvc\model\db\Model ;
 class Example extends Object{
 	
 	static public function loadByTitle($sTitle){
-		$aModel = self::createModel('/xxx/ooo');
+		$aModel = self::createModel($sTitle);
 		$arr = self::processModel($aModel);
 		return $arr ;
 	}

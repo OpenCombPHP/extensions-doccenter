@@ -3,13 +3,13 @@ namespace org\opencomb\doccenter\formatter\warning ;
 
 use org\opencomb\doccenter\formatter\AbstractMultiLineTransformer ;
 
-class WarningBlock extends AbstractMultiLineTransformer{
+class WarningIcon extends AbstractMultiLineTransformer{
 	public function pattern(){
-		return '`\[([!^?])\](.*?)\[/([!^?])\]`';
+		return '`\(([!^?])\)`';
 	}
 	
 	public function replacement(array $arrMatch){
-		list($sAll , $sPre , $sCont ) = $arrMatch ;
+		list($sAll , $sPre ) = $arrMatch ;
 		
 		$arrClass = array(
 			'?' => 'question',
@@ -17,6 +17,6 @@ class WarningBlock extends AbstractMultiLineTransformer{
 			'^' => 'notice',
 		);
 		
-		return '<div class="'.$arrClass[$sPre].'Block">'.$sCont.'</div>';
+		return '<div class="'.$arrClass[$sPre].'Icon"></div>';
 	}
 }
