@@ -38,6 +38,9 @@ class FileExampleTransformer extends AbstractSingleLineTransformer{
 		}
 		
 		$str = htmlentities($str,ENT_QUOTES, "UTF-8");
-		return '<pre class="brush:'.$sLang.'">'.$str.'</pre>';
+		return '<div class="example">
+					<h3>例子: 扩展:'.$sExtName.' 路径:'.$sPath.'</h3>
+					<pre class="brush:'.$sLang.'">'.$str.'</pre>
+				</div>';
 	}
 }

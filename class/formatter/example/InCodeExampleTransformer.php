@@ -1,7 +1,7 @@
 <?php
 namespace org\opencomb\doccenter\formatter\example ;
 
-use org\opencomb\doccenter\formatter\AbstractSingleLineTransformer ;
+use org\opencomb\doccenter\formatter\AbstractMultiLineTransformer ;
 use org\opencomb\platform\ext\ExtensionManager ;
 use org\jecat\framework\fs\FileSystem ;
 
@@ -17,7 +17,7 @@ use org\jecat\framework\fs\FileSystem ;
  *  |}
  */
 
-class InCodeExampleTransformer extends AbstractSingleLineTransformer{
+class InCodeExampleTransformer extends AbstractMultiLineTransformer{
 	public function pattern(){
 		return '`\[example lang=["\'](\w*)["\']\](.*?)\[/example\]`';
 	}
@@ -25,6 +25,9 @@ class InCodeExampleTransformer extends AbstractSingleLineTransformer{
 	public function replacement(array $arrMatch){
 		list($sAll , $sLang , $sCode) = $arrMatch ;
 		$sCode = htmlentities($sCode,ENT_QUOTES, "UTF-8");
-		return '<pre class="brush:'.$sLang.'">'.$sCode.'</pre>';
+		return '<div class="example">
+					<h3>例子: </h3>
+					<pre class="brush:'.$sLang.'">'.$sCode.'</pre>
+				</div>';
 	}
 }
