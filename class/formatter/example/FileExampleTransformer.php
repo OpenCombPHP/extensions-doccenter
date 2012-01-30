@@ -5,6 +5,19 @@ use org\opencomb\doccenter\formatter\AbstractSingleLineTransformer ;
 use org\opencomb\platform\ext\ExtensionManager ;
 use org\jecat\framework\fs\FileSystem ;
 
+/**
+ * @wiki /文档中心/wiki语法
+ * {|
+ *  ! 语法
+ *  ! html
+ *  ! 说明
+ *  |-- --
+ *  | &#91;example lang extName path nBegin nEnd]
+ *  | <pre class="brush:lang">code</pre>
+ *  | 从名为extName的扩展的安装目录下寻找路径为path的文件，从第nBegin行到第nEnd行作为code
+ *  |}
+ */
+
 class FileExampleTransformer extends AbstractSingleLineTransformer{
 	public function pattern(){
 		return '`\[example (\w*) (\w*) ([a-zA-z0-9/.]*) (\d*) (\d*)\]`';
@@ -24,6 +37,12 @@ class FileExampleTransformer extends AbstractSingleLineTransformer{
 			$str .= $arrFile[$i];
 		}
 		
-		return '<pre class="brush:'.$sLang.'">'.$str.'</pre>';
+		$str = htmlentities($str,ENT_QUOTES, "UTF-8");
+		return '<div class="example">
+					<h3>例子: 扩展:'.$sExtName.' 路径:'.$sPath.'</h3>
+					<div>
+						<pre class="brush:'.$sLang.'">'.$str.'</pre>
+					</div>
+				</div>';
 	}
 }

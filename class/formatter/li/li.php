@@ -3,6 +3,19 @@ namespace org\opencomb\doccenter\formatter\li ;
 
 use org\opencomb\doccenter\formatter\AbstractMultiLineTransformer ;
 
+/**
+ * @wiki /文档中心/wiki语法
+ * {|
+ *  ! 语法
+ *  ! html
+ *  ! 说明
+ *  |-- --
+ *  | * xxx
+ *  | <li>xxx</li>
+ *  | 会自动加上<ul>标签。支持嵌套。必须独占一行。
+ *  |}
+ */
+
 class li extends AbstractMultiLineTransformer{
 	public function pattern(){
 		return '`^.*$`';
