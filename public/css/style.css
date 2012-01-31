@@ -123,10 +123,12 @@ pre {
 	float:left;
 }
 #quick_index{
+	height:50%;
 	background: #108AC6;
 }
 
 #api_index{
+	height:50%;
 	background: #D05D2A;
 }
 
