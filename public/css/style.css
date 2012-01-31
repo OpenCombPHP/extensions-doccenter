@@ -92,8 +92,7 @@ pre {
 
 #doc_index .index_scroll{
 	width:916px;
-	overflow: scroll;
-	overflow-x: hidden;
+	overflow: hidden;
 	display:none;
 }
 
@@ -117,23 +116,32 @@ pre {
 	border-bottom-left-radius: 5px;*/
 }
 
-#doc_index .indexs{
-	width:300px;
-	display:block;
-	float:left;
-}
 #quick_index{
-	height:50%;
+	width:300px;
 	background: #108AC6;
 }
 
 #api_index{
-	height:50%;
+	width:300px;
+	overflow:scroll;
 	background: #D05D2A;
 }
 
+.left_indexs{
+	float:left;
+}
+
 #manual_index{
+	float:left;
+	overflow:scroll;
 	background: #D8D2CE;
+}
+.subWikisColumn{
+	width:300px;
+	float:left;
+}
+.subWikiTree{
+	width:300px;
 }
 
 .block{clear:both}

@@ -63,6 +63,8 @@ class DocFrontFrame extends FrontFrame
 							'name' => $aPath
 							,'wholeName' => $aClass['namespace']
 							,'children' => array()
+							,'iconOpen' => 'extensions/doccenter/0.1/public/img/package_open.png'
+							,'iconClose' => 'extensions/doccenter/0.1/public/img/package_close.gif'
 							);
 					$arrParentChildren = &$arrParentChildren[count($arrParentChildren)-1]['children'];
 				}
@@ -74,6 +76,7 @@ class DocFrontFrame extends FrontFrame
 					,'wholeName' => $aClass['namespace']
 					,'url' => '?c=org.opencomb.doccenter.ApiContent&extension='.$aClass['extension'].'&namespace='.$aClass['namespace'].'&name='.$aClass['name']
 					,'target' => '_self'
+					,'icon' => 'extensions/doccenter/0.1/public/img/class.png'
 			);
 			$arrParentChildren = &$arrTree;
 		}

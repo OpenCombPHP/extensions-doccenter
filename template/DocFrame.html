@@ -7,7 +7,6 @@ jQuery(function() {
 	apiTree = jquery.fn.zTree.init(jquery("#api_index_tree"), {
 		view: {
 			expandSpeed: 0,
-			showIcon:false
 		},
 	}, api_info);
 	//适当展开
@@ -22,10 +21,23 @@ jQuery(function() {
 			showIcon:false
 		},
 	}, manual_info);
-	//适当展开
-	expandNodes(wikiTree,wikiTree.getNodesByParam('level',0,null),true);
-	expandNodes(wikiTree,wikiTree.getNodesByParam('level',1,null),true);
+	//wikitree退居幕后
+	jquery("#manual_index_tree").hide();
 	
+	var numOfManualColumn  = Math.floor((jquery(window).width() - 300 - 300) / 300)  // 能容下几列手册文档  (屏宽-预留300px-api和速查文档300px / 每列手册300px)
+	//至少保持有一列文档
+	if(numOfManualColumn == 0){
+		numOfManualColumn = 1;
+	}
+	//重置文档容器的宽度
+	jQuery('#doc_index , #doc_index .index_scroll').width(300 + 300*numOfManualColumn+20);//+20px滚动轴偏差
+	jQuery("#manual_index").width(300*numOfManualColumn+20);//+20px滚动轴偏差
+	//放置手册文档"跑道"(列)
+	for(var i = 0; i<numOfManualColumn; i++){
+		jQuery("#manual_index").append('<div class="subWikisColumn"></div>');
+	}
+	
+	//展开tree的指定节点
 	function expandNodes(tree,nodes,isExpand){
 		jQuery.each(nodes,function(b,v){
 			tree.expandNode(v,isExpand,false,false);
@@ -34,14 +46,10 @@ jQuery(function() {
 	
 	var doc_index = jQuery('#doc_index');
 	var doc_height = jQuery('#doc_index').outerHeight();
-	// doc手册目录的高度
+	// "文档"标题框体的高度
 	var index_tilte_height = 30;
-	// 目录标题的高度
-	// var tur_height = ; //教程目录的高度
-	// var quick_height = ; //速查手册目录的高度
 
-	resetIndexScroll();
-	replaceIndexs();
+	resetIndexs();
 
 	function replaceIndexs() {
 		doc_index.css({
@@ -53,20 +61,54 @@ jQuery(function() {
 		}
 	}
 
-	jQuery(window).resize(function() {
+	jQuery(window).on('resize',resetIndexs);
+	
+	//重置所有index的高度
+	function resetIndexs (){
 		resetIndexScroll();
 		replaceIndexs();
-	});
-	// 改变选单内容高度
+		resetApiIndexHeight();
+	}
+	// 改变目录内容高度
 	function resetIndexScroll() {
-		jQuery('#doc_index .index_scroll').css(
+		jQuery('#doc_index .index_scroll , #manual_index , .left_indexs').css(
 				{
 					'height' : window.innerHeight - 30
 				});
 	}
+	
+	function resetApiIndexHeight(){
+		jQuery('#api_index').height( jQuery('#doc_index').outerHeight() - jQuery('#quick_index').outerHeight());
+	}
 
 	jQuery('#doc_index_title').toggle(function() {
 		jQuery('#doc_index .index_scroll').slideDown(300);
+		resetIndexs();
+		if(jquery('.subWikiTree').length == 0){
+			//手册文档放入跑道
+			var subWikiTreeData = wikiTree.getNodesByParam('level',0,null);
+			for(var ztreeData in subWikiTreeData){
+				var subTreeContainer = jQuery('<div id="ztree_'+subWikiTreeData[ztreeData].name+'" class="ztree subWikiTree"></div>');
+				//选取一个手册"跑道"
+				//选最短的那条
+				var shortestWikiColumn = [0,100000];
+				var wikiColumns = jQuery('#manual_index .subWikisColumn');
+				wikiColumns.each(function(b,v){
+					if(jQuery(v).height() < shortestWikiColumn[1]){
+						shortestWikiColumn = [b,jQuery(v).height()];
+					}
+				});
+				jquery(wikiColumns[shortestWikiColumn[0]]).append(subTreeContainer);
+				var wikiSubTree = jquery.fn.zTree.init(subTreeContainer, {
+					view: {
+						expandSpeed: 0,
+						showIcon:false
+					},
+				}, subWikiTreeData[ztreeData]);
+				expandNodes(wikiSubTree,wikiSubTree.getNodesByParam('level',0,null),true);
+				expandNodes(wikiSubTree,wikiSubTree.getNodesByParam('level',1,null),true);
+			}
+		}
 	}, function() {
 		jQuery('#doc_index .index_scroll').slideUp(300);
 	});
@@ -116,25 +158,24 @@ jQuery(function() {
 </script>
 <div id="doc_index">
 	<div class='index_scroll'>
-		<div class='indexs'>
+		<div class='left_indexs'>
 			<div id='quick_index' class=''>
 				<h3>速查</h3>
-				<label>搜索<input type='text' class='keyWord'/></label>
+				<div><label>搜索<input type='text' class='keyWord'/></label></div>
 				<div id='_index_tree' class='ztree'>
-				
 				</div>
 			</div>
 			<div id='api_index' class=''>
 				<h3>API</h3>
-				<label>搜索<input type='text' class='keyWord'/></label>
+				<div><label>搜索<input type='text' class='keyWord'/></label></div>
 				<div id='api_index_tree' class='ztree'>
 				
 				</div>
 			</div>
 		</div>
-		<div id='manual_index' class='indexs'>
+		<div id='manual_index' class=''>
 			<h3>手册</h3>
-			<label>搜索<input type='text' class='keyWord'/></label>
+			<div><label>搜索<input type='text' class='keyWord'/></label></div>
 			<div id='manual_index_tree' class='ztree'>
 			
 			</div>
