@@ -63,7 +63,7 @@ class DocFrontFrame extends FrontFrame
 							'name' => $aPath
 							,'wholeName' => $aClass['namespace']
 							,'children' => array()
-					);
+							);
 					$arrParentChildren = &$arrParentChildren[count($arrParentChildren)-1]['children'];
 				}
 				$nKeyFound=-1;
@@ -100,6 +100,8 @@ class DocFrontFrame extends FrontFrame
 							'name' => $aPath
 							,'wholeName' => '/'.implode('/', $arrNamespace)
 							,'children' => array()
+							,'url' => '?c=org.opencomb.doccenter.WikiContent&title='.'/'.implode('/', $arrNamespace)
+							,'target' => '_self'
 					);
 					$arrParentChildren = &$arrParentChildren[count($arrParentChildren)-1]['children'];
 				}

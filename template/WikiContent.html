@@ -1,9 +1,10 @@
 <lib name='syntaxhighlighter:php'/>
 <lib name='jquery.ui'/>
 <div class='sidebar'>
-	<div id='brotherWikiTree' class='ztree'>
-		
-	</div>
+	<h3>相关wiki</h3>
+	<div id='brotherWikiTree' class='ztree'></div>
+	<h3>子wiki</h3>
+	<div id='subWikiTree' class='ztree'></div>
 </div>
 <div class='main'>
 	<msgqueue for="$theController->messageQueue()" />
@@ -64,14 +65,9 @@
 		//例子默认收起
 		jquery( ".example" ).find('a:first').click();
 		
-		//兄弟项的菜单
-		var aBrotherTreeData = wikiTree.transformToArray(wikiTree.getNodesByParam('wholeName','{=$theParams->get("title")}',null)[0].getParentNode()) ;
+		//兄弟项tree
+		var aBrotherTreeData = wikiTree.getNodeByParam('wholeName','{=$theParams->get("title")}',null).getParentNode() ;
 		var aBrotherWikiTree = jquery.fn.zTree.init(jquery("#brotherWikiTree"), {
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
 			view: {
 				expandSpeed: 0,
 				showIcon:false
@@ -80,6 +76,18 @@
 		//适当展开
 		expandNodes(aBrotherWikiTree,aBrotherWikiTree.getNodesByParam('level',0,null),true);
 		expandNodes(aBrotherWikiTree,aBrotherWikiTree.getNodesByParam('level',1,null),true);
+		
+		//子项的tree
+		var aSubTreeData = wikiTree.getNodeByParam('wholeName','{=$theParams->get("title")}',null) ;
+		var aSubWikiTree = jquery.fn.zTree.init(jquery("#subWikiTree"), {
+			view: {
+				expandSpeed: 0,
+				showIcon:false
+			}
+		}, aSubTreeData);
+		//适当展开
+		expandNodes(aSubWikiTree,aSubWikiTree.getNodesByParam('level',0,null),true);
+		expandNodes(aSubWikiTree,aSubWikiTree.getNodesByParam('level',1,null),true);
 		
 		function expandNodes(tree,nodes,isExpand){
 			jQuery.each(nodes,function(b,v){
