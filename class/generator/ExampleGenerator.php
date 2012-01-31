@@ -57,6 +57,8 @@ class ExampleGenerator implements IGenerator{
 				$iLine = $aToken->line();
 				$arrExample['sourceLine'] = $iLine ;
 				
+				$aUseInExample = new UseInExample ;
+				
 				$aCodeBeginToken = null;
 				$aCodeEndToken = null;
 				$aFolIterator = clone $aIterator ;
@@ -74,6 +76,9 @@ class ExampleGenerator implements IGenerator{
 							break;
 						}
 						break;
+					case T_STRING:
+						$aUseInExample->processToken($aFolToken,$aTokenPool);
+						break;
 					}
 					$sCode .= $aFolToken->__toString();
 					if($aCodeEndToken !== null){
@@ -82,7 +87,8 @@ class ExampleGenerator implements IGenerator{
 					
 					$aFolIterator->next() ;
 				}
-				$arrExample['code'] = $sCode ;
+				
+				$arrExample['code'] = $aUseInExample->codeForUseList()."\n".$sCode ;
 				
 				$arrExample['sourcePackageNamespace']=$aFileInfo->sourcePackageNamespace() ;
 				$arrExample['sourceClass']=$aFileInfo->sourceClass() ;
