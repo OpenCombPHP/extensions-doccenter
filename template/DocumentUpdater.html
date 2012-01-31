@@ -1,14 +1,6 @@
-<lib name='jquery.treeview' version />
-<lib name='jquery.cookie' />
 <lib name='jquery.progressbar' />
-
+<lib name='jquery.ztree' />
 <style>
-.filenode{
-	display:inline;
-}
-.foldernode{
-	display:inline;
-}
 #message{
 	position:absolute;
 	right:300px;
@@ -25,43 +17,10 @@
 }
 </style>
 
-<subtemplate:define name='namespacetree'>
-<ul>
-	<foreach for='$tree' key='name' item='branch'>
-		<if 'empty($name)'>
-			<continue />
-		</if>
-		<if '$name === "files" '>
-			<foreach for='$branch' item='file'>
-				<li>
-					<input type='checkbox' path='{=$file['path']}' />
-					{=$file['name']}
-				</li>
-			</foreach>
-		<else/>
-			<li>
-				{=$name}
-				<a href='#' onclick='setChecked(this,"a")'>全选</a>
-				<a href='#' onclick='setChecked(this,"n")'>全取消</a>
-				<a href='#' onclick='setChecked(this,"o")'>反选</a>
-				<subtemplate:call name='namespacetree' var.tree='$branch' />
-			</li>
-		</if>
-	</foreach>
-</ul>
-</subtemplate:define>
-
-<button onclick='createDoc();'>开始生成文档</button>
-<ul id="package_tree">
-	<subtemplate:call name='namespacetree' var.tree='$arrtree' />
-	<li>debug
-		<ul>
-			<foreach for='{=$packageIterator}' item='package'>
-				<li>{=$package->ns()}</li>
-			</foreach>
-		</ul>
-	</li>
-</ul>
+<button id="createDoc">开始生成文档</button>
+<br />
+<label>搜索: <input type="text" id="keyWord" /></label><button id='cleanKeyWord'>清除</button>
+<div id='classTree' class='ztree'></div>
 
 <div id="message">
 	<div id="progress">
@@ -73,41 +32,13 @@
 </div>
 
 <script type="text/javascript">
-function loadTreeview(){
-	jQuery('#package_tree').treeview({
-		collapsed:true ,
-		animated: "fast",
-		persist: 'cookie',
-		cookieId: 'documentUpdater-treeview',
-	});
-}
 function loadProgressBar(){
 	jQuery('#progress').progressBar({
 		barImage:'/extensions/doccenter/0.1/public/progressbg_red.gif',
 		boxImage:'/extensions/doccenter/0.1/public/progressbar.gif',
 	});
 }
-jQuery(loadTreeview);
-//@param t : a , all ; n , none ; o , opposite
-function setChecked(o,t){
-	var closest_li = jQuery(o).closest('li');
-	var list_check = closest_li.find('input[type=checkbox]');
-	switch(t){
-	case 'a':
-		list_check.attr('checked',true);
-		break;
-	case 'n':
-		list_check.attr('checked',false);
-		break;
-	case 'o':
-		list_check.attr('checked',
-			function(i,t){
-				return !t;
-			}
-		);
-		break;
-	}
-}
+
 var totalCount = 1;
 var finishCount=0;
 var postlength = 5;
@@ -116,7 +47,7 @@ var postlength = 5;
 // 1 : sending
 var postState = 0;
 
-function createDoc(){
+function createDoc(arrPath){
 	if(postState != 0){
 		return;
 	}
@@ -126,18 +57,8 @@ function createDoc(){
 	loadProgressBar();
 	// clean generator log
 	document.getElementById('generator_log').innerHTML='';
-	// get path list
-	var arrPath = new Array();
-	jQuery('input[type=checkbox]').each(
-		function(){
-			if(jQuery(this).attr('checked') == 'checked'){
-				var path = jQuery(this).attr('path');
-				arrPath.push(path);
-			}
-		}
-	);
 	// post path list
-	totalCount = arrPath.length * 3;
+	totalCount = arrPath.length ;
 	var arrPost = new Array();
 	for(var i=0;i<arrPath.length;++i){
 		arrPost.push(arrPath[i]);
@@ -152,62 +73,20 @@ function createDoc(){
 }
 
 function postArrPath(arr){
-	// generate document
 	jQuery.post(
-		'/?c=org.opencomb.doccenter.DocumentGenerator&noframe=1',
-		{path:arr},
-		function(data){
-			var div=document.getElementById('generator_log');
-			for(var i=0;i<data.length;++i){
-				// display error message
-				if(typeof(data[i].success)=='undefined' || data[i].success == false){
-					jQuery("#generator_log").append('<p>error '+data[i].path+' : '+data[i].errorString+'</p>');
-				}
-				if(div.scrollHeight>div.offsetHeight){
-					div.scrollTop=div.scrollHeight-div.offsetHeight;
-				}
-				// progress bar
-				finishCount ++;//= data.length;
-				jQuery('#progress').progressBar( finishCount*100 / totalCount);
-				// has finished ?
-				if(finishCount == totalCount){
-					postState = 0;
-				}
-			}
-		},
-		'json'
-	);
-	
-	// generate example
-	jQuery.post(
-		'/?c=org.opencomb.doccenter.ExampleGenerator&noframe=1',
+		'/?c=org.opencomb.doccenter.generator.DocumentGenerator&noframe=1',
 		{path:arr},
 		function(data){
 			var arrError = data.split('\n');
 			for(var i=1;i<arrError.length;++i){
 				if(arrError[i].length>0){
-					jQuery("#generator_log").append('<p>error '+arrError[i]+'</p>');
-				}
-			}
-			var count = parseInt(data.substr(0,1));
-			finishCount += count ;
-			jQuery('#progress').progressBar( finishCount*100 / totalCount);
-			// has finished ?
-			if(finishCount == totalCount){
-				postState = 0;
-			}
-		}
-	);
-	
-	// generate wiki
-	jQuery.post(
-		'/?c=org.opencomb.doccenter.WikiGenerator&noframe=1',
-		{path:arr},
-		function(data){
-			var arrError = data.split('\n');
-			for(var i=1;i<arrError.length;++i){
-				if(arrError[i].length>0){
-					jQuery("#generator_log").append('<p>error '+arrError[i]+'</p>');
+					var sPre = 'path:';
+					var sErrorPre = arrError[i].substr(0,sPre.length);
+					if(sPre == sErrorPre){
+						path = arrError[i].substr(sPre.length,arrError[i].length);
+					}else{
+						jQuery("#generator_log").append('<p>error path:'+path+arrError[i]+'</p>');
+					}
 				}
 			}
 			var count = parseInt(data.substr(0,1));
@@ -220,4 +99,73 @@ function postArrPath(arr){
 		}
 	);
 }
+jQuery(function(){
+	//树数据
+	classList = {=$classJson};
+	//初始化树
+	jquery.fn.zTree.init(jquery("#classTree"), {
+		view: {
+			expandSpeed: 0
+		},
+		check:{
+			enable:true,
+			chkboxType:{ "Y": "ps", "N": "ps" }
+		},
+	}, classList);
+	
+	var aRunningZTree = jquery.fn.zTree.getZTreeObj("classTree");
+	
+	//搜索树
+	jquery('#keyWord').on('keyup',function(){
+		var nodeLis = jquery('#classTree li');
+		nodeLis.show();
+		
+		var sKeyWord = jquery.trim(jquery(this).val());
+		if(sKeyWord.length < 2){
+			aRunningZTree.expandAll(false);
+			aRunningZTree.cancelSelectedNode();
+			return;
+		}
+		
+		aRunningZTree.cancelSelectedNode();
+		aRunningZTree.checkAllNodes(false);
+		
+		var arrSelectNode = aRunningZTree.getNodesByParamFuzzy('name', sKeyWord);
+		aRunningZTree.expandAll(false);
+		for(var i = 0 ; i< arrSelectNode.length; i++){
+			//区分大小写
+			if(arrSelectNode[i].name.indexOf(sKeyWord) == -1){
+				continue;
+			}
+			aRunningZTree.selectNode(arrSelectNode[i],true);
+			aRunningZTree.expandNode(arrSelectNode[i],true,false,true);
+		}
+		//隐藏无关树
+		nodeLis.each(function (){
+			if(!jquery(this).find('a.curSelectedNode').size()){
+				jquery(this).hide();
+			}
+		});
+		
+		//焦点回归
+		jquery(this).focus();
+	});
+	//点击清除搜索框内容
+	jquery('#cleanKeyWord').click(function(){
+		jquery('#keyWord').val('');
+	});
+	// 点击开始生成文档按钮
+	jquery('#createDoc').click(function(){
+		var arrCheckedNodes = aRunningZTree.getCheckedNodes(true);
+		var arrPaths = [];
+		//整理需要清理的路径
+		for(var i = 0; i < arrCheckedNodes.length ; i++){
+			if(typeof(arrCheckedNodes[i].children) == 'undefined'){
+				arrPaths.push(arrCheckedNodes[i].filepath);
+			}
+		}
+		//发送到后台进行处理
+		createDoc(arrPaths);
+	});
+});
 </script>

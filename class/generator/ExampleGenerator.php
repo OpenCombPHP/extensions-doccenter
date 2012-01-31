@@ -1,82 +1,13 @@
 <?php
-namespace org\opencomb\doccenter ;
+namespace org\opencomb\doccenter\generator ;
 
-use org\opencomb\coresystem\mvc\controller\ControlPanel ;
-use org\jecat\framework\fs\FileSystem ;
-use org\jecat\framework\lang\compile\CompilerFactory ;
+use org\jecat\framework\lang\compile\object\TokenPool;
 use org\jecat\framework\lang\compile\object\Token ;
-use org\jecat\framework\lang\compile\object\TokenPool ;
-use org\opencomb\platform\ext\ExtensionManager ;
-use org\jecat\framework\lang\oop\ClassLoader;
-use org\jecat\framework\fs\IFSO ;
-use org\jecat\framework\fs\IFolder ;
 use org\jecat\framework\db\DB ;
 use org\jecat\framework\db\sql\StatementFactory ;
-use org\jecat\framework\util\Version ;
-use org\opencomb\platform\Platform ;
 
-class ExampleGenerator extends ControlPanel{
-	public function process(){
-		$arrPath = $this->params['path'];
-		
-		echo count($arrPath);
-		echo ' ';
-		echo "\n";
-		
-		foreach($arrPath as $path){
-			$arrGenerate = $this->generate($path);
-			if( TRUE === $this->cleanInDB($arrGenerate)){
-				$this->saveInDB($arrGenerate);
-			}
-		}
-		$this->mainView()->disable();
-	}
-	
-	private function generate($sPath){
-		$aFile = FileSystem::singleton()->findFile($sPath);
-		if($aFile === null) return null;
-		
-		// PackageNamespace
-		$sPackageNamespace = '';
-		$aClassLoader = ClassLoader::singleton();
-		foreach($aClassLoader->packageIterator() as $aPackage){
-			if($this->isInFolder($aFile,$aPackage->folder()) ){
-				$sPackageNamespace = $aPackage->ns();
-				break;
-			}
-		}
-		
-		$aInputStream = $aFile->openReader();
-		$aCompiler = CompilerFactory::singleton()->create();
-		$aTokenPool = $aCompiler->scan($aInputStream);
-		$aCompiler->interpret($aTokenPool);
-		
-		// sourceClass
-		$sSourceClass = '';
-		foreach($aTokenPool->classIterator() as $aClassToken){
-			$sSourceClass = $aClassToken->fullName();
-			break ;
-		}
-		
-		$arrDoc = $this->generateDoc($aTokenPool);
-		foreach($arrDoc as &$doc){
-			$doc['sourcePackageNamespace'] = $sPackageNamespace ;
-			$doc['sourceClass'] = $sSourceClass ;
-		}
-		return $arrDoc ;
-	}
-	
-	private function isInFolder(IFSO $aFSO,IFolder $aFolder){
-		while($aFSO !== null){
-			if( $aFSO === $aFolder){
-				return true;
-			}
-			$aFSO = $aFSO->directory();
-		}
-		return false;
-	}
-	
-	private function generateDoc(TokenPool $aTokenPool){
+class ExampleGenerator implements IGenerator{
+	public function generate(TokenPool $aTokenPool , FileInfo $aFileInfo){
 		$arrDoc = array();
 		$aIterator = $aTokenPool -> iterator() ;
 		foreach( $aIterator as $aToken ){
@@ -120,31 +51,8 @@ class ExampleGenerator extends ControlPanel{
 				$sForWiki = $aDocComment->item('forwiki') ;
 				$arrExample['forwiki'] = $sForWiki ;
 				
-				$sNamespace = $aToken->belongsNamespace()->name();
-				
-				$sExtension = ExtensionManager::singleton()->extensionNameByNamespace($sNamespace);
-				
-				$aVersion = null ;
-				if(empty($sExtension)){
-					$strFrameworkNs = 'org\\jecat\\framework' ;
-					$nFNLength = strlen($strFrameworkNs) ;
-					$strPlatformNs = 'org\\opencomb\\platform' ;
-					$nPNLength = strlen($strPlatformNs) ;
-					if( substr($sNamespace,0,$nFNLength) === $strFrameworkNs ){
-						$aVersion = Version::FromString(\org\jecat\framework\VERSION) ;
-						$sExtension = 'framework';
-					}else if ( substr($sNamespace,0,$nPNLength) === $strPlatformNs ){
-						$aVersion = Platform::singleton()->version();
-						$sExtension = 'platform';
-					}
-				}else{
-					$aExtensionMetainfo = ExtensionManager::singleton()->extensionMetainfo($sExtension);
-					$aVersion = $aExtensionMetainfo->version();
-				}
-				$sVersion = $aVersion->to32Integer();
-				
-				$arrExample['extension'] = $sExtension ;
-				$arrExample['version'] = $sVersion ;
+				$arrExample['extension'] = $aFileInfo->extension() ;
+				$arrExample['version'] = $aFileInfo->version() ;
 				
 				$iLine = $aToken->line();
 				$arrExample['sourceLine'] = $iLine ;
@@ -176,14 +84,16 @@ class ExampleGenerator extends ControlPanel{
 				}
 				$arrExample['code'] = $sCode ;
 				
+				$arrExample['sourcePackageNamespace']=$aFileInfo->sourcePackageNamespace() ;
+				$arrExample['sourceClass']=$aFileInfo->sourceClass() ;
+				
 				$arrDoc [] = $arrExample ;
 			}
 		}
 		return $arrDoc ;
 	}
 	
-	private function cleanInDB(array $arrGenerate){
-		$aDB = DB::singleton();
+	public function cleanInDB(array $arrGenerate ,DB $aDB){
 		foreach($arrGenerate as $generate){
 			$extension = $generate ['extension'] ;
 			$version = $generate ['version'] ;
@@ -208,10 +118,10 @@ class ExampleGenerator extends ControlPanel{
 					)'
 			);
 		}
-		return true;
+		return TRUE;
 	}
 	
-	private function saveInDB(array $arrGenerate){
+	public function saveInDB(array $arrGenerate , DB $aDB){
 		$arrKeyExample = array(
 			'extension',
 			'version',
@@ -223,7 +133,6 @@ class ExampleGenerator extends ControlPanel{
 			'sourceClass',
 			'sourceLine',
 		);
-		$aDB = DB::singleton() ;
 		foreach($arrGenerate as $generate){
 			// example
 			$aExampleInsert = StatementFactory::singleton()->createInsert('doccenter_example');
@@ -257,5 +166,6 @@ class ExampleGenerator extends ControlPanel{
 				$aDB->execute($aExampleTopicInsert);
 			}
 		}
+		return TRUE ;
 	}
 }

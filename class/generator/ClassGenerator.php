@@ -1,69 +1,20 @@
 <?php
-namespace org\opencomb\doccenter ;
+namespace org\opencomb\doccenter\generator ;
 
-use org\opencomb\coresystem\mvc\controller\ControlPanel ;
-use org\jecat\framework\lang\compile\CompilerFactory ;
-use org\jecat\framework\lang\compile\Compiler ;
-use org\jecat\framework\fs\FileSystem ;
-use org\jecat\framework\lang\Exception ;
-use org\opencomb\platform\ext\ExtensionManager ;
+use org\jecat\framework\lang\compile\object\TokenPool;
 use org\jecat\framework\db\DB ;
-use org\jecat\framework\db\sql\StatementFactory ;
-use org\jecat\framework\db\ExecuteException ;
-use org\jecat\framework\util\Version ;
-use org\opencomb\platform\Platform ;
-use org\jecat\framework\lang\compile\object\TokenPool ;
 use org\jecat\framework\lang\compile\object\NamespaceDeclare ;
+use org\jecat\framework\db\sql\StatementFactory ;
 
-// /?c=org.opencomb.doccenter.DocumentGenerator&noframe=1&path[]=/framework/class/util/match/ResultSet.php&path[]=/framework/class/util/match/RegExp.php&path[]=/framework/class/util/match/Result.php
-// /?c=org.opencomb.doccenter.DocumentGenerator&debug=1&noframe=1&path[]=/extensions/doccenter/0.1/class/testCompiler.php
-
-class DocumentGenerator extends ControlPanel
-{
-	public function process(){
-		$arrPath = $this->params['path'];
-		$arrResultList = array();
-		
-		foreach($arrPath as $path){
-			$arrGenerate = $this->generate($path);
-			$arrResult = $this->cleanInDatabase($arrGenerate);
-			if($arrResult['success']){
-				$arrResult = $this->saveToDatabase($arrGenerate);
-			}
-			$arrResultList[] = $arrResult ;
-		}
-		echo json_encode($arrResultList);
-		$this->mainView()->disable(); 
-	}
-	
-	public function generate($path){
+class ClassGenerator implements IGenerator{
+	public function generate(TokenPool $aTokenPool , FileInfo $aFileInfo){
 		$arrGenerate = array();
-		$arrGenerate['path'] = $path;
-		$arrGenerate['classlist'] = array();
 		
-		$aTokenPool = $this->getTokenPool($path);
-		if(null === $aTokenPool){
-			return array(
-				'path' => $path,
-				'error' => true,
-				'errorString' => 'can not open token pool',
-			);
-		}
 		foreach($aTokenPool->classIterator() as $aClassToken){
 			$classInfo = array();
 			$classInfo['name'] = $aClassToken->name();
-			$aVersion = $this->getVersionByClassName($aClassToken->fullName());
-			if( null === $aVersion ){
-				$classInfo['version'] = 123;
-			}else{
-				$classInfo['version'] = $aVersion->to32Integer();
-			}
-			$sExtName = $this->getExtNameByClassName($aClassToken->fullName());
-			if( null === $sExtName ){
-				$classInfo['extension'] = 'error' ;
-			}else{
-				$classInfo['extension'] = $sExtName ;
-			}
+			$classInfo['version'] = $aFileInfo->version();
+			$classInfo['extension'] = $aFileInfo->extension();
 			$classInfo['abstract'] = $aClassToken->isAbstract();
 			$classInfo['namespace'] = $aClassToken->belongsNamespace()->name();
 			$classInfo['comment'] = ( null === $aClassToken->docToken() )?'':$aClassToken->docToken()->docComment()->description();
@@ -85,7 +36,9 @@ class DocumentGenerator extends ControlPanel
 					foreach($aDocComment->itemIterator('param') as $strParam){
 						$arrParam = preg_split('|\\s+|',$strParam,3);
 						$arrParamInfo = array ();
-						if(count($arrParam) === 2){
+						if(count($arrParam) === 1){
+							$arrParamInfo['name'] = $arrParam[0] ;
+						}else if(count($arrParam) === 2){
 							$arrParamInfo['name'] = $arrParam[0] ;
 							$arrParamInfo['comment'] = $arrParam[1] ;
 						}else if(count($arrParam) === 3){
@@ -141,7 +94,9 @@ class DocumentGenerator extends ControlPanel
 					$parameterInfo['name'] = $parameterToken->name();
 					$parameterInfo['byRef'] = (int)$parameterToken->isReference();
 					// comment
-					if(isset($arrInfoFromFunctionComment['paramlist'][$parameterToken->name()])){
+					if(isset($arrInfoFromFunctionComment['paramlist'][$parameterToken->name()])
+						and isset($arrInfoFromFunctionComment['paramlist'][$parameterToken->name()]['comment'])
+						){
 						$parameterInfo['comment'] = $arrInfoFromFunctionComment['paramlist'][$parameterToken->name()]['comment'] ;
 					}else{
 						$parameterInfo['comment'] = '' ;
@@ -154,107 +109,19 @@ class DocumentGenerator extends ControlPanel
 			}
 			$classInfo['functionlist'] = $arrFunction;
 			
-			$arrGenerate['classlist'][] = $classInfo;
+			$arrGenerate[] = $classInfo;
 		}
 		return $arrGenerate;
 	}
 	
-	private function getTokenPool($path){
-		$aFile = FileSystem::singleton()->findFile($path);
-		if($aFile === null) return null;
-		$aInputStream = $aFile->openReader();
-		$aCompiler = CompilerFactory::singleton()->create();
-		$aTokenPool = $aCompiler->scan($aInputStream);
-		$aCompiler->interpret($aTokenPool);
-		return $aTokenPool;
-	}
-	
-	private function getVersionByClassName($classname){
-		if(null === $this->aExtensionManager){
-			$this->aExtensionManager = ExtensionManager::singleton() ;
-		}
-		$extensionName = $this->aExtensionManager->extensionNameByClass($classname);
-		if(empty($extensionName)){
-			$strFrameworkNs = 'org\\jecat\\framework' ;
-			$nFNLength = strlen($strFrameworkNs) ;
-			$strPlatformNs = 'org\\opencomb\\platform' ;
-			$nPNLength = strlen($strPlatformNs) ;
-			if( substr($classname,0,$nFNLength) === $strFrameworkNs ){
-				return Version::FromString(\org\jecat\framework\VERSION) ;
-			}else if ( substr($classname,0,$nPNLength) === $strPlatformNs ){
-				return Platform::singleton()->version();
-			}else{
-				return null;
-			}
-		}
-		$extensionMetainfo = $this->aExtensionManager->extensionMetainfo($extensionName);
-		return $extensionMetainfo->version();
-	}
-	
-	private function getExtNameByClassName($sClassName){
-		if(null === $this->aExtensionManager){
-			$this->aExtensionManager = ExtensionManager::singleton() ;
-		}
-		$extensionName = $this->aExtensionManager->extensionNameByClass($sClassName);
-		if(empty($extensionName)){
-			$strFrameworkNs = 'org\\jecat\\framework' ;
-			$nFNLength = strlen($strFrameworkNs) ;
-			$strPlatformNs = 'org\\opencomb\\platform' ;
-			$nPNLength = strlen($strPlatformNs) ;
-			if( substr($sClassName,0,$nFNLength) === $strFrameworkNs ){
-				return 'framework' ;
-			}else if ( substr($sClassName,0,$nPNLength) === $strPlatformNs ){
-				return 'platform' ;
-			}else{
-				return null;
-			}
-		}
-		$extensionMetainfo = $this->aExtensionManager->extensionMetainfo($extensionName);
-		return $extensionMetainfo->name();
-	}
-	
-	private function cleanInDatabase($arrGenerate){
-		$arrResult = array(
-			'success' => true,
-			'errorString' => 'clean succeed',
-		);
-		
-		// model
+	public function cleanInDB(array $arrGenerate ,DB $aDB){
 		try{
-			$aDB = DB::singleton();
-			foreach($arrGenerate['classlist'] as $classInfo){
+			foreach($arrGenerate as $classInfo){
 				$version = $classInfo['version'];
 				$namespace = $classInfo['namespace'];
 				$name = $classInfo['name'];
 				$extname = $classInfo['extension'];
 				
-				// create table
-				$aClassTable = StatementFactory::singleton()->createTable('doccenter_class');
-				$aFunctionTable = StatementFactory::singleton()->createTable('doccenter_method');
-				$aParamTable = StatementFactory::singleton()->createTable('doccenter_parameter');
-				// create join
-				$aClassFunctionJoin = StatementFactory::singleton()->createTablesJoin();
-				$aFunctionParamJoin = StatementFactory::singleton()->createTablesJoin();
-				// create restriction
-				$aClassFunctionRestriction = StatementFactory::singleton()->createRestriction();
-				$aFunctionParamRestriction = StatementFactory::singleton()->createRestriction();
-				// set restriction
-				$aClassFunctionRestriction->eqColumn('`doccenter_class`.`name`','`doccenter_method`.`class`');
-				$aClassFunctionRestriction->eqColumn('`doccenter_class`.`namespace`','`doccenter_method`.`namespace`');
-				$aClassFunctionRestriction->eqColumn('`doccenter_class`.`version`','`doccenter_method`.`version`');
-			
-				$aFunctionParamRestriction->eqColumn('`doccenter_method`.`version`','`doccenter_parameter`.`version`');
-				$aFunctionParamRestriction->eqColumn('`doccenter_method`.`name`','`doccenter_parameter`.`method`');
-				$aFunctionParamRestriction->eqColumn('`doccenter_method`.`class`','`doccenter_parameter`.`class`');
-				$aFunctionParamRestriction->eqColumn('`doccenter_method`.`namespace`','`doccenter_parameter`.`namespace`');
-				// join them !
-				$aClassTable->addJoin($aClassFunctionJoin);
-				$aClassFunctionJoin->addTable($aFunctionTable,$aClassFunctionRestriction);
-				$aFunctionTable->addJoin($aFunctionParamJoin);
-				$aFunctionParamJoin->addTable($aParamTable,$aFunctionParamRestriction);
-				// create delete
-				$aDelete = StatementFactory::singleton()->createDelete();
-				$aDelete->addTable($aClassTable);
 				// execute
 				$aDB->execute(
 				'DELETE doccenter_class,
@@ -281,29 +148,19 @@ class DocumentGenerator extends ControlPanel
 					AND `doccenter_class`.`extension` = "'.$extname.'")');
 			}
 		}catch(ExecuteException $e){
-			$arrResult['success'] = false;
-			$arrResult['errorString'] = $e->message();
-			$arrResult['executeLog'] = DB::singleton()->executeLog(false);
+			echo $e->message();
+			echo $aDB->executeLog(false);
 		}catch(Exception $e){
-			$arrResult['success'] = false;
-			$arrResult['errorString'] = $e->message();
+			echo $e->message();
 		}catch(\Exception $e){
-			$arrResult['success'] = false;
-			$arrResult['errorString'] = $e->message();
+			echo $e->message();
 		}
-		
-		// result
-		return $arrResult;
+		return TRUE;
 	}
 	
-	private function saveToDatabase($arrGenerate){
-		$arrResult = array(
-			'success' => true,
-			'errorString' => 'save succeed',
-		);
-		
+	public function saveInDB(array $arrGenerate , DB $aDB){
 		try{
-			foreach($arrGenerate['classlist'] as $classInfo){
+			foreach($arrGenerate as $classInfo){
 				$aClassInsert = StatementFactory::singleton()->createInsert('doccenter_class');
 				$aClassInsert->setData('namespace',$classInfo['namespace']);
 				$aClassInsert->setData('name',$classInfo['name']);
@@ -336,19 +193,14 @@ class DocumentGenerator extends ControlPanel
 				}
 			}
 		}catch(ExecuteException $e){
-			$arrResult['success'] = false;
-			$arrResult['errorString'] = $e->message();
-			$arrResult['executeLog'] = DB::singleton()->executeLog(false);
+			echo $e->message();
+			echo DB::singleton()->executeLog(false);
 		}catch(Exception $e){
-			$arrResult['success'] = false;
-			$arrResult['errorString'] = $e->message();
+			echo $e->message();
 		}catch(\Exception $e){
-			$arrResult['success'] = false;
-			$arrResult['errorString'] = $e->message();
+			echo $e->message();
 		}
-		
-		// result
-		return $arrResult;
+		return TRUE;
 	}
 	
 	const IN_COMMENT = 0x371 ;
@@ -379,7 +231,4 @@ class DocumentGenerator extends ControlPanel
 		}
 		return $sTypeRtn ;
 	}
-	
-	private $aExtensionManager = null ;
-	private $aPrototype = null ;
 }
