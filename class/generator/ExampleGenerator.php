@@ -48,8 +48,8 @@ class ExampleGenerator implements IGenerator{
 				$sForMethod = $aDocComment->item('formethod') ;
 				$arrExample['formethod'] = $sForMethod ;
 				
-				$sForWiki = $aDocComment->item('forwiki') ;
-				$arrExample['forwiki'] = $sForWiki ;
+				$arrForWikiList = $aDocComment->items('forwiki') ;
+				$arrExample['forwiki'] = $arrForWikiList ;
 				
 				$arrExample['extension'] = $aFileInfo->extension() ;
 				$arrExample['version'] = $aFileInfo->version() ;
@@ -166,10 +166,12 @@ class ExampleGenerator implements IGenerator{
 			
 			// topic
 			if(!empty($generate['forwiki'])){
-				$aExampleTopicInsert = StatementFactory::singleton()->createInsert('doccenter_example_topic');
-				$aExampleTopicInsert->setData('eid',$eid);
-				$aExampleTopicInsert->setData('topic_title',$generate['forwiki']);
-				$aDB->execute($aExampleTopicInsert);
+				foreach($generate['forwiki'] as $sForWiki){
+					$aExampleTopicInsert = StatementFactory::singleton()->createInsert('doccenter_example_topic');
+					$aExampleTopicInsert->setData('eid',$eid);
+					$aExampleTopicInsert->setData('topic_title',$sForWiki);
+					$aDB->execute($aExampleTopicInsert);
+				}
 			}
 		}
 		return TRUE ;
