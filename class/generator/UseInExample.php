@@ -36,7 +36,9 @@ class UseInExample{
 			$sCode .= $sCodeLine ."\n";
 		}
 		// 加上注释符号
-		$sCode = "/*\n".$sCode."*/\n";
+		if(!empty($sCode)){
+			$sCode = "/*\n".$sCode."*/\n";
+		}
 		return $sCode ;
 	}
 	

@@ -76,7 +76,7 @@ class DocFrontFrame extends FrontFrame
 					,'wholeName' => $aClass['namespace']
 					,'url' => '?c=org.opencomb.doccenter.ApiContent&extension='.$aClass['extension'].'&namespace='.$aClass['namespace'].'&name='.$aClass['name']
 					,'target' => '_self'
-					,'icon' => 'extensions/doccenter/0.1/public/img/class.png'
+					,'icon' => 'extensions/doccenter/0.1/public/img/class.gif'
 			);
 			$arrParentChildren = &$arrTree;
 		}
