@@ -10,8 +10,9 @@ use org\opencomb\doccenter\formatter\AbstractSingleLineTransformer ;
  *  ! html
  *  ! 说明
  *  |-- --
- *  | |-[- ]+
+ *  | |- （后可接任意多个减号“-”或空格“ ”）
  *  | </tr><tr>
+ *  | 必须独占一行
  *  |}
  */
 
