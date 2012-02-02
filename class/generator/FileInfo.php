@@ -56,7 +56,7 @@ class FileInfo {
 		$aVersion = null;
 		switch ($sExtensionName) {
 			case 'framework' :
-				$aVersion = Version::FromString ( (\org\jecat\framework\VERSION );
+				$aVersion = Version::FromString ( \org\jecat\framework\VERSION );
 				break;
 			case 'platform' :
 				$aVersion = Platform::singleton ()->version ();
