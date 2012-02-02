@@ -25,13 +25,17 @@ class WikiGenerator implements IGenerator {
 				$arrCommentItemWiki = $aDocComment->items ( 'wiki' );
 				foreach ( $arrCommentItemWiki as $sCommentItemWiki ) {
 					$arrWiki = array ();
-					
-					$arrSWiki = explode ( ':', $sCommentItemWiki );
-					$arrWiki ['title'] = $arrSWiki [0];
-					if (isset ( $arrSWiki [1] )) {
-						$arrWiki ['index'] = $arrSWiki [1];
-					} else {
-						$arrWiki ['index'] = '';
+					/**
+					 * @wiki /文档中心/wiki语法[wiki]
+					 * wiki语法是 @wiki title[index]
+					 * 如果没有index ，请省略方括号
+					*/
+					if(preg_match( '|^(.*)\[(.*)\]$|' , $sCommentItemWiki , $arrWikiMatch)){
+						$arrWiki['title'] = $arrWikiMatch[1];
+						$arrWiki['index'] = $arrWikiMatch[2];
+					}else{
+						$arrWiki['title'] = $sCommentItemWiki ;
+						$arrWiki['index'] = '';
 					}
 					$arrWiki ['text'] = $sText;
 					$arrWiki ['extension'] = $aFileInfo->extension ();
