@@ -1,23 +1,22 @@
 {=//var_dump($result)}
 <style>
-.table_title{
-	font-size:18px;
-	color:red;
+.table_title {
+	font-size: 18px;
+	color: red;
 }
-.argument_list{
-	border:2px;
-	color:green;
+
+.argument_list {
+	border: 2px;
+	color: green;
 }
 </style>
 <table>
 	<tr>
 		<th>path</th>
 	</tr>
-<foreach for="$result" item="aPath">
+	<foreach for="$result" item="aPath">
 	<tr>
-		<td>
-			{=$aPath['path']}
-		</td>
+		<td>{=$aPath['path']}</td>
 	</tr>
 	<tr>
 		<td colspan='2'>
@@ -30,7 +29,7 @@
 					<th>namespace</th>
 					<th>comment</th>
 				</tr>
-			<foreach for="$aPath['classlist']" item="aClass">
+				<foreach for="$aPath['classlist']" item="aClass">
 				<tr>
 					<td>{=$aClass['version']}</td>
 					<td>{=$aClass['name']}</td>
@@ -55,60 +54,59 @@
 								<th>comment</th>
 							</tr>
 							<foreach for="$aClass['functionlist']" item="aFunction">
-								<tr>
-									<td>{=$aFunction['version']}</td>
-									<td>{=$aFunction['name']}</td>
-									<td>{=$aFunction['class']}</td>
-									<td>{=$aFunction['namespace']}</td>
-									<td>{=$aFunction['access']}</td>
-									<td>{=$aFunction['abstract']}</td>
-									<td>{=$aFunction['static']}</td>
-									<td>{=$aFunction['returnType']}</td>
-									<td>{=$aFunction['returnByRef']}</td>
-									<td>{=$aFunction['comment']}</td>
-								</tr>
-								<if "!empty($aFunction['parameterlist'])">
-									<tr>
-										<td colspan='10'>
-										<div class='table_title'>argument list:</div>
-											<table class="argument_list">
-												<tr>
-													<th>version</th>
-													<th>namespace</th>
-													<th>class</th>
-													<th>method</th>
-													<th>name</th>
-													<th>type</th>
-													<th>default</th>
-													<th>byRef</th>
-													<th>comment</th>
-												</tr>
-												<tr>
-													<foreach for="$aFunction['parameterlist']" item='parameter'>
-														<tr>
-															<td>{=$parameter['version']}</td>
-															<td>{=$parameter['namespace']}</td>
-															<td>{=$parameter['class']}</td>
-															<td>{=$parameter['method']}</td>
-															<td>{=$parameter['name']}</td>
-															<td>{=$parameter['type']}</td>
-															<td>{=$parameter['default']}</td>
-															<td>{=$parameter['byRef']}</td>
-															<td>{=$parameter['comment']}</td>
-														</tr>
-													</foreach>
-												</tr>
-											</table>
-										</td>
-									</tr>
-								</if>
-							</foreach>
+							<tr>
+								<td>{=$aFunction['version']}</td>
+								<td>{=$aFunction['name']}</td>
+								<td>{=$aFunction['class']}</td>
+								<td>{=$aFunction['namespace']}</td>
+								<td>{=$aFunction['access']}</td>
+								<td>{=$aFunction['abstract']}</td>
+								<td>{=$aFunction['static']}</td>
+								<td>{=$aFunction['returnType']}</td>
+								<td>{=$aFunction['returnByRef']}</td>
+								<td>{=$aFunction['comment']}</td>
+							</tr>
+							<if"!empty($aFunction['parameterlist'])">
+							<tr>
+								<td colspan='10'>
+									<div class='table_title'>argument list:</div>
+									<table class="argument_list">
+										<tr>
+											<th>version</th>
+											<th>namespace</th>
+											<th>class</th>
+											<th>method</th>
+											<th>name</th>
+											<th>type</th>
+											<th>default</th>
+											<th>byRef</th>
+											<th>comment</th>
+										</tr>
+										<tr>
+											<foreach for="$aFunction['parameterlist']" item='parameter'>
+											<tr>
+												<td>{=$parameter['version']}</td>
+												<td>{=$parameter['namespace']}</td>
+												<td>{=$parameter['class']}</td>
+												<td>{=$parameter['method']}</td>
+												<td>{=$parameter['name']}</td>
+												<td>{=$parameter['type']}</td>
+												<td>{=$parameter['default']}</td>
+												<td>{=$parameter['byRef']}</td>
+												<td>{=$parameter['comment']}</td>
+											</tr>
+											</foreach>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							</if> </foreach>
 						</table>
 					</td>
 				</tr>
-			</foreach>
+				</foreach>
 			</table>
 		</td>
 	</tr>
-</foreach>
+	</foreach>
 </table>

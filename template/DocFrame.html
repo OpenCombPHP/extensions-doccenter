@@ -1,5 +1,5 @@
 <css src="doccenter:css/style.css" />
-<lib name='jquery.ztree'/>
+<lib name='jquery.ztree' />
 <script>
 jQuery(function() {
 	//api tree
@@ -30,8 +30,8 @@ jQuery(function() {
 		numOfManualColumn = 1;
 	}
 	//重置文档容器的宽度
-	jQuery('#doc_index , #doc_index .index_scroll').width(300 + 300*numOfManualColumn+20);//+20px滚动轴偏差
-	jQuery("#manual_index").width(300*numOfManualColumn+20);//+20px滚动轴偏差
+	jQuery('#doc_index , #doc_index .index_scroll').width(300 + 300*numOfManualColumn+28);//+28px滚动轴偏差
+	jQuery("#manual_index").width(300*numOfManualColumn+28);//+28px滚动轴偏差
 	//放置手册文档"跑道"(列)
 	for(var i = 0; i<numOfManualColumn; i++){
 		jQuery("#manual_index").append('<div class="subWikisColumn"></div>');
@@ -167,27 +167,29 @@ jQuery(function() {
 		<div class='left_indexs'>
 			<div id='quick_index' class='index'>
 				<h3>速查</h3>
-				<div><label>搜索<input type='text' class='keyWord'/></label></div>
+				<div>
+					<label>搜索<input type='text' class='keyWord' /></label>
+				</div>
 			</div>
 			<div id='api_index' class='index'>
 				<h3>API</h3>
-				<div><label>搜索<input type='text' class='keyWord'/></label></div>
-				<div id='api_index_tree' class='ztree'>
-				
+				<div>
+					<label>搜索<input type='text' class='keyWord' /></label>
 				</div>
+				<div id='api_index_tree' class='ztree'></div>
 			</div>
 		</div>
 		<div id='manual_index' class='index'>
 			<h3>手册</h3>
-			<div><label>搜索<input type='text' class='keyWord'/></label></div>
-			<div id='manual_index_tree' class='ztree'>
-			
+			<div>
+				<label>搜索<input type='text' class='keyWord' /></label>
 			</div>
+			<div id='manual_index_tree' class='ztree'></div>
 		</div>
 	</div>
 	<div id="doc_index_title">文档</div>
 	<div class='block'></div>
 </div>
 <div id='wrapper'>
-<views/>
+	<views />
 </div>

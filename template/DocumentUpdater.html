@@ -1,34 +1,35 @@
 <lib name='jquery.progressbar' />
 <lib name='jquery.ztree' />
 <style>
-#message{
-	position:absolute;
-	right:300px;
-	top:0px;
+#message {
+	position: absolute;
+	right: 300px;
+	top: 0px;
 	border-style: solid;
-	width:500px;
-	display:block;
+	width: 500px;
+	display: block;
 }
-#generator_log{
+
+#generator_log {
 	max-height: 500px;
-	word-break:break-all;
-	overflow:auto;
-	text-overflow:ellipsis;
+	word-break: break-all;
+	overflow: auto;
+	text-overflow: ellipsis;
 }
 </style>
 
 <button id="createDoc">开始生成文档</button>
 <br />
-<label>搜索: <input type="text" id="keyWord" /></label><button id='cleanKeyWord'>清除</button>
+<label>搜索: <input type="text" id="keyWord" /></label>
+<button id='cleanKeyWord'>清除</button>
 <div id='classTree' class='ztree'></div>
 
 <div id="message">
 	<div id="progress">
-	<br/>
+		<br />
 	</div>
 	<p>Document Generator 日志:</p>
-	<div id="generator_log">
-	</div>
+	<div id="generator_log"></div>
 </div>
 
 <script type="text/javascript">

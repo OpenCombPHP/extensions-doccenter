@@ -3,15 +3,15 @@
 	<name>doccenter</name>
 	<version>0.1</version>
 	<title>文档中心</title>
-	
- 
+
+
 	<class>org.opencomb.doccenter.DocCenter</class>
 	<package folder="/class" namespace="org.opencomb.doccenter" />
- 
+
 	<template folder="/template" />
-	
+
 	<publicFolder folder="/public" />
-	
+
 	<beanFolder folder="/bean" />
-	
+
 </Extension>

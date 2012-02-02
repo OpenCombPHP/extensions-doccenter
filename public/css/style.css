@@ -1,37 +1,65 @@
 /*CSS reset*/
-body,div,dl,dt,dd,pre,form,fieldset,input,textarea,p,blockquote,th,td {margin:0;padding:0;}
-table { border-collapse:collapse; border-spacing:0;}
-fieldset,img { border:0;}
-address,caption,cite,code,dfn,em,strong,th,var { font-style:normal; font-weight:normal;}
+body,div,dl,dt,dd,pre,form,fieldset,input,textarea,p,blockquote,th,td {
+	margin: 0;
+	padding: 0;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+fieldset,img {
+	border: 0;
+}
+
+address,caption,cite,code,dfn,em,strong,th,var {
+	font-style: normal;
+	font-weight: normal;
+}
 /*ol,ul,li { list-style:none;}*/
-caption,th { text-align:left;}
-h1,h2,h3,h4,h5,h6 { font-weight:normal;}
-q:before,q:after {content:'';}
-abbr,acronym {border:0;}
-h3{font-weight: bold;}
+caption,th {
+	text-align: left;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-weight: normal;
+}
+
+q:before,q:after {
+	content: '';
+}
+
+abbr,acronym {
+	border: 0;
+}
+
+h3 {
+	font-weight: bold;
+}
+
 img {
 	color: transparent;
 	font-size: 0;
 	vertical-align: middle;
-	-ms-interpolation-mode: bicubic;/*Only fot IE7*/
+	-ms-interpolation-mode: bicubic; /*Only fot IE7*/
 }
-b, strong {
-	/*
+
+b,strong { /*
   Makes browsers agree.
   IE + Opera = font-weight: bold.
   Gecko + WebKit = font-weight: bolder.
 */
-  font-weight: bold;
-}
-*:focus {
-	/* 去掉获得焦点时出现的虚线框 */
-	outline: none;
-}  
-textarea{
-	/* chrome 不允许 textarea 可更改大小  */
-	resize:none;
+	font-weight: bold;
 }
 
+*:focus { /* 去掉获得焦点时出现的虚线框 */
+	outline: none;
+}
+
+textarea { /* chrome 不允许 textarea 可更改大小  */
+	resize: none;
+}
 
 body {
 	font: 12px Arial, Helvetica, sans-serif;
@@ -39,37 +67,45 @@ body {
 	font-size: 14px;
 	/*background: #d8d2ce url(../styles/bglines.png) repeat 0;*/
 }
+
 a {
 	text-decoration: none;
 }
+
 a:link {
 	color: #4B8DB5;
 }
+
 a:visited {
 	color: #5A6F7F;
 }
+
 a:hover {
 	color: #D05D2A;
 }
+
 p {
 	display: block;
 	text-indent: 2em;
 	margin: 10px 0 15px 0;
 	line-height: 20px;
 }
+
 pre {
 	white-space: normal;
 }
 
 .wrapper {
+	
 }
-#doc_index {
-	-webkit-gradient(linear, 0% 0, 0% 100%, from(#FFFFF6), to(#FFFDE3));
+
+#doc_index {-webkit-gradient (linear, 0% 0, 0% 100%, from(#FFFFF6),
+	to(#FFFDE3));
 	/*padding:10px;*/
 	width: 916px;
-	position:fixed;
-	z-index:10000;
-	border:1px solid #D05D2A;
+	position: fixed;
+	z-index: 10000;
+	border: 1px solid #D05D2A;
 	-webkit-border-bottom-right-radius: 5px;
 	-webkit-border-bottom-left-radius: 5px;
 	-moz-border-radius-bottomright: 5px;
@@ -90,25 +126,25 @@ pre {
 	-webkit-border-radius: 2px;
 }
 
-#doc_index .index_scroll{
-	width:916px;
+#doc_index .index_scroll {
+	width: 916px;
 	overflow: hidden;
-	display:none;
+	display: none;
 }
 
-#doc_index_title{
+#doc_index_title {
 	width: 100px;
-	height:30px;
-	position:absolute;
-	right:100px;
-	bottom:-29px;
-	color:white;
-	font-size:24px;
-	line-height:30px;
-	text-align:center;
-	background:#D05D2A;
+	height: 30px;
+	position: absolute;
+	right: 100px;
+	bottom: -29px;
+	color: white;
+	font-size: 24px;
+	line-height: 30px;
+	text-align: center;
+	background: #D05D2A;
 	cursor: pointer;
-/*	-webkit-border-bottom-right-radius: 5px;
+	/*	-webkit-border-bottom-right-radius: 5px;
 	-webkit-border-bottom-left-radius: 5px;
 	-moz-border-radius-bottomright: 5px;
 	-moz-border-radius-bottomleft: 5px;
@@ -116,37 +152,39 @@ pre {
 	border-bottom-left-radius: 5px;*/
 }
 
-#quick_index{
-	width:300px;
+#quick_index {
+	width: 300px;
 	background: #108AC6;
 }
 
-#api_index{
-	width:300px;
-	overflow:scroll;
+#api_index {
+	width: 300px;
+	overflow: scroll;
 	background: #D05D2A;
 }
 
-.left_indexs{
-	float:left;
+.left_indexs {
+	float: left;
 }
 
-#manual_index{
-	float:left;
-	overflow:scroll;
+#manual_index {
+	float: left;
+	overflow: scroll;
 	background: #D8D2CE;
 }
-.subWikisColumn{
-	width:300px;
-	float:left;
-}
-.subWikiTree{
-	width:300px;
+
+.subWikisColumn {
+	width: 300px;
+	float: left;
 }
 
-.block{clear:both}
+.subWikiTree {
+	width: 300px;
+}
 
-
+.block {
+	clear: both
+}
 
 .bodyText {
 	padding: 10px 20px;
@@ -155,11 +193,13 @@ pre {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 }
+
 .bodyText h1 {
 	font-weight: bold;
 	padding: 0px;
 	margin: 5px auto;
 }
+
 blockquote {
 	display: block;
 	height: auto;
@@ -169,16 +209,19 @@ blockquote {
 	background: #EEE;
 	line-height: 20px;
 }
+
 .prepare {
 	min-height: 60px;
 	background: #eee url(../img/prepare.png) no-repeat 10px 10px;
 	padding-left: 80px;
 }
+
 .warning {
 	min-height: 60px;
 	background: #eee url(../img/warning.png) no-repeat 10px 10px;
 	padding-left: 80px;
 }
+
 .title {
 	background: none repeat scroll 0 0 #108AC6;
 	display: block;
@@ -188,46 +231,105 @@ blockquote {
 	width: 6px;
 }
 
-table{ width:100%;color:#666; font-size:12px;border:1px solid #e4e4e4;  margin:10px 0;}/*background:url(../images/tablebg.gif) repeat 0 0;*/
-th{ font-weight:bold; color:#666;height:30px;padding:0 8px; background:url(../img/thbg.jpg) repeat-x 0 0;}
-tr{}
-tr:hover{ background:#F9F7EA}
-td{ height:30px; vertical-align: middle; padding:0 8px;}
+table {
+	width: 100%;
+	color: #666;
+	font-size: 12px;
+	border: 1px solid #e4e4e4;
+	margin: 10px 0;
+} /*background:url(../images/tablebg.gif) repeat 0 0;*/
+th {
+	font-weight: bold;
+	color: #666;
+	height: 30px;
+	padding: 0 8px;
+	background: url(../img/thbg.jpg) repeat-x 0 0;
+}
+
+tr {
+	
+}
+
+tr:hover {
+	background: #F9F7EA
+}
+
+td {
+	height: 30px;
+	vertical-align: middle;
+	padding: 0 8px;
+}
 
 /*
  * 字 排版样式
  */
+.tRed {
+	color: red;
+}
 
-.tRed{color:red;}
-.tYellow{color:yellow;}
-.tGray{color:gray;}
-.tGreen{color:green;}
-.tBlue{color:blue;}
+.tYellow {
+	color: yellow;
+}
+
+.tGray {
+	color: gray;
+}
+
+.tGreen {
+	color: green;
+}
+
+.tBlue {
+	color: blue;
+}
 
 /*wiki 文字块区分*/
-.title{ display:block; float:left; width:6px;  height: 15px; margin: 1px 5px 0 0;background:#108ac6}
-.method-detail-item{
-	border:1px solid #d5d5d5;
-    padding:12px 6px 12px 16px;
+.title {
+	display: block;
+	float: left;
+	width: 6px;
+	height: 15px;
+	margin: 1px 5px 0 0;
+	background: #108ac6
 }
-.method-list-item,.method-list li{
-	width: 290px ;
-	height:21px;
-	line-height:21px;
-	padding-left:10px;
-	float: left ;
-}
-.normalfloat{float:left;width:100%;margin-bottom:10px;}
-.methodlist{font-size:13px; line-height:20px;}
-.extension label{font-weight: bold;}
 
-body{
+.method-detail-item {
+	border: 1px solid #d5d5d5;
+	padding: 12px 6px 12px 16px;
+}
+
+.method-list-item,.method-list li {
+	width: 290px;
+	height: 21px;
+	line-height: 21px;
+	padding-left: 10px;
+	float: left;
+}
+
+.normalfloat {
+	float: left;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.methodlist {
+	font-size: 13px;
+	line-height: 20px;
+}
+
+.extension label {
+	font-weight: bold;
+}
+
+body {
 	background: #D8D2CE;
 }
-#wrapper{
+
+#wrapper {
 	
 }
-.main{
+
+.main {
 	background: white;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -235,9 +337,10 @@ body{
 	margin: 10px 305px 10px 10px;
 	padding: 10px 10px 10px 10px;
 }
-.sidebar{
-	float:right;
-	width:255px;
+
+.sidebar {
+	float: right;
+	width: 255px;
 	background: white;
 	border-radius: 5px;
 	-moz-border-radius: 5px;

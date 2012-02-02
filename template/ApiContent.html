@@ -1,33 +1,34 @@
-<lib name='syntaxhighlighter:php'/>
+<lib name='syntaxhighlighter:php' />
 <div class='page'>
 	<msgqueue for="$theController->messageQueue()" />
-	<h1><span class='title'></span>{=$sName}</h1>
-	<label>版本: </label>
-	<select class='version' idx='apiIndex'>
+	<h1>
+		<span class='title'></span>{=$sName}
+	</h1>
+	<label>版本: </label> <select class='version' idx='apiIndex'>
 		<model:foreach>
-			<option value="{='?c=org.opencomb.doccenter.ApiContent&extension=' . $theModel['extension'] . '&namespace='.$aClass['namespace'].'&name='.$aClass['name']}" {=$sVersion == $theModel['version'] ? 'selected' : ''}>{=org\jecat\framework\util\Version::from32Integer($theModel['version'])}</option>
-			<if "($sVersion && $sVersion == $theModel['version']) || (!$sVersion && $apiIndex==0)">{*如果没有版本号就显示最新版本的内容,如果有版本号就显示对应版本号内容*}
-				{? $aContentModel=$theModel}
-			</if>
+			<option
+				value="{='?c=org.opencomb.doccenter.ApiContent&extension=' . $theModel['extension'] . '&namespace='.$aClass['namespace'].'&name='.$aClass['name']}"
+				{=$sVersion==$theModel['version'] ? 'selected' : ''}>{=org\jecat\framework\util\Version::from32Integer($theModel['version'])}</option>
+			<if "($sVersion && $sVersion==
+				$theModel['version']) || (!$sVersion && $apiIndex==0)">{*如果没有版本号就显示最新版本的内容,如果有版本号就显示对应版本号内容*}
+			{? $aContentModel=$theModel} </if>
 		</model:foreach>
 	</select>
-	
+
 	<div class='info'>
-		<label>扩展: {=$aContentModel['extension']}</label><br/>
-		<label>命名空间: {=$aContentModel['namespace']}</label><br/>
-		<if "$aContentModel['abstract']==1">
-			<label>{$aContentModel['name']}是<b>抽象类</b></label><br/>
+		<label>扩展: {=$aContentModel['extension']}</label><br /> <label>命名空间:
+			{=$aContentModel['namespace']}</label><br />
+		<if "$aContentModel['abstract']==1"> <label>{$aContentModel['name']}是<b>抽象类</b></label>
+		<br />
 		</if>
 	</div>
-	
+
 	<div class='comment'>
 		{=org\opencomb\doccenter\formatter\Formatter::singleton()->format($aContentModel['comment'])}
 	</div>
-	
-	<div class='methodList'>
-		
-	</div>
-	
+
+	<div class='methodList'></div>
+
 	<script type="text/javascript">
 		SyntaxHighlighter.defaults['toolbar'] = false;
 		SyntaxHighlighter.all();
