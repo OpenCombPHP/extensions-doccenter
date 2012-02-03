@@ -89,6 +89,9 @@ class ExampleGenerator implements IGenerator {
 					$aFolIterator->next ();
 				}
 				
+				$iEndLine = $aCodeEndToken->line();
+				$arrExample ['sourceEndLine'] = $iEndLine;
+				
 				$arrExample ['code'] = $aUseInExample->codeForUseList () . "\n" . $sCode;
 				
 				$arrExample ['sourcePackageNamespace'] = $aFileInfo->sourcePackageNamespace ();
@@ -127,7 +130,7 @@ class ExampleGenerator implements IGenerator {
 	}
 	
 	public function saveInDB(array $arrGenerate, DB $aDB) {
-		$arrKeyExample = array ('extension', 'version', 'title', 'name', 'index', 'code', 'sourcePackageNamespace', 'sourceClass', 'sourceLine' );
+		$arrKeyExample = array ('extension', 'version', 'title', 'name', 'index', 'code', 'sourcePackageNamespace', 'sourceClass', 'sourceLine' , 'sourceEndLine' );
 		foreach ( $arrGenerate as $generate ) {
 			// example
 			$aExampleInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_example' );
