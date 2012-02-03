@@ -152,6 +152,13 @@ pre {
 	border-bottom-left-radius: 5px;*/
 }
 
+.exampleTitle{
+	color:#125Acf;
+}
+.exampleName{
+	color:green;
+}
+
 #quick_index {
 	width: 300px;
 	background: #108AC6;

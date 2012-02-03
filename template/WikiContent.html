@@ -1,10 +1,10 @@
 <lib name='syntaxhighlighter:php' />
 <lib name='jquery.ui' />
 <div class='sidebar'>
+	<h3>下级wiki</h3>
+	<div id='subWikiTree' class='ztree'></div>
 	<h3>相关wiki</h3>
 	<div id='brotherWikiTree' class='ztree'></div>
-	<h3>子wiki</h3>
-	<div id='subWikiTree' class='ztree'></div>
 </div>
 <div class='main'>
 	<msgqueue for="$theController->messageQueue()" />
@@ -23,7 +23,7 @@
 		<foreach for='$theModel->childIterator()' item='aContentModel'>
 		<div class='method-detail-item'>
 			<div class='extension'>
-				<label>扩展: </label>{=$aContentModel['extension']} <label>版本:
+				<label>来源: </label>{=$aContentModel['extension']} <label>版本:
 				</label>{=org\jecat\framework\util\Version::from32Integer($aContentModel['version'])}
 				<label>类: </label>{=$aContentModel['sourceClass']} <label>行:
 				</label>{=$aContentModel['sourceLine']}
@@ -38,7 +38,7 @@
 					item='aExample' idx='nExampleIndex'>
 				<div class='example'>
 					<h3>
-						<a href="#">例子{=$nExampleIndex+1}: {=$aExample['title']}</a>
+						<a href="#" name="{=$aExample['title']}:{=$aExample['name']}">例子{=$nExampleIndex+1}: <span class='exampleTitle'>{=$aExample['title']}</span> : <span class='exampleName'>{=$aExample['name']}</span></a>
 					</h3>
 					<div>
 						<pre class="brush: php;">
