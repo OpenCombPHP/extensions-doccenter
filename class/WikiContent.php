@@ -1,8 +1,9 @@
 <?php
 namespace org\opencomb\doccenter;
 
+use org\opencomb\platform\ext\Extension;
+use org\jecat\framework\mvc\model\IModel;
 use org\jecat\framework\db\DB;
-
 use org\jecat\framework\util\Version;
 use org\opencomb\doccenter\frame\DocFrontController;
 use org\jecat\framework\message\Message;
@@ -55,7 +56,6 @@ class WikiContent extends DocFrontController {
 			$this->messageQueue ()->create ( Message::error, "无法定位到指定文档,缺少信息" );
 			return;
 		}
-		
 		// 搜集版本列表
 		$arrVersions = array ();
 		$sLastVersion = '';
@@ -93,6 +93,33 @@ class WikiContent extends DocFrontController {
 		$this->viewWikiContent->variables ()->set ( 'arrVersions', array_keys ( $arrVersions ) );
 		
 		$this->viewWikiContent->variables ()->set ( 'sSelectedVersion', $sVersion );
+	}
+	//来源提示,依赖提示
+	public function translateExtension($aContentModel){
+		$sTranslatedExtension = "<label>来源: </label>";
+		$sTranslatedExtensionEnd = '';
+		switch($aContentModel['extension'])
+		{
+			case "framework":
+				$sTranslatedExtension .= "Jecat框架";
+				break;
+			case "platform":
+				$sTranslatedExtension .= "蜂巢平台";
+				break;
+			default:
+				$sExtensionName = '未知扩展';
+				if($aExtension = Extension::flyweight($aContentModel['extension'],false)){
+					$sExtensionName = $aExtension->metainfo()->title();
+				}
+				$sTranslatedExtension.= $sExtensionName .  "(" . $aContentModel['extension'] . ")";
+				$sTranslatedExtensionEnd = "<div class='extensionWarning'>依赖扩展:" . $sExtensionName .  "(" . $aContentModel['extension'] . ")</div>";
+		}
+		
+		$sTranslatedExtension.=" <label>版本: </label>".Version::from32Integer($aContentModel['version']);
+		$sTranslatedExtension.=" <label>类: </label>".$aContentModel['sourceClass'];
+		$sTranslatedExtension.=" <label>行: </label>".$aContentModel['sourceLine'];
+		$sTranslatedExtension.=$sTranslatedExtensionEnd;
+		return $sTranslatedExtension;
 	}
 }
 

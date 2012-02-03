@@ -355,3 +355,35 @@ body {
 	margin: 0 10px 0 10px;
 	padding: 10px 10px 10px 10px;
 }
+.noticeIcon {
+	display: block;
+	height: auto;
+	margin: 10px;
+	padding: 10px 20px;
+	border: 1px #aaa solid;
+	background: #EEE;
+	line-height: 20px;
+	min-height: 60px;
+	background: #eee url(../img/notice.png) no-repeat 10px 10px;
+	padding-left: 80px;
+}
+.warningBlock {
+	display: block;
+	height: auto;
+	margin: 10px;
+	padding: 10px 20px;
+	border: 1px #aaa solid;
+	background: #EEE;
+	line-height: 20px;
+	min-height: 60px;
+	background: #eee url(../img/warning.png) no-repeat 10px 10px;
+	padding-left: 80px;
+}
+.questionIcon{
+	
+}
+
+.extensionWarning{
+	height:18px;
+	border:1px solid red;
+}
