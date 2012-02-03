@@ -5,7 +5,6 @@ use org\jecat\framework\lang\Object;
 
 class Formatter extends Object {
 	public function format($sOriginalText) {
-		echo '<pre>';
 		$sPregText = preg_replace ( $this->arrPattern, $this->arrReplacement, $sOriginalText );
 		foreach ( $this->arrTransformer as $aTransformer ) {
 			switch ($aTransformer->lineType ()) {
@@ -14,9 +13,7 @@ class Formatter extends Object {
 					$sPregText = '';
 					$sPattern = $aTransformer->pattern ();
 					foreach ( $arrLine as $sLine ) {
-						// echo 'line:';var_dump($sLine);
 						preg_match_all ( $sPattern, $sLine, $arrMatch, PREG_OFFSET_CAPTURE );
-						// echo 'arrMatch:';var_dump($arrMatch);
 						$nRow = count ( $arrMatch );
 						if ($nRow <= 0)
 							continue;
@@ -58,7 +55,6 @@ class Formatter extends Object {
 					break;
 			}
 		}
-		echo '</pre>';
 		return $sPregText;
 	}
 	
@@ -106,10 +102,6 @@ class Formatter extends Object {
 	 * | &#91;img xxx1]xxx2[/img]
 	 * | <img xxx1 />
 	 * |-- --
-	 * | ^(.*)\n\s*\n
-	 * | <p>\1</p>
-	 * | 暂时不太好用，有空再改
-	 * |-- --
 	 * | \
 	 * |
 	 * | 行末尾的反斜线将两行接成一行
@@ -120,17 +112,57 @@ class Formatter extends Object {
 	 */
 	
 	public function readParamFromSetting() {
-		$arr = array ('pattern' => array (0 => '`<`', 1 => '`>`', 2 => '`(^|\n)\\s*---\\s*($|\n)`', 3 => '`(^|\n)\\s*=([^=].*)=\\s*($|\n)`', 4 => '`(^|\n)\\s*==([^=].*)==\\s*($|\n)`', 5 => '`(^|\n)\\s*===([^=].*)===\\s*($|\n)`', 6 => '`\\[a (.*)\\](.*)\\[/a\\]`', 7 => '`\\[img (.*)\\](.*)\\[/img\\]`', 8 => '`^(.*)\n\\s*\n`', 9 => '`\\\\(\\r\\n|\\n|\\r)`', 10 => '`(\\r\\n|\\n|\\r)`' ), 'replacement' => array (0 => '&lt;', 1 => '&gt;', 2 => '\\1<hr />\\2', 3 => '\\1<h3><a name="\\2">\\2</a></h3>\\3', 4 => '\\1<h2><a name="\\2">\\2</a></h2>\\3', 5 => '\\1<h1><a name="\\2">\\2</a></h1>\\3', 6 => '<a \\1>\\2</a>', 7 => '<img \\1 />', 8 => '<p>\\1</p>', 9 => '', 10 => '<br />' ), 'transformer' => array (new example\FileExampleTransformer (), new example\InCodeExampleTransformer (), new example\ByTitleExampleTransformer (), 
+		$arr = array (
+			'pattern' =>
+			array (
+				0 => '`<`',
+				1 => '`>`',
+				2 => '`(^|\n)\\s*---\\s*($|\n)`',
+				3 => '`(^|\n)\\s*=([^=].*)=\\s*($|\n)`',
+				4 => '`(^|\n)\\s*==([^=].*)==\\s*($|\n)`',
+				5 => '`(^|\n)\\s*===([^=].*)===\\s*($|\n)`',
+				6 => '`\\[a (.*)\\](.*)\\[/a\\]`',
+				7 => '`\\[img (.*)\\](.*)\\[/img\\]`',
+				8 => '`\\\\(\\r\\n|\\n|\\r)`',
+				9 => '`(\\r\\n|\\n|\\r)`',
+			),
+			'replacement' =>
+			array (
+				0 => '&lt;',
+				1 => '&gt;',
+				2 => '\\1<hr />\\2',
+				3 => '\\1<h3><a name="\\2">\\2</a></h3>\\3',
+				4 => '\\1<h2><a name="\\2">\\2</a></h2>\\3',
+				5 => '\\1<h1><a name="\\2">\\2</a></h1>\\3',
+				6 => '<a \\1>\\2</a>',
+				7 => '<img \\1 />',
+				8 => '',
+				9 => '<br />',
+			),
+			'transformer' => 
+			array (
+				new example\FileExampleTransformer,
+				new example\InCodeExampleTransformer,
+				new example\ByTitleExampleTransformer,
 
-		new table\TableBeginTransformer (), new table\TableEndTransformer (), new table\TableRowTransformer (), new table\TableHeadTransformer (), new table\TableCellTransformer (), 
+				new table\TableBeginTransformer,
+				new table\TableEndTransformer,
+				new table\TableRowTransformer,
+				new table\TableHeadTransformer,
+				new table\TableCellTransformer,
 
-		new font\SingleTagsTransformer (), new font\AttrTagsTransformer (), 
+				new font\SingleTagsTransformer,
+				new font\AttrTagsTransformer,
 
-		new warning\WarningBlock (), new warning\WarningIcon (), 
+				new warning\WarningBlock,
+				new warning\WarningIcon,
 
-		new li\li (), 
+				new li\li,
 
-		new other\see () ) );
+				new other\see,
+				new other\rmbr,
+			),
+		) ;
 		
 		$arrPattern = $arr ['pattern'];
 		$arrReplacement = $arr ['replacement'];
