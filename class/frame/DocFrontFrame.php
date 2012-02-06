@@ -55,7 +55,9 @@ class DocFrontFrame extends FrontFrame {
 			array_shift ( $arrNamespace ); // 弹出空的项
 			$sTitle = array_pop ( $arrNamespace ); // 弹出标题项并另外保存
 			$nKeyFound = - 1; // -1 代表 "未找到",因为无法用 0 做if判断
+			$sPathUrl = '';
 			foreach ( $arrNamespace as $aPath ) {
+				$sPathUrl.='/'.$aPath;
 				foreach ( $arrParentChildren as $nKey => $aChild ) {
 					if ($aChild ['name'] == $aPath) {
 						$nKeyFound = $nKey;
@@ -64,7 +66,13 @@ class DocFrontFrame extends FrontFrame {
 				if ($nKeyFound != - 1) {
 					$arrParentChildren = &$arrParentChildren [$nKeyFound] ['children'];
 				} else {
-					$arrParentChildren [] = array ('name' => $aPath, 'wholeName' => '/' . implode ( '/', $arrNamespace ), 'children' => array (), 'url' => '?c=org.opencomb.doccenter.WikiContent&title=' . '/' . implode ( '/', $arrNamespace ), 'target' => '_self' );
+					$arrParentChildren [] = array (
+							'name' => $aPath, 
+							'wholeName' => '/' . implode ( '/', $arrNamespace ), 
+							'children' => array (), 
+							'url' => '?c=org.opencomb.doccenter.WikiContent&title=' . $sPathUrl, 
+							'target' => '_self' 
+							);
 					$arrParentChildren = &$arrParentChildren [count ( $arrParentChildren ) - 1] ['children'];
 				}
 				$nKeyFound = - 1;
@@ -81,7 +89,12 @@ class DocFrontFrame extends FrontFrame {
 				continue;
 			}
 			// 添加新文档
-			$arrParentChildren [] = array ('name' => $sTitle, 'wholeName' => $aTopic ['title'], 'url' => '?c=org.opencomb.doccenter.WikiContent&title=' . $aTopic ['title'], 'target' => '_self' );
+			$arrParentChildren [] = array (
+					'name' => $sTitle, 
+					'wholeName' => $aTopic ['title'], 
+					'url' => '?c=org.opencomb.doccenter.WikiContent&title=' . $aTopic ['title'], 
+					'target' => '_self' 
+					);
 			$arrParentChildren = &$arrTree;
 		}
 		return $arrTree;
