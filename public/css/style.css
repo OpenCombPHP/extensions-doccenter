@@ -356,6 +356,20 @@ body {
 	padding: 10px 10px 10px 10px;
 }
 .noticeIcon {
+	display: inline-block;
+	width:16px;
+	height:16px;
+	line-height: 16px;
+	background: #eee url(../img/notice_small.png) no-repeat;
+}
+.warningIcon {
+	display: inline-block;
+	width:16px;
+	height:16px;
+	line-height: 16px;
+	background: #eee url(../img/warning_small.png) no-repeat;
+}
+.noticeBlock {
 	display: block;
 	height: auto;
 	margin: 10px;
