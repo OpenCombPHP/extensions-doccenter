@@ -68,7 +68,7 @@ class DocFrontFrame extends FrontFrame {
 				} else {
 					$arrParentChildren [] = array (
 							'name' => $aPath, 
-							'wholeName' => '/' . implode ( '/', $arrNamespace ), 
+							'wholeName' => $sPathUrl, 
 							'children' => array (), 
 							'url' => '?c=org.opencomb.doccenter.WikiContent&title=' . $sPathUrl, 
 							'target' => '_self' 
