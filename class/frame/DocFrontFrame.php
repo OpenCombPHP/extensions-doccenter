@@ -58,9 +58,11 @@ class DocFrontFrame extends FrontFrame {
 			$sPathUrl = '';
 			foreach ( $arrNamespace as $aPath ) {
 				$sPathUrl.='/'.$aPath;
-				foreach ( $arrParentChildren as $nKey => $aChild ) {
-					if ($aChild ['name'] == $aPath) {
-						$nKeyFound = $nKey;
+				if($arrParentChildren){
+					foreach ( $arrParentChildren as $nKey => $aChild ) {
+						if ($aChild ['name'] == $aPath) {
+							$nKeyFound = $nKey;
+						}
 					}
 				}
 				if ($nKeyFound != - 1) {

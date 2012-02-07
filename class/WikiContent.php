@@ -112,7 +112,7 @@ class WikiContent extends DocFrontController {
 					$sExtensionName = $aExtension->metainfo()->title();
 				}
 				$sTranslatedExtension.= $sExtensionName .  "(" . $aContentModel['extension'] . ")";
-				$sTranslatedExtensionEnd = "<div class='extensionWarning'>依赖扩展:" . $sExtensionName .  "(" . $aContentModel['extension'] . ")</div>";
+				$sTranslatedExtensionEnd = "<div class='extensionWarning'><span>依赖扩展:" . $sExtensionName .  "(" . $aContentModel['extension'] . ")</span></div>";
 		}
 		
 		$sTranslatedExtension.=" <label>版本: </label>".Version::from32Integer($aContentModel['version']);
