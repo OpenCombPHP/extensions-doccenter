@@ -82,8 +82,9 @@ jQuery(function() {
 	}
 	
 	function resetApiIndexHeight(){
-		jQuery('#api_index').height( jQuery('.index_scroll').height() - jQuery('#quick_index').outerHeight(true) );
-		jQuery('#api_index_trees').height( jQuery('.index_scroll').height() - jQuery('#quick_index').outerHeight(true) - jquery('#api_index_titlebar').outerHeight(true));
+		var index_scroll = jQuery('#doc_index').find('.index_scroll');
+		jQuery('#api_index').height( index_scroll.height() - jQuery('#quick_index').outerHeight(true) );
+		jQuery('#api_index_trees').height( index_scroll.height() - jQuery('#quick_index').outerHeight(true) - jquery('#api_index_titlebar').outerHeight(true));
 	}
 
 	jQuery('#doc_index_title').toggle(function() {
