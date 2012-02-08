@@ -5,7 +5,7 @@ use org\opencomb\doccenter\formatter\AbstractMultiLineTransformer;
 
 class rmbr extends AbstractMultiLineTransformer {
 	public function pattern() {
-		return '`(</.*?>|<.*?/>)<br />`';
+		return '`(</[^<>]*?>|<[^<>]*?/>)<br />`';
 	}
 	
 	public function replacement(array $arrMatch) {
