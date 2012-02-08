@@ -166,18 +166,23 @@ pre {
 
 #api_index {
 	width: 300px;
-	overflow: scroll;
 	background: #D05D2A;
 }
-
+#api_index_trees{
+	overflow-y:scroll;
+	overflow-x:auto;
+}
 .left_indexs {
 	float: left;
 }
 
 #manual_index {
 	float: left;
-	overflow: scroll;
 	background: #D8D2CE;
+}
+#manual_index_trees{
+	overflow-y:scroll;
+	overflow-x:auto;
 }
 
 .subWikisColumn {
