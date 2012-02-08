@@ -30,7 +30,7 @@ jQuery(function() {
 		numOfManualColumn = 1;
 	}
 	//重置文档容器的宽度
-	jQuery('#doc_index , #doc_index .index_scroll').width(300 + 300*numOfManualColumn+28);//+28px滚动轴偏差
+	jQuery('#doc_index , #doc_index .index_scroll').width(300 + 300*numOfManualColumn+28+8);//+28px滚动轴偏差
 	jQuery("#manual_index").width(300*numOfManualColumn+28);//+28px滚动轴偏差
 	//放置手册文档"跑道"(列)
 	for(var i = 0; i<numOfManualColumn; i++){
@@ -82,7 +82,7 @@ jQuery(function() {
 	}
 	
 	function resetApiIndexHeight(){
-		jQuery('#api_index').height( jQuery('.index_scroll').height() - jQuery('#quick_index').outerHeight(true) );
+		jQuery('#api_index').height( jQuery('.index_scroll').height() - jQuery('#quick_index').outerHeight(true));
 		jQuery('#api_index_trees').height( jQuery('.index_scroll').height() - jQuery('#quick_index').outerHeight(true) - jquery('#api_index_titlebar').outerHeight(true));
 	}
 
@@ -168,40 +168,40 @@ jQuery(function() {
 });
 </script>
 <div id="doc_index">
-	<div class='index_scroll'>
-		<div class='left_indexs'>
-			<div id='quick_index' class='index'>
-				<div id='quick_index_titlebar'>
-					<div class='doc_title'>速查</div>
-					<label>搜索<input type='text' class='keyWord' /></label>
+	<div class="index_scroll">
+		<div class="left_indexs">
+			<div id="quick_index" class="index">
+				<div id="quick_index_titlebar" class="titlebar">
+					<div class="doc_title">速查</div>
+					<label><input type="text" class="keyWord" /></label>
 				</div>
-				<div id='quick_index_trees'>
-					<div id='quick_index_tree' class='ztree'></div>
+				<div id="quick_index_trees">
+					<div id="quick_index_tree" class="ztree">aaa</div>
 				</div>
 			</div>
-			<div id='api_index' class='index'>
-				<div id='api_index_titlebar'>
-					<div class='doc_title'>API</div>
-					<label>搜索<input type='text' class='keyWord' /></label>
+			<div id="api_index" class="index">
+				<div id="api_index_titlebar" class="titlebar">
+					<div class="doc_title">API</div>
+					<label><input type="text" class="keyWord" /></label>
 				</div>
-				<div id='api_index_trees'>
-					<div id='api_index_tree' class='ztree'></div>
+				<div id="api_index_trees">
+					<div id="api_index_tree" class="ztree"></div>
 				</div>
 			</div>
 		</div>
-		<div id='manual_index' class='index'>
-			<div id='manual_index_titlebar'>
-				<div class='doc_title'>手册</div>
-				<label>搜索<input type='text' class='keyWord' /></label>
+		<div id="manual_index" class="index">
+			<div id="manual_index_titlebar" class="titlebar">
+				<div class="doc_title">手 册</div>
+				<label><input type="text" class="keyWord" /></label>
 			</div>
-			<div id='manual_index_trees'>
-				<div id='manual_index_tree' class='ztree'></div>
+			<div id="manual_index_trees">
+				<div id="manual_index_tree" class="ztree"></div>
 			</div>
 		</div>
 	</div>
 	<div id="doc_index_title">文档</div>
-	<div class='block'></div>
+	<div class="block"></div>
 </div>
-<div id='wrapper'>
+<div id="wrapper">
 	<views />
 </div>

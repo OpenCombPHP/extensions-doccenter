@@ -143,14 +143,21 @@ pre {
 	font-size: 24px;
 	line-height: 30px;
 	text-align: center;
-	background: #D05D2A;
+	background:rgba(102,102,102,0.9);
+	box-shadow:0 0 5px rgba(0,0,0,0.2);
+	border-radius:0 0 5px 5px;
 	cursor: pointer;
+	-webkit-transition:all 0.15s ease-in;
+	-moz-transition:all 0.15s ease-in;
 	/*	-webkit-border-bottom-right-radius: 5px;
 	-webkit-border-bottom-left-radius: 5px;
 	-moz-border-radius-bottomright: 5px;
 	-moz-border-radius-bottomleft: 5px;
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;*/
+}
+#doc_index_title:hover{
+	background:rgba(116,197,68,1);
 }
 
 .exampleTitle{
@@ -162,12 +169,17 @@ pre {
 
 #quick_index {
 	width: 300px;
-	background: #108AC6;
+	background: #fff;
+	border-radius:5px;
+	box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;
+	margin-bottom:8px;
 }
 
 #api_index {
 	width: 300px;
-	background: #D05D2A;
+	background: #fff;
+	border-radius:5px;
+	box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;
 }
 #api_index_trees{
 	overflow-y:scroll;
@@ -175,12 +187,14 @@ pre {
 }
 .left_indexs {
 	float: left;
+	margin-right:8px;
 }
 
 #manual_index {
 	float: left;
 	background: #fff;
 	border-radius:5px;
+	box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;
 }
 #manual_index_trees{
 	overflow-y:scroll;
@@ -236,15 +250,6 @@ blockquote {
 	padding-left: 80px;
 }
 
-.title {
-	background: none repeat scroll 0 0 #108AC6;
-	display: block;
-	float: left;
-	height: 18px;
-	margin: 2px 5px 0 0;
-	width: 6px;
-}
-
 table {
 	width: 100%;
 	color: #666;
@@ -298,18 +303,10 @@ td {
 }
 
 /*wiki 文字块区分*/
-.title {
-	display: block;
-	float: left;
-	width: 6px;
-	height: 15px;
-	margin: 1px 5px 0 0;
-	background: #108ac6
-}
-
 .method-detail-item {
+	line-height:200%;
 	border: 1px solid #d5d5d5;
-	padding: 12px 6px 12px 16px;
+	padding: 10px;
 }
 
 .method-list-item,.method-list li {
@@ -348,8 +345,8 @@ body {
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	margin: 10px 305px 10px 10px;
-	padding: 10px 10px 10px 10px;
+	margin: 10px 300px 10px 10px;
+	padding:10px 10px 15px;
 }
 
 .sidebar {
@@ -376,6 +373,19 @@ button{padding:0; margin:0; border-width:0px;}
 #manual_index a.level2 span:hover{ color:#74c544; text-decoration:underline}
 #manual_index a.level3 span{ font-size:12px; color:#666;}
 #manual_index a.level3 span:hover{ color:#74c544; text-decoration:underline}
+
+.titlebar{ background:url(../img/titlebg.jpg) repeat-x 0 0; height:36px; border-radius:5px 5px 0 0;}
+.doc_title{ font-size:18px; font-weight:bold; color:#484848; text-shadow:1px 1px 0 rgba(255,255,255,1); float:left;margin:5px 0 0 10px; background:url(../img/titleborder.gif) repeat-y right 0; height:25px; padding-right:36px;}
+#manual_index .doc_title{padding:0 128px;}
+.titlebar label{ float:right}
+.keyWord{ background:url(../img/keyWord.png) no-repeat 0 0; width:148px; height:20px; border:0px solid #ccc; padding:2px 25px 2px 2px; margin:5px 5px 0 0; color:#484848;}
+
+h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
+
+.main h1{border-left:3px solid #09c;padding:0 0 0 8px; margin:0; font-size: 2em; margin-bottom:8px;}
+.wholepath{ margin-bottom:8px;}
+/* */
+
 .noticeIcon {
 	display: inline-block;
 	width:16px;
@@ -419,7 +429,6 @@ button{padding:0; margin:0; border-width:0px;}
 }
 
 .extensionWarning{
-	height:16px;
 	padding:5px 8px 5px 0;
 }
 .extensionWarning span{

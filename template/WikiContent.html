@@ -9,9 +9,9 @@
 <div class='main'>
 	<msgqueue for="$theController->messageQueue()" />
 	<h1>
-		<span class='title'></span>{=$sTitle}
+		{=$sTitle}
 	</h1>
-	<div>
+	<div class="wholepath">
 		{? $sWholePath}
 		<foreach for='explode("/",$theParams->get("title"))' item='sPath' idx='nIdx'><if '$nIdx==0'>{? continue}</if>{?$sWholePath=$sWholePath.'/'.$sPath}/<a href='?c=org.opencomb.doccenter.WikiContent&title={=$sWholePath}'>{=$sPath}</a></foreach>
 	</div>
@@ -42,7 +42,6 @@
 				</foreach>
 			</div>
 		</div>
-		<br />
 		</foreach>
 	</div>
 </div>
