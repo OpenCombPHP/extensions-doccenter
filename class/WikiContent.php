@@ -96,7 +96,7 @@ class WikiContent extends DocFrontController {
 	}
 	//来源提示,依赖提示
 	public function translateExtension($aContentModel){
-		$sTranslatedExtension = "<label>来源: </label>";
+		$sTranslatedExtension = "<div class='extensioninfo'><label>来源: </label><span class='docversion'>";
 		$sTranslatedExtensionEnd = '';
 		switch($aContentModel['extension'])
 		{
@@ -112,12 +112,12 @@ class WikiContent extends DocFrontController {
 					$sExtensionName = $aExtension->metainfo()->title();
 				}
 				$sTranslatedExtension.= $sExtensionName .  "(" . $aContentModel['extension'] . ")";
-				$sTranslatedExtensionEnd = "<div class='extensionWarning'><span>依赖扩展:" . $sExtensionName .  "(" . $aContentModel['extension'] . ")</span></div>";
+				$sTranslatedExtensionEnd = "<div class='extensionWarning'><span>*依赖扩展：" . $sExtensionName .  "(" . $aContentModel['extension'] . ")</span></div>";
 		}
 		
-		$sTranslatedExtension.=" <label>版本: </label>".Version::from32Integer($aContentModel['version']);
-		$sTranslatedExtension.=" <label>类: </label>".$aContentModel['sourceClass'];
-		$sTranslatedExtension.=" <label>行: </label>".$aContentModel['sourceLine'];
+		$sTranslatedExtension.=" </span><label>版本: </label>".Version::from32Integer($aContentModel['version']);
+		$sTranslatedExtension.=" <label>类: </label><a href='#'>".$aContentModel['sourceClass']."</a>";
+		$sTranslatedExtension.=" <label>行: </label>".$aContentModel['sourceLine']."</div>";
 		$sTranslatedExtension.=$sTranslatedExtensionEnd;
 		return $sTranslatedExtension;
 	}

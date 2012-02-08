@@ -307,6 +307,7 @@ td {
 	line-height:200%;
 	border: 1px solid #d5d5d5;
 	padding: 10px;
+	margin-bottom:8px;
 }
 
 .method-list-item,.method-list li {
@@ -346,7 +347,7 @@ body {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	margin: 10px 300px 10px 10px;
-	padding:10px 10px 15px;
+	padding:10px;
 }
 
 .sidebar {
@@ -380,10 +381,15 @@ button{padding:0; margin:0; border-width:0px;}
 .titlebar label{ float:right}
 .keyWord{ background:url(../img/keyWord.png) no-repeat 0 0; width:148px; height:20px; border:0px solid #ccc; padding:2px 25px 2px 2px; margin:5px 5px 0 0; color:#484848;}
 
-h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
 
-.main h1{border-left:3px solid #09c;padding:0 0 0 8px; margin:0; font-size: 2em; margin-bottom:8px;}
+
+h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
+.main h1{border-left:3px solid #0090ff;padding:0 0 0 8px; margin:0; font-size: 2em; margin-bottom:8px;}
 .wholepath{ margin-bottom:8px;}
+.extensioninfo{margin-bottom:4px; font-size:12px;}
+.extensioninfo a{color:#0090ff;}
+.extensioninfo a:hover{ text-decoration:underline}
+.docversion{ font-weight:bold; color:#F90;font-size:13px;}
 /* */
 
 .noticeIcon {
@@ -403,7 +409,7 @@ h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
 .noticeBlock {
 	display: block;
 	height: auto;
-	margin: 10px;
+	margin:0 0 10px 0;
 	padding: 10px 20px;
 	border: 1px #aaa solid;
 	background: #EEE;
@@ -429,10 +435,32 @@ h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
 }
 
 .extensionWarning{
-	padding:5px 8px 5px 0;
+	background:#fff1f1;
+	border-left:6px solid #f60;
+	padding:5px 5px 5px 10px;
+	font-size:16px;
+	color:#f40;
+	margin-bottom:8px;
 }
-.extensionWarning span{
-	padding:5px 8px;
-	border:1px solid red;
-	background:#FFF4F0;
-}
+.methodlist {color:#333;}
+.methodlist th{ white-space:nowrap} /*th里面的文字不换行*/
+.methodlist h2{margin:14px 0 8px;}
+.methodlist h2 a{ font-weight:bold; font-size:16px; color:#0090ff}
+.methodlist h2 a:hover{ color:#000; text-decoration:underline}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
