@@ -34,7 +34,7 @@ jQuery(function() {
 	jQuery("#manual_index").width(300*numOfManualColumn+28);//+28px滚动轴偏差
 	//放置手册文档"跑道"(列)
 	for(var i = 0; i<numOfManualColumn; i++){
-		jQuery("#manual_index").append('<div class="subWikisColumn"></div>');
+		jQuery("#manual_index_trees").append('<div class="subWikisColumn"></div>');
 	}
 	
 	//展开tree的指定节点
@@ -75,10 +75,15 @@ jQuery(function() {
 				{
 					'height' : window.innerHeight - 30
 				});
+		jQuery('#manual_index_trees').css(
+			{
+				'height' : window.innerHeight - jquery('#manual_index_titlebar').height() -30
+			});
 	}
 	
 	function resetApiIndexHeight(){
 		jQuery('#api_index').height( jQuery('#doc_index').outerHeight() - jQuery('#quick_index').outerHeight());
+		jQuery('#api_index_trees').height( jQuery('#doc_index').outerHeight() - jQuery('#quick_index').outerHeight() - jquery('#api_index_titlebar').outerHeight());
 	}
 
 	jQuery('#doc_index_title').toggle(function() {
@@ -166,25 +171,32 @@ jQuery(function() {
 	<div class='index_scroll'>
 		<div class='left_indexs'>
 			<div id='quick_index' class='index'>
-				<h3>速查</h3>
-				<div>
+				<div id='quick_index_titlebar'>
+					<div class='doc_title'>速查</div>
 					<label>搜索<input type='text' class='keyWord' /></label>
+				</div>
+				<div id='quick_index_trees'>
+					<div id='quick_index_tree' class='ztree'></div>
 				</div>
 			</div>
 			<div id='api_index' class='index'>
-				<h3>API</h3>
-				<div>
+				<div id='api_index_titlebar'>
+					<div class='doc_title'>API</div>
 					<label>搜索<input type='text' class='keyWord' /></label>
 				</div>
-				<div id='api_index_tree' class='ztree'></div>
+				<div id='api_index_trees'>
+					<div id='api_index_tree' class='ztree'></div>
+				</div>
 			</div>
 		</div>
 		<div id='manual_index' class='index'>
-			<h3>手册</h3>
-			<div>
+			<div id='manual_index_titlebar'>
+				<div class='doc_title'>手册</div>
 				<label>搜索<input type='text' class='keyWord' /></label>
 			</div>
-			<div id='manual_index_tree' class='ztree'></div>
+			<div id='manual_index_trees'>
+				<div id='manual_index_tree' class='ztree'></div>
+			</div>
 		</div>
 	</div>
 	<div id="doc_index_title">文档</div>

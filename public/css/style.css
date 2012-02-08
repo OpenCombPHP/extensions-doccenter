@@ -167,19 +167,24 @@ pre {
 
 #api_index {
 	width: 300px;
-	overflow: scroll;
 	background: #D05D2A;
 }
-
+#api_index_trees{
+	overflow-y:scroll;
+	overflow-x:auto;
+}
 .left_indexs {
 	float: left;
 }
 
 #manual_index {
 	float: left;
-	overflow: scroll;
 	background: #fff;
 	border-radius:5px;
+}
+#manual_index_trees{
+	overflow-y:scroll;
+	overflow-x:auto;
 }
 
 .subWikisColumn {
@@ -371,3 +376,54 @@ button{padding:0; margin:0; border-width:0px;}
 #manual_index a.level2 span:hover{ color:#74c544; text-decoration:underline}
 #manual_index a.level3 span{ font-size:12px; color:#666;}
 #manual_index a.level3 span:hover{ color:#74c544; text-decoration:underline}
+.noticeIcon {
+	display: inline-block;
+	width:16px;
+	height:16px;
+	line-height: 16px;
+	background: #eee url(../img/notice_small.png) no-repeat;
+}
+.warningIcon {
+	display: inline-block;
+	width:16px;
+	height:16px;
+	line-height: 16px;
+	background: #eee url(../img/warning_small.png) no-repeat;
+}
+.noticeBlock {
+	display: block;
+	height: auto;
+	margin: 10px;
+	padding: 10px 20px;
+	border: 1px #aaa solid;
+	background: #EEE;
+	line-height: 20px;
+	min-height: 60px;
+	background: #eee url(../img/notice.png) no-repeat 10px 10px;
+	padding-left: 80px;
+}
+.warningBlock {
+	display: block;
+	height: auto;
+	margin: 10px;
+	padding: 10px 20px;
+	border: 1px #aaa solid;
+	background: #EEE;
+	line-height: 20px;
+	min-height: 60px;
+	background: #eee url(../img/warning.png) no-repeat 10px 10px;
+	padding-left: 80px;
+}
+.questionIcon{
+	
+}
+
+.extensionWarning{
+	height:16px;
+	padding:5px 8px 5px 0;
+}
+.extensionWarning span{
+	padding:5px 8px;
+	border:1px solid red;
+	background:#FFF4F0;
+}
