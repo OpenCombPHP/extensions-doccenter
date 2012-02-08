@@ -73,17 +73,17 @@ jQuery(function() {
 	function resetIndexScroll() {
 		jQuery('#doc_index .index_scroll , #manual_index , .left_indexs').css(
 				{
-					'height' : window.innerHeight - 30
+					'height' : window.innerHeight - 46
 				});
 		jQuery('#manual_index_trees').css(
 			{
-				'height' : window.innerHeight - jquery('#manual_index_titlebar').height() -30
+				'height' : window.innerHeight - jquery('#manual_index_titlebar').height() - 46
 			});
 	}
 	
 	function resetApiIndexHeight(){
-		jQuery('#api_index').height( jQuery('#doc_index').outerHeight() - jQuery('#quick_index').outerHeight());
-		jQuery('#api_index_trees').height( jQuery('#doc_index').outerHeight() - jQuery('#quick_index').outerHeight() - jquery('#api_index_titlebar').outerHeight());
+		jQuery('#api_index').height( jQuery('.index_scroll').height() - jQuery('#quick_index').outerHeight(true) );
+		jQuery('#api_index_trees').height( jQuery('.index_scroll').height() - jQuery('#quick_index').outerHeight(true) - jquery('#api_index_titlebar').outerHeight(true));
 	}
 
 	jQuery('#doc_index_title').toggle(function() {
