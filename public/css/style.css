@@ -455,3 +455,8 @@ h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
 .methodlist h2{margin:14px 0 8px;}
 .methodlist h2 a{ font-weight:bold; font-size:16px; color:#0090ff}
 .methodlist h2 a:hover{ color:#000; text-decoration:underline}
+
+#wikiContentIndex div{
+overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;height:20px;
+}
+

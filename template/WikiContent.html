@@ -1,6 +1,10 @@
 <lib name='syntaxhighlighter:php' />
 <lib name='jquery.ui' />
 <div class='sidebar'>
+	<h3>目录</h3>
+	<div id='wikiContentIndex'>
+	
+	</div>
 	<h3>下级wiki</h3>
 	<div id='subWikiTree' class='ztree'></div>
 	<h3>相关wiki</h3>
@@ -66,6 +70,20 @@
 		});
 		//例子默认收起
 		jquery( ".example" ).find('a:first').click();
+		
+		//侧边目录
+		jquery('.methodlist h1,.methodlist h2,.methodlist h3').each(function(b,v){
+			var ha = jquery(v).find('a:first');
+			var hName = ha.attr('name');
+			var indentWidth = 1;
+			if(jquery(v).get(0).nodeName == 'H2'){
+				indentWidth = 2;
+			}else if(jquery(v).get(0).nodeName == 'H3'){
+				indentWidth = 3;
+			}
+			
+			jquery('#wikiContentIndex').append('<div style="margin-left:'+ 18*indentWidth +'px;"><a href="#'+hName+'">'+hName+'</a></div>');
+		});
 		
 		//兄弟项tree
 		var aBrotherTreeData = wikiTree.getNodeByParam('wholeName','{=$theParams->get("title")}',null).getParentNode() ;
