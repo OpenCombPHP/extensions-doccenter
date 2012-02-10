@@ -189,24 +189,30 @@ pre {
 	float: left;
 	margin-right:8px;
 }
-
-#manual_index {
+.right_indexs {
+	overflow-y:scroll;
+	overflow-x:auto;
 	float: left;
+}
+
+#manual_index ,#example_index{
 	background: #fff;
 	border-radius:5px;
 	box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;
 }
 #manual_index_trees{
-	overflow-y:scroll;
-	overflow-x:auto;
+	
+}
+#example_index{
+	margin-top:8px;
 }
 
-.subWikisColumn {
-	width: 300px;
+.subWikisColumn ,.subExamplesColumn {
+	width: 304px;
 	float: left;
 }
 
-.subWikiTree {
+.subWikiTree,.subExampleTree {
 	width: 300px;
 }
 
@@ -371,21 +377,22 @@ body {
 
 /*2012-2-8 Cross*/
 button{padding:0; margin:0; border-width:0px;}
-#manual_index li.level0{border-left:2px solid #666;padding-left:3px;}
-#manual_index li:hover.level0{ border-left:2px solid #74c544}
-#manual_index a.level0 {margin-bottom:8px;}
-#manual_index a.level0 span{ font-size:18px; color:#74c544; font-weight:bold;}
-#manual_index a.level0 span:hover{ text-decoration:underline}
-#manual_index a.level1 span{ font-size:13px; color:#333; padding:0 1px;}
-#manual_index a.level1 span:hover{ background:#74c544; color:#fff; text-decoration:none}
-#manual_index a.level2 span{ font-size:12px; color:#666;}
-#manual_index a.level2 span:hover{ color:#74c544; text-decoration:underline}
-#manual_index a.level3 span{ font-size:12px; color:#666;}
-#manual_index a.level3 span:hover{ color:#74c544; text-decoration:underline}
+#manual_index li.level0,#example_index li.level0{border-left:2px solid #666;padding-left:3px;}
+#manual_index li:hover.level0,#example_index li:hover.level0{ border-left:2px solid #74c544}
+#manual_index a.level0 ,#example_index a.level0 {margin-bottom:8px;}
+#manual_index a.level0 span,#example_index a.level0 span{ font-size:18px; color:#74c544; font-weight:bold;}
+#manual_index a.level0 span:hover,#example_index a.level0 span:hover{ text-decoration:underline}
+#manual_index a.level1 span,#example_index a.level1 span{ font-size:13px; color:#333; padding:0 1px;}
+#manual_index a.level1 span:hover,#example_index a.level1 span:hover{ background:#74c544; color:#fff; text-decoration:none}
+#manual_index a.level2 span,#example_index a.level2 span{ font-size:12px; color:#666;}
+#manual_index a.level2 span:hover,#example_index a.level2 span:hover{ color:#74c544; text-decoration:underline}
+#manual_index a.level3 span,#example_index a.level3 span{ font-size:12px; color:#666;}
+#manual_index a.level3 span:hover,#example_index a.level3 span:hover{ color:#74c544; text-decoration:underline}
 
 .titlebar{ background:url(../img/titlebg.jpg) repeat-x 0 0; height:36px; border-radius:5px 5px 0 0;}
 .doc_title{ font-size:18px; font-weight:bold; color:#484848; text-shadow:1px 1px 0 rgba(255,255,255,1); float:left;margin:5px 0 0 10px; background:url(../img/titleborder.gif) repeat-y right 0; height:25px; padding-right:36px;}
 #manual_index .doc_title{padding:0 128px;}
+#example_index .doc_title{padding:0 128px;}
 .titlebar label{ float:right}
 .keyWord{ background:url(../img/keyWord.png) no-repeat 0 0; width:148px; height:20px; border:0px solid #ccc; padding:2px 25px 2px 2px; margin:5px 5px 0 0; color:#484848;}
 

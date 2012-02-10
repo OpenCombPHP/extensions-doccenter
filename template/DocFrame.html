@@ -24,17 +24,29 @@ jQuery(function() {
 	//wikitree退居幕后
 	jquery("#manual_index_tree").hide();
 	
+	//例子 tree
+	example_info = {=$arrExampleTree};
+	exampleTree = jquery.fn.zTree.init(jquery("#example_index_tree"), {
+		view: {
+			expandSpeed: 0,
+			showIcon:false
+		},
+	}, example_info);
+	//exampletree退居幕后
+	jquery("#example_index_tree").hide();
+	
 	var numOfManualColumn  = Math.floor((jquery(window).width() - 300 - 300) / 300)  // 能容下几列手册文档  (屏宽-预留300px-api和速查文档300px / 每列手册300px)
 	//至少保持有一列文档
 	if(numOfManualColumn == 0){
 		numOfManualColumn = 1;
 	}
 	//重置文档容器的宽度
-	jQuery('#doc_index , #doc_index .index_scroll').width(300 + 300*numOfManualColumn+28+8);//+28px滚动轴偏差
-	jQuery("#manual_index").width(300*numOfManualColumn+28);//+28px滚动轴偏差
+	jQuery('#doc_index , #doc_index .index_scroll').width(300 + 300*numOfManualColumn+50);//+36px滚动轴偏差
+	jQuery(".right_indexs").width(300*numOfManualColumn+36);//+28px滚动轴偏差
 	//放置手册文档"跑道"(列)
 	for(var i = 0; i<numOfManualColumn; i++){
 		jQuery("#manual_index_trees").append('<div class="subWikisColumn"></div>');
+		jQuery("#example_index_trees").append('<div class="subExamplesColumn"></div>');
 	}
 	
 	//展开tree的指定节点
@@ -71,13 +83,9 @@ jQuery(function() {
 	}
 	// 改变目录内容高度
 	function resetIndexScroll() {
-		jQuery('#doc_index .index_scroll , #manual_index , .left_indexs').css(
-				{
-					'height' : window.innerHeight - 46
-				});
-		jQuery('#manual_index_trees').css(
+		jQuery('#doc_index .index_scroll , .right_indexs , .left_indexs').css(
 			{
-				'height' : window.innerHeight - jquery('#manual_index_titlebar').height() - 46
+				'height' : window.innerHeight - 46
 			});
 	}
 	
@@ -113,6 +121,31 @@ jQuery(function() {
 				}, subWikiTreeData[ztreeData]);
 				expandNodes(wikiSubTree,wikiSubTree.getNodesByParam('level',0,null),true);
 				expandNodes(wikiSubTree,wikiSubTree.getNodesByParam('level',1,null),true);
+			}
+		}
+		if(jquery('.subExampleTree').length == 0){
+			//手册文档放入跑道
+			var subExampleTreeData = exampleTree.getNodesByParam('level',0,null);
+			for(var ztreeData in subExampleTreeData){
+				var subTreeContainer = jQuery('<div id="ztree_'+subExampleTreeData[ztreeData].name+'" class="ztree subExampleTree"></div>');
+				//选取一个手册"跑道"
+				//选最短的那条
+				var shortestExampleColumn = [0,100000];
+				var exampleColumns = jQuery('#example_index .subExamplesColumn');
+				exampleColumns.each(function(b,v){
+					if(jQuery(v).height() < shortestExampleColumn[1]){
+						shortestExampleColumn = [b,jQuery(v).height()];
+					}
+				});
+				jquery(exampleColumns[shortestExampleColumn[0]]).append(subTreeContainer);
+				var exampleSubTree = jquery.fn.zTree.init(subTreeContainer, {
+					view: {
+						expandSpeed: 0,
+						showIcon:false
+					},
+				}, subExampleTreeData[ztreeData]);
+				expandNodes(exampleSubTree,exampleSubTree.getNodesByParam('level',0,null),true);
+				expandNodes(exampleSubTree,exampleSubTree.getNodesByParam('level',1,null),true);
 			}
 		}
 	}, function() {
@@ -190,13 +223,26 @@ jQuery(function() {
 				</div>
 			</div>
 		</div>
-		<div id="manual_index" class="index">
-			<div id="manual_index_titlebar" class="titlebar">
-				<div class="doc_title">手 册</div>
-				<label><input type="text" class="keyWord" /></label>
+		<div class="right_indexs">
+			<div id="manual_index" class="index">
+				<div id="manual_index_titlebar" class="titlebar">
+					<div class="doc_title">手 册</div>
+					<label><input type="text" class="keyWord" /></label>
+				</div>
+				<div id="manual_index_trees">
+					<div id="manual_index_tree" class="ztree"></div>
+				</div>
+				<div class='block'></div>
 			</div>
-			<div id="manual_index_trees">
-				<div id="manual_index_tree" class="ztree"></div>
+			<div id="example_index" class="index">
+				<div id="example_index_titlebar" class="titlebar">
+					<div class="doc_title">例 子</div>
+					<label><input type="text" class="keyWord" /></label>
+				</div>
+				<div id="example_index_trees">
+					<div id="example_index_tree" class="ztree"></div>
+				</div>
+				<div class='block'></div>
 			</div>
 		</div>
 	</div>

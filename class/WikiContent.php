@@ -121,6 +121,21 @@ class WikiContent extends DocFrontController {
 		$sTranslatedExtension.=$sTranslatedExtensionEnd;
 		return $sTranslatedExtension;
 	}
+	/**
+	 * 获取例子所在文件的路径
+	 * @return string 
+	 */
+	public function getExamplePath(IModel $aExampleModel){
+		$sSourceClass = $aExampleModel['sourceClass'];
+		$sSourcePackageNamespace = $aExampleModel['sourcePackageNamespace'];
+		$sExtension = $aExampleModel['extension'];
+		foreach(Extension::flyweight($sExtension)->metainfo()->packageIterator() as $arrPackage){
+			list($sNamespace,$sPackagePath) = $arrPackage ;
+			if($sNamespace == $sSourcePackageNamespace){
+				return Extension::flyweight($sExtension)->metainfo()->installPath().$sPackagePath . str_replace( '\\','/', substr($sSourceClass , strLen($sSourcePackageNamespace)) ).'.php';
+			}
+		}
+	}
 }
 
 /*

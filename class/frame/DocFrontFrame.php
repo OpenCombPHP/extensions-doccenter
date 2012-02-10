@@ -8,7 +8,41 @@ use org\opencomb\coresystem\mvc\controller\FrontFrame;
 
 class DocFrontFrame extends FrontFrame {
 	public function createBeanConfig() {
-		return array ('frameview:DocFrameView' => array ('template' => 'DocFrame.html' ), 'model:api' => array ('class' => 'model', 'list' => true, 'orm' => array ('table' => 'class', 'limit' => - 1, 'keys' => array ('extension', 'namespace', 'name', 'version' ) ) ), 'model:wiki' => array ('class' => 'model', 'list' => true, 'orm' => array ('table' => 'topic', 'limit' => - 1 ) ) );
+		return array (
+				'frameview:DocFrameView' => array (
+						'template' => 'DocFrame.html' 
+						), 
+				'model:api' => array (
+						'class' => 'model', 
+						'list' => true, 
+						'orm' => array (
+								'table' => 'class', 
+								'limit' => - 1, 
+								'keys' => array (
+										'extension', 
+										'namespace', 
+										'name', 
+										'version' 
+										) 
+								) 
+						), 
+				'model:wiki' => array (
+						'class' => 'model', 
+						'list' => true, 
+						'orm' => array (
+								'table' => 'topic', 
+								'limit' => - 1 
+								) 
+						), 
+				'model:example' => array (
+						'class' => 'model', 
+						'list' => true, 
+						'orm' => array (
+								'table' => 'example', 
+								'limit' => - 1 
+								) 
+						) 
+				);
 	}
 	
 	public function process() {
@@ -18,6 +52,9 @@ class DocFrontFrame extends FrontFrame {
 		$this->modelWiki->load ();
 		$arrWikiTree = $this->makeWikiTree ( $this->modelWiki );
 		$this->viewDocFrameView->variables ()->set ( 'arrManualTree', json_encode ( $arrWikiTree ) );
+		$this->modelExample->load ();
+		$arrExampleTree = $this->makeExampleTree ( $this->modelExample );
+		$this->viewDocFrameView->variables ()->set ( 'arrExampleTree', json_encode ( $arrExampleTree ) );
 	}
 	
 	private function makeApiTree(IModel $aModelApi) {
@@ -52,7 +89,9 @@ class DocFrontFrame extends FrontFrame {
 		$arrParentChildren = &$arrTree;
 		foreach ( $aModelWiki->childIterator () as $aTopic ) {
 			$arrNamespace = explode ( '/', $aTopic ['title'] );
-			array_shift ( $arrNamespace ); // 弹出空的项
+			if($arrNamespace[0] == ''){
+				array_shift ( $arrNamespace ); // 弹出空的项
+			}
 			$sTitle = array_pop ( $arrNamespace ); // 弹出标题项并另外保存
 			$nKeyFound = - 1; // -1 代表 "未找到",因为无法用 0 做if判断
 			$sPathUrl = '';
@@ -95,6 +134,62 @@ class DocFrontFrame extends FrontFrame {
 					'name' => $sTitle, 
 					'wholeName' => $aTopic ['title'], 
 					'url' => '?c=org.opencomb.doccenter.WikiContent&title=' . $aTopic ['title'], 
+					'target' => '_self' 
+					);
+			$arrParentChildren = &$arrTree;
+		}
+		return $arrTree;
+	}
+	private function makeExampleTree(IModel $aModelExample) {
+		$arrTree = array ();
+		$arrParentChildren = &$arrTree;
+		foreach ( $aModelExample->childIterator () as $aTopic ) {
+			$arrNamespace = explode ( '/', $aTopic ['title'] );
+			if($arrNamespace[0] == ''){
+				array_shift ( $arrNamespace ); // 弹出空的项
+			}
+			$sTitle = array_pop ( $arrNamespace ); // 弹出标题项并另外保存
+			$nKeyFound = - 1; // -1 代表 "未找到",因为无法用 0 做if判断
+			$sPathUrl = '';
+			foreach ( $arrNamespace as $aPath ) {
+				$sPathUrl.='/'.$aPath;
+				if($arrParentChildren){
+					foreach ( $arrParentChildren as $nKey => $aChild ) {
+						if ($aChild ['name'] == $aPath) {
+							$nKeyFound = $nKey;
+						}
+					}
+				}
+				if ($nKeyFound != - 1) {
+					$arrParentChildren = &$arrParentChildren [$nKeyFound] ['children'];
+				} else {
+					$arrParentChildren [] = array (
+							'name' => $aPath, 
+							'wholeName' => $sPathUrl, 
+							'children' => array (), 
+							'url' => '?c=org.opencomb.doccenter.ExampleContent&title=' . $sPathUrl, 
+							'target' => '_self' 
+							);
+					$arrParentChildren = &$arrParentChildren [count ( $arrParentChildren ) - 1] ['children'];
+				}
+				$nKeyFound = - 1;
+			}
+			// 如果有同名的文档就不再重复添加
+			$bHasThisDoc = false;
+			if (is_array ( $arrParentChildren )) {
+				foreach ( $arrParentChildren as $aChild ) {
+					$bHasThisDoc = $bHasThisDoc || $aChild ['name'] == $sTitle;
+				}
+			}
+			if ($bHasThisDoc) {
+				$arrParentChildren = &$arrTree;
+				continue;
+			}
+			// 添加新文档
+			$arrParentChildren [] = array (
+					'name' => $sTitle, 
+					'wholeName' => $aTopic ['title'], 
+					'url' => '?c=org.opencomb.doccenter.ExampleContent&title=' . $aTopic ['title'], 
 					'target' => '_self' 
 					);
 			$arrParentChildren = &$arrTree;
