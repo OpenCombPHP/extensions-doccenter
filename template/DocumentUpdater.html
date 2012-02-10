@@ -75,7 +75,7 @@ function createDoc(arrPath){
 
 function postArrPath(arr){
 	jQuery.post(
-		'/?c=org.opencomb.doccenter.generator.DocumentGenerator&noframe=1',
+		'/?c=org.opencomb.doccenter.generator.DocumentGenerator&rspn=noframe',
 		{path:arr},
 		function(data){
 			var arrError = data.split('\n');
