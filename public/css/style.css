@@ -349,6 +349,14 @@ body {
 	margin: 10px 300px 10px 10px;
 	padding:10px;
 }
+.sourceViewer {
+	background: white;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	margin: 10px 10px 10px 10px;
+	padding:10px;
+}
 
 .sidebar {
 	float: right;
@@ -384,7 +392,7 @@ button{padding:0; margin:0; border-width:0px;}
 
 
 h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
-.main h1{border-left:3px solid #0090ff;padding:0 0 0 8px; margin:0; font-size: 2em; margin-bottom:8px;}
+.main h1 , .sourceViewer h1{border-left:3px solid #0090ff;padding:0 0 0 8px; margin:0; font-size: 2em; margin-bottom:8px;}
 .wholepath{ margin-bottom:8px;}
 .extensioninfo{margin-bottom:4px; font-size:12px;}
 .extensioninfo a{color:#0090ff;}
@@ -447,20 +455,3 @@ h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
 .methodlist h2{margin:14px 0 8px;}
 .methodlist h2 a{ font-weight:bold; font-size:16px; color:#0090ff}
 .methodlist h2 a:hover{ color:#000; text-decoration:underline}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

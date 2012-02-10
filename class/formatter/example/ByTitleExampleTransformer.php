@@ -41,7 +41,7 @@ class ByTitleExampleTransformer extends AbstractSingleLineTransformer {
 					<h3><a href="#">例子:' . $sTitle . '</a></h3>
 					<div>
 						<pre class="brush: php;">
-							' . $str . '
+' . $str . '
 						</pre>
 					</div>
 				</div>';
