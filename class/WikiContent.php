@@ -94,7 +94,21 @@ class WikiContent extends DocFrontController {
 		
 		$this->viewWikiContent->variables ()->set ( 'sSelectedVersion', $sVersion );
 	}
-	//来源提示,依赖提示
+	/**
+	 * 整理例子,合并例子代码
+	 * @return array 
+	 */
+	public function mergeExamples(IModel $aExamplesModel){
+		$arrModels = array();
+		foreach($aExamplesModel->childIterator() as $aModel){
+			$arrModels[$aModel['name']][] = $aModel;
+		}
+		return $arrModels;
+	}
+	
+	/**
+	 * 来源提示,依赖提示
+	 */
 	public function translateExtension($aContentModel){
 		$sTranslatedExtension = "<div class='extensioninfo'><label>来源: </label><span class='docversion'>";
 		$sTranslatedExtensionEnd = '';
