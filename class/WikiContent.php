@@ -30,9 +30,9 @@ class WikiContent extends DocFrontController {
 									'table' => 'example', 
 									'bridge' => 'example_topic', 
 									'orderAsc'=>'index'
-									) 
-							) 
-					), 
+									)
+							)
+					),
 			'model:versions' => array (
 					'class' => 'model', 
 					'list' => true, 

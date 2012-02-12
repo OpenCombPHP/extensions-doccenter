@@ -24,10 +24,34 @@
 	</div>
 
 	<div class='comment'>
+		<h2>简介</h2>
 		{=org\opencomb\doccenter\formatter\Formatter::singleton()->format($aContentModel['comment'])}
 	</div>
 
-	<div class='methodList'></div>
+	<div class='methodList'>
+		<h2>函数列表</h2>
+		<foreach for='$aContentModel->child("methods")->childIterator()' item='aMethodModel'>
+			<div class='method'>
+				<if '{=$aMethodModel['abstract']}'>
+					<span class='method_abstract'>abstract</span>
+				</if>
+				<if '{=$aMethodModel['static']}'>
+					<span class='method_static'>static</span>
+				</if>
+				<span class='method_access'>{=$aMethodModel['access']}</span>
+				<span class='method_name'>{=$aMethodModel['name']}</span>
+				<if '{=$aMethodModel['returnType']}'>
+					<span class='method_returnType'>{=$aMethodModel['returnType']}</span>
+					<if '{=$aMethodModel['returnByRef']}'>
+						<span class='method_returnByRef'>返回指针</span>
+					</if>
+				</if>
+				<div class='method_comment'>
+					{=$aMethodModel['comment']}
+				</div>
+			</div>
+		</foreach>
+	</div>
 
 	<script type="text/javascript">
 		SyntaxHighlighter.defaults['toolbar'] = false;

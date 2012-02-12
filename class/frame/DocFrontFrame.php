@@ -26,7 +26,7 @@ class DocFrontFrame extends FrontFrame {
 		foreach ( $aModelApi->childIterator () as $aClass ) {
 			$arrNamespace = explode ( '\\', $aClass ['namespace'] );
 			$nKeyFound = - 1; // -1 代表 "未找到",因为无法用 0
-			                 // 包
+            // 包
 			foreach ( $arrNamespace as $aPath ) {
 				foreach ( $arrParentChildren as $nKey => $aChild ) {
 					if ($aChild ['name'] == $aPath) {
@@ -36,13 +36,28 @@ class DocFrontFrame extends FrontFrame {
 				if ($nKeyFound != - 1) {
 					$arrParentChildren = &$arrParentChildren [$nKeyFound] ['children'];
 				} else {
-					$arrParentChildren [] = array ('name' => $aPath, 'wholeName' => $aClass ['namespace'], 'children' => array (), 'iconOpen' => 'extensions/doccenter/0.1/public/img/package_open.png', 'iconClose' => 'extensions/doccenter/0.1/public/img/package_close.gif' );
+					$arrParentChildren [] = array (
+							'name' => $aPath, 
+							'wholeName' => $aClass ['namespace'],
+							'children' => array (), 
+							//'url' => '?c=org.opencomb.doccenter.ApiContent&extension=' . $aClass ['extension'] .
+								//'&namespace=' . $aClass ['namespace'] . '&name=' . $aClass ['name'],
+							'iconOpen' => 'extensions/doccenter/0.1/public/img/package_open.png', 
+							'iconClose' => 'extensions/doccenter/0.1/public/img/package_close.gif' 
+							);
 					$arrParentChildren = &$arrParentChildren [count ( $arrParentChildren ) - 1] ['children'];
 				}
 				$nKeyFound = - 1;
 			}
 			// 类
-			$arrParentChildren [] = array ('name' => $aClass ['name'], 'wholeName' => $aClass ['namespace'], 'url' => '?c=org.opencomb.doccenter.ApiContent&extension=' . $aClass ['extension'] . '&namespace=' . $aClass ['namespace'] . '&name=' . $aClass ['name'], 'target' => '_self', 'icon' => 'extensions/doccenter/0.1/public/img/class.gif' );
+			$arrParentChildren [] = array (
+					'name' => $aClass ['name'], 
+					'wholeName' => $aClass ['namespace'], 
+					'url' => '?c=org.opencomb.doccenter.ApiContent&extension=' . $aClass ['extension'] . 
+								'&namespace=' . $aClass ['namespace'] . '&name=' . $aClass ['name'], 
+					'target' => '_self', 
+					'icon' => 'extensions/doccenter/0.1/public/img/class.gif' 
+					);
 			$arrParentChildren = &$arrTree;
 		}
 		return $arrTree;
