@@ -136,13 +136,14 @@ class WikiContent extends DocFrontController {
 		return $sTranslatedExtension;
 	}
 	/**
-	 * 获取例子所在文件的路径
+	 * 获取wiki或者example所在文件的路径
 	 * @return string 
 	 */
-	public function getExamplePath(IModel $aExampleModel){
-		$sSourceClass = $aExampleModel['sourceClass'];
-		$sSourcePackageNamespace = $aExampleModel['sourcePackageNamespace'];
-		$sExtension = $aExampleModel['extension'];
+	public function getPath(IModel $aModel){
+		$aModel->printStruct();
+		$sSourceClass = $aModel['sourceClass'];
+		$sSourcePackageNamespace = $aModel['sourcePackageNamespace'];
+		$sExtension = $aModel['extension'];
 		foreach(Extension::flyweight($sExtension)->metainfo()->packageIterator() as $arrPackage){
 			list($sNamespace,$sPackagePath) = $arrPackage ;
 			if($sNamespace == $sSourcePackageNamespace){

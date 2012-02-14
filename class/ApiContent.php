@@ -92,4 +92,12 @@ class ApiContent extends DocFrontController
 		$this->viewClassContent->variables ()->set ( 'sVersion', $sVersion );
 		$this->viewClassContent->variables ()->set ( 'sName', $sName );
 	}
+	/**
+	 * 类路径转面包屑
+	 * @return string
+	 */
+	static public function APIBreadcrumb(string $sClass){
+		
+		return ;
+	}
 }
