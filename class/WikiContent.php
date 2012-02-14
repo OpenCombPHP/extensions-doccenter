@@ -140,14 +140,20 @@ class WikiContent extends DocFrontController {
 	 * @return string 
 	 */
 	public function getPath(IModel $aModel){
-		$aModel->printStruct();
 		$sSourceClass = $aModel['sourceClass'];
 		$sSourcePackageNamespace = $aModel['sourcePackageNamespace'];
 		$sExtension = $aModel['extension'];
-		foreach(Extension::flyweight($sExtension)->metainfo()->packageIterator() as $arrPackage){
+		if($sExtension == 'framework'){
+			return '/framework/class' . str_replace( '\\','/', substr($sSourceClass , strLen($sSourcePackageNamespace)) ) . '.php';
+		}
+		if($sExtension == 'platform'){
+			return 'platform/class' . str_replace( '\\','/', substr($sSourceClass , strLen($sSourcePackageNamespace)) ) . '.php';
+		}
+		$aExtension = Extension::flyweight($sExtension);
+		foreach($aExtension->metainfo()->packageIterator() as $arrPackage){
 			list($sNamespace,$sPackagePath) = $arrPackage ;
 			if($sNamespace == $sSourcePackageNamespace){
-				return Extension::flyweight($sExtension)->metainfo()->installPath().$sPackagePath . str_replace( '\\','/', substr($sSourceClass , strLen($sSourcePackageNamespace)) ).'.php';
+				return $aExtension->metainfo()->installPath().$sPackagePath . str_replace( '\\','/', substr($sSourceClass , strLen($sSourcePackageNamespace)) ).'.php';
 			}
 		}
 	}
