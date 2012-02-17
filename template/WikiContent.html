@@ -11,7 +11,8 @@
 	<div id='brotherWikiTree' class='ztree'></div>
 </div>
 <div class='main'>
-	<msgqueue for="$theController->messageQueue()" />
+	<msgqueue />
+	<if '!$theModel->isEmpty()'>
 	<h1>
 		{=$sTitle}
 	</h1>
@@ -62,6 +63,7 @@
 		</div>
 		</foreach>
 	</div>
+	</if>
 </div>
 
 <div class="block"></div>

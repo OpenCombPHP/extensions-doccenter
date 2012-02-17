@@ -59,7 +59,7 @@ class WikiContent extends DocFrontController {
 		// 搜集版本列表
 		$arrVersions = array ();
 		$sLastVersion = '';
-		$this->modelVersions->load ( array ($sTitle ), array ('title' ) );
+		$this->modelVersions->load ( array ($sTitle ), array ('title') );
 		foreach ( $this->modelVersions->childIterator () as $aVersion ) {
 			$sStringVersion = ( string ) Version::from32Integer ( $aVersion ['version'] );
 			$arrVersions [$sStringVersion] = $aVersion ['version'];
@@ -76,7 +76,7 @@ class WikiContent extends DocFrontController {
 		if (isset ( $arrVersions [$sVersion] )) {
 			$s32Version = $arrVersions [$sVersion];
 		} else {
-			$this->messageQueue ()->create ( Message::error, "无法定位到指定文档,不存在的版本号" );
+			$this->messageQueue ()->create ( Message::error, "无法定位到指定文档,不存在的title或者不存在的版本号" );
 			return;
 		}
 		
