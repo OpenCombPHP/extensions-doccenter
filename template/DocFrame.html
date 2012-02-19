@@ -25,8 +25,8 @@ jQuery(function() {
 	jquery("#manual_index_tree").hide();
 	
 	//例子 tree
-	example_info = {=$arrExampleTree};
-	var exampleTree = jquery.fn.zTree.init(jquery("#example_index_tree"), {
+	var example_info = {=$arrExampleTree};
+	exampleTree = jquery.fn.zTree.init(jquery("#example_index_tree"), {
 		view: {
 			expandSpeed: 0,
 			showIcon:false
@@ -102,7 +102,7 @@ jQuery(function() {
 			//手册文档放入跑道
 			var subWikiTreeData = wikiTree.getNodesByParam('level',0,null);
 			for(var ztreeData in subWikiTreeData){
-				var subTreeContainer = jQuery('<div id="ztree_'+subWikiTreeData[ztreeData].name+'" class="ztree subWikiTree"></div>');
+				var subTreeContainer = jQuery('<ul id="ztree_wiki_'+subWikiTreeData[ztreeData].name+'" class="ztree subWikiTree"></ul>');
 				//选取一个手册"跑道"
 				//选最短的那条
 				var shortestWikiColumn = [0,100000];
@@ -127,7 +127,7 @@ jQuery(function() {
 			//手册文档放入跑道
 			var subExampleTreeData = exampleTree.getNodesByParam('level',0,null);
 			for(var ztreeData in subExampleTreeData){
-				var subTreeContainer = jQuery('<div id="ztree_'+subExampleTreeData[ztreeData].name+'" class="ztree subExampleTree"></div>');
+				var subTreeContainer = jQuery('<ul id="ztree_example_'+subExampleTreeData[ztreeData].name+'" class="ztree subExampleTree"></ul>');
 				//选取一个手册"跑道"
 				//选最短的那条
 				var shortestExampleColumn = [0,100000];
@@ -210,7 +210,7 @@ jQuery(function() {
 					<label><input type="text" class="keyWord" /></label>
 				</div>
 				<div id="quick_index_trees">
-					<div id="quick_index_tree" class="ztree">aaa</div>
+					<ul id="quick_index_tree" class="ztree">aaa</ul>
 				</div>
 			</div>
 			<div id="api_index" class="index">
@@ -219,7 +219,7 @@ jQuery(function() {
 					<label><input type="text" class="keyWord" /></label>
 				</div>
 				<div id="api_index_trees">
-					<div id="api_index_tree" class="ztree"></div>
+					<ul id="api_index_tree" class="ztree"></ul>
 				</div>
 			</div>
 		</div>
@@ -230,7 +230,7 @@ jQuery(function() {
 					<label><input type="text" class="keyWord" /></label>
 				</div>
 				<div id="manual_index_trees">
-					<div id="manual_index_tree" class="ztree"></div>
+					<ul id="manual_index_tree" class="ztree"></ul>
 				</div>
 				<div class='block'></div>
 			</div>
@@ -240,7 +240,7 @@ jQuery(function() {
 					<label><input type="text" class="keyWord" /></label>
 				</div>
 				<div id="example_index_trees">
-					<div id="example_index_tree" class="ztree"></div>
+					<ul id="example_index_tree" class="ztree"></ul>
 				</div>
 				<div class='block'></div>
 			</div>
