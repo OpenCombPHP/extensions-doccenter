@@ -149,7 +149,9 @@ class WikiContent extends DocFrontController {
 		if($sExtension == 'platform'){
 			return 'platform/class' . str_replace( '\\','/', substr($sSourceClass , strLen($sSourcePackageNamespace)) ) . '.php';
 		}
-		$aExtension = Extension::flyweight($sExtension);
+		if(!$aExtension = Extension::flyweight($sExtension,false)){
+			return "未按装{$sExtension}扩展,无法定位文件";
+		}
 		foreach($aExtension->metainfo()->packageIterator() as $arrPackage){
 			list($sNamespace,$sPackagePath) = $arrPackage ;
 			if($sNamespace == $sSourcePackageNamespace){

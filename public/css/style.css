@@ -452,8 +452,8 @@ h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
 .extensionWarning{
 	background:#fff1f1;
 	border-left:6px solid #f60;
-	padding:5px 5px 5px 10px;
-	font-size:16px;
+	padding:2px 2px 2px 6px;
+	font-size:14px;
 	color:#f40;
 	margin-bottom:8px;
 }
