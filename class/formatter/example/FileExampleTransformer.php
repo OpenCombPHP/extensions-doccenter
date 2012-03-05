@@ -20,7 +20,7 @@ use org\jecat\framework\fs\FileSystem;
 
 class FileExampleTransformer extends AbstractSingleLineTransformer {
 	public function pattern() {
-		return '`\[example (\w*) (\w*) ([a-zA-z0-9/.]*) (\d*) (\d*)\]`';
+		return '`\[example (\w*) (\w*) ([a-zA-Z0-9/.-]*) (\d*) (\d*)\]`';
 	}
 	
 	public function replacement(array $arrMatch) {
