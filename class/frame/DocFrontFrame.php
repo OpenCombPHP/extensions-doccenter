@@ -103,6 +103,9 @@ class DocFrontFrame extends FrontFrame {
 		$arrTree = array ();
 		$arrParentChildren = &$arrTree;
 		foreach ( $aModelWiki->childIterator () as $aTopic ) {
+			if(empty($aTopic ['title'])){
+				continue;
+			}
 			$arrNamespace = explode ( '/', $aTopic ['title'] );
 			if($arrNamespace[0] == ''){
 				array_shift ( $arrNamespace ); // 弹出空的项
@@ -159,6 +162,9 @@ class DocFrontFrame extends FrontFrame {
 		$arrTree = array ();
 		$arrParentChildren = &$arrTree;
 		foreach ( $aModelExample->childIterator () as $aTopic ) {
+			if(empty($aTopic ['title'])){
+				continue;
+			}
 			$arrNamespace = explode ( '/', $aTopic ['title'] );
 			if($arrNamespace[0] == ''){
 				array_shift ( $arrNamespace ); // 弹出空的项
