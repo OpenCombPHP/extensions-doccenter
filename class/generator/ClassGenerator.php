@@ -109,38 +109,36 @@ class ClassGenerator implements IGenerator {
 		return $arrGenerate;
 	}
 	
-	public function cleanInDB(array $arrGenerate, DB $aDB) {
+	public function cleanInDB(FileInfo $aFileInfo, DB $aDB) {
 		try {
-			foreach ( $arrGenerate as $classInfo ) {
-				$version = $classInfo ['version'];
-				$namespace = $classInfo ['namespace'];
-				$name = $classInfo ['name'];
-				$extname = $classInfo ['extension'];
-				
-				// execute
-				$aDB->execute ( 'DELETE doccenter_class,
-				doccenter_method,
-				doccenter_parameter FROM  `doccenter_class` LEFT JOIN (
-					`doccenter_method`
-						LEFT JOIN `doccenter_parameter` ON (
-							`doccenter_method`.`version` =  `doccenter_parameter`.`version`
-							AND  `doccenter_method`.`name` =  `doccenter_parameter`.`method`
-							AND  `doccenter_method`.`class` =  `doccenter_parameter`.`class`
-							AND  `doccenter_method`.`namespace` = `doccenter_parameter`.`namespace`
-							AND  `doccenter_method`.`extension` = `doccenter_parameter`.`extension`
-						)
-					) ON (
-						`doccenter_class`.`name` =  `doccenter_method`.`class`
-						AND `doccenter_class`.`namespace` = `doccenter_method`.`namespace`
-						AND `doccenter_class`.`version` = `doccenter_method`.`version`
-						AND `doccenter_class`.`extension` = `doccenter_method`.`extension`
+			$version = $aFileInfo->version() ;
+			$namespace = $aFileInfo->ns() ;
+			$name = $aFileInfo->sourceClassName() ;
+			$extname = $aFileInfo->extension() ;
+			
+			// execute
+			$aDB->execute ( 'DELETE doccenter_class,
+			doccenter_method,
+			doccenter_parameter FROM  `doccenter_class` LEFT JOIN (
+				`doccenter_method`
+					LEFT JOIN `doccenter_parameter` ON (
+						`doccenter_method`.`version` =  `doccenter_parameter`.`version`
+						AND  `doccenter_method`.`name` =  `doccenter_parameter`.`method`
+						AND  `doccenter_method`.`class` =  `doccenter_parameter`.`class`
+						AND  `doccenter_method`.`namespace` = `doccenter_parameter`.`namespace`
+						AND  `doccenter_method`.`extension` = `doccenter_parameter`.`extension`
 					)
-				WHERE (
-					`doccenter_class`.`name` = "' . $name . '"
-					AND `doccenter_class`.`namespace` = "' . addslashes ( $namespace ) . '"
-					AND `doccenter_class`.`version` = "' . $version . '"
-					AND `doccenter_class`.`extension` = "' . $extname . '")' );
-			}
+				) ON (
+					`doccenter_class`.`name` =  `doccenter_method`.`class`
+					AND `doccenter_class`.`namespace` = `doccenter_method`.`namespace`
+					AND `doccenter_class`.`version` = `doccenter_method`.`version`
+					AND `doccenter_class`.`extension` = `doccenter_method`.`extension`
+				)
+			WHERE (
+				`doccenter_class`.`name` = "' . $name . '"
+				AND `doccenter_class`.`namespace` = "' . addslashes ( $namespace ) . '"
+				AND `doccenter_class`.`version` = "' . $version . '"
+				AND `doccenter_class`.`extension` = "' . $extname . '")' );
 		} catch ( ExecuteException $e ) {
 			echo $e->message ();
 			echo $aDB->executeLog ( false );
