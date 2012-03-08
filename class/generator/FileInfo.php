@@ -81,9 +81,10 @@ class FileInfo {
 		// sourceClass
 		$sSourceClass = '';
 		foreach ( $aTokenPool->classIterator () as $aClassToken ) {
-			$sSourceClass = $aClassToken->fullName ();
-			$aFileInfo->sSourceClassName = $aClassToken->name() ;
-			break;
+			if( '' === $sSourceClass ){
+				$sSourceClass = $aClassToken->fullName ();
+			}
+			$aFileInfo->arrSourceClassNameList[] = $aClassToken->name() ;
 		}
 		$aFileInfo->sSourceClass = $sSourceClass;
 		
@@ -114,8 +115,8 @@ class FileInfo {
 		return $this->sSourceClass;
 	}
 	
-	public function sourceClassName(){
-		return $this->sSourceClassName ;
+	public function sourceClassNameList(){
+		return $this->arrSourceClassNameList ;
 	}
 	
 	static private function isInFolder(IFSO $aFSO, IFolder $aFolder) {
@@ -134,5 +135,5 @@ class FileInfo {
 	private $nVersion;
 	private $sSourcePackageNamespace;
 	private $sSourceClass;
-	private $sSourceClassName='';
+	private $arrSourceClassNameList=array();
 }

@@ -113,8 +113,10 @@ class ClassGenerator implements IGenerator {
 		try {
 			$version = $aFileInfo->version() ;
 			$namespace = $aFileInfo->ns() ;
-			$name = $aFileInfo->sourceClassName() ;
+			
 			$extname = $aFileInfo->extension() ;
+			
+			foreach($aFileInfo->sourceClassNameList() as $name){
 			
 			// execute
 			$aDB->execute ( 'DELETE doccenter_class,
@@ -139,6 +141,7 @@ class ClassGenerator implements IGenerator {
 				AND `doccenter_class`.`namespace` = "' . addslashes ( $namespace ) . '"
 				AND `doccenter_class`.`version` = "' . $version . '"
 				AND `doccenter_class`.`extension` = "' . $extname . '")' );
+			}
 		} catch ( ExecuteException $e ) {
 			echo $e->message ();
 			echo $aDB->executeLog ( false );
