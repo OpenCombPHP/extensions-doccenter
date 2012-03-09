@@ -2,7 +2,7 @@
 namespace org\opencomb\doccenter\generator;
 
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\compile\CompilerFactory;
 use org\jecat\framework\db\DB;
 
@@ -36,7 +36,7 @@ class DocumentGenerator extends ControlPanel {
 	}
 	
 	private function getTokenPool($path) {
-		$aFile = FileSystem::singleton ()->findFile ( $path );
+		$aFile = Folder::singleton ()->findFile ( $path );
 		if ($aFile === null)
 			return null;
 		$aInputStream = $aFile->openReader ();

@@ -3,7 +3,7 @@ namespace org\opencomb\doccenter\formatter\example;
 
 use org\opencomb\doccenter\formatter\AbstractSingleLineTransformer;
 use org\opencomb\platform\ext\ExtensionManager;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 
 /**
  * @wiki /文档中心/wiki语法
@@ -27,7 +27,7 @@ class FileExampleTransformer extends AbstractSingleLineTransformer {
 		list ( $sAll, $sLang, $sExtName, $sPath, $nBegin, $nEnd ) = $arrMatch;
 		
 		$sFilePath = ExtensionManager::singleton ()->extensionMetainfo ( $sExtName )->installPath () . '/' . $sPath;
-		$aFile = FileSystem::singleton ()->findFile ( $sFilePath, FileSystem::FIND_AUTO_CREATE_OBJECT );
+		$aFile = Folder::singleton ()->findFile ( $sFilePath, Folder::FIND_AUTO_CREATE_OBJECT );
 		if (! $aFile->exists ()) {
 			return '';
 		}

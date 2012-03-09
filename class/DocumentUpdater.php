@@ -4,7 +4,7 @@ namespace org\opencomb\doccenter;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\compile\CompilerFactory;
-use org\jecat\framework\fs\IFolder;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\fs\FSIterator;
 
 class DocumentUpdater extends ControlPanel {
@@ -41,14 +41,14 @@ class DocumentUpdater extends ControlPanel {
 		return $arrTree;
 	}
 	
-	private function getFileTree(IFolder $aFolder, &$arr) {
+	private function getFileTree(Folder $aFolder, &$arr) {
 		$aFSIterator = $aFolder->iterator ( (FSIterator::FLAG_DEFAULT ^ FSIterator::RECURSIVE_SEARCH) | FSIterator::RETURN_FSO );
 		if (! isset ( $arr ['files'] )) {
 			$arr ['files'] = array ();
 		}
 		foreach ( $aFSIterator as $aFSO ) {
 			$arrChild = array ();
-			if ($aFSO instanceof IFolder) {
+			if ($aFSO instanceof Folder) {
 				$this->getFileTree ( $aFSO, $arrChild );
 				$arr [$aFSO->name ()] = $arrChild;
 			} else {
@@ -87,7 +87,7 @@ class DocumentUpdater extends ControlPanel {
 		return $arrTree;
 	}
 	
-	private function buildNode(IFolder $aFolder) {
+	private function buildNode(Folder $aFolder) {
 		$arrNode = array ();
 		$aFSIterator = $aFolder->iterator ( (FSIterator::FLAG_DEFAULT ^ FSIterator::RECURSIVE_SEARCH) | FSIterator::RETURN_FSO );
 		foreach ( $aFSIterator as $aFSO ) {

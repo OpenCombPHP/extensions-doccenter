@@ -5,15 +5,15 @@ use org\jecat\framework\lang\compile\object\TokenPool;
 use org\opencomb\platform\ext\ExtensionManager;
 use org\jecat\framework\util\Version;
 use org\opencomb\platform\Platform;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\oop\ClassLoader;
-use org\jecat\framework\fs\IFSO;
-use org\jecat\framework\fs\IFolder;
+use org\jecat\framework\fs\FSO;
+use org\jecat\framework\fs\Folder;
 
 class FileInfo {
 	static public function create(TokenPool $aTokenPool, $sPath) {
 		// file
-		$aFile = FileSystem::singleton ()->findFile ( $sPath );
+		$aFile = Folder::singleton ()->findFile ( $sPath );
 		if ($aFile === null)
 			return null;
 			
@@ -113,7 +113,7 @@ class FileInfo {
 		return $this->sSourceClass;
 	}
 	
-	static private function isInFolder(IFSO $aFSO, IFolder $aFolder) {
+	static private function isInFolder(FSO $aFSO, Folder $aFolder) {
 		while ( $aFSO !== null ) {
 			if ($aFSO === $aFolder) {
 				return true;

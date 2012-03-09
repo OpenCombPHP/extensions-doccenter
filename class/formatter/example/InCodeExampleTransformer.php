@@ -3,7 +3,7 @@ namespace org\opencomb\doccenter\formatter\example;
 
 use org\opencomb\doccenter\formatter\AbstractMultiLineTransformer;
 use org\opencomb\platform\ext\ExtensionManager;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 
 /**
  * @wiki /文档中心/wiki语法
