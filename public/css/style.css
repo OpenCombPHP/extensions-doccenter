@@ -113,7 +113,6 @@ pre {
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 	box-shadow:0 0 5px rgba(0,0,0,0.4);
-	font-family:"微软雅黑",Arial, Helvetica, sans-serif
 }
 /*#doc_index a {
 	font-size:12px;
@@ -260,7 +259,7 @@ blockquote {
 table {
 	width: 100%;
 	color: #333;
-	font-size: 12px;
+	font-size: 1em;
 	border: 1px solid #e4e4e4;
 	margin: 10px 0;
 } /*background:url(../images/tablebg.gif) repeat 0 0;*/
@@ -335,10 +334,6 @@ td {
 	font-weight: bold;
 }
 
-#wrapper {
-	
-}
-
 .main {
 	background: white;
 	border-radius: 5px;
@@ -387,7 +382,7 @@ button{padding:0; margin:0; border-width:0px;}
 #example_index a.level3 span:hover{ color:#08c; text-decoration:underline}
 
 .titlebar{ background:url(../img/titlebg.jpg) repeat-x 0 0; height:36px; border-radius:5px 5px 0 0;}
-.doc_title{ font-size:18px; font-weight:bold; color:#484848; text-shadow:1px 1px 0 rgba(255,255,255,1); float:left;margin:5px 0 0 10px; background:url(../img/titleborder.gif) repeat-y right 0; height:25px; padding-right:36px;}
+.doc_title{ font-size:18px; font-weight:bold; color:#484848; text-shadow:1px 1px 0 rgba(255,255,255,1); float:left;margin:5px 0 0 10px; background:url(../img/titleborder.gif) repeat-y right 0; height:25px; padding-right:36px;font-family:"微软雅黑",Arial, Helvetica, sans-serif}
 #manual_index .doc_title{padding:0 128px;}
 #example_index .doc_title{padding:0 128px;}
 .titlebar label{ float:right}
@@ -458,10 +453,15 @@ h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
 .methodlist {color:#333;font-size:1.3em;line-height:2em;}
 .methodlist th{ white-space:nowrap} /*th里面的文字不换行*/
 .methodlist h2{margin:14px 0 8px;}
-.methodlist h2 a{ font-weight:bold; font-size:16px; color:#0090ff}
+.methodlist h2 a{ font-weight:bold; font-size:1em; color:#0090ff}
 .methodlist h2 a:hover{ color:#000; text-decoration:underline}
 
 #wikiContentIndex div{
 overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;height:20px;
 }
 
+.ztree{ font-size:1.2em}
+
+.sidebar{font-size:1.2em;}
+.sidebar h3{font-weight:normal; font-size:2em}
+.sourceContent{font-size:1.2em;}
