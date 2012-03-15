@@ -258,7 +258,7 @@ blockquote {
 
 table {
 	width: 100%;
-	color: #666;
+	color: #333;
 	font-size: 12px;
 	border: 1px solid #e4e4e4;
 	margin: 10px 0;
@@ -308,6 +308,7 @@ td {
 	color: blue;
 }
 
+.gray{color:#ccc}
 /*wiki 文字块区分*/
 .method-detail-item {
 	line-height:200%;
@@ -378,16 +379,21 @@ body {
 /*2012-2-8 Cross*/
 button{padding:0; margin:0; border-width:0px;}
 #manual_index li.level0,#example_index li.level0{border-left:2px solid #666;padding-left:3px;}
-#manual_index li:hover.level0,#example_index li:hover.level0{ border-left:2px solid #74c544}
-#manual_index a.level0 ,#example_index a.level0 {margin-bottom:8px;}
-#manual_index a.level0 span,#example_index a.level0 span{ font-size:18px; color:#74c544; font-weight:bold;}
+#manual_index li:hover.level0{ border-left:2px solid #74c544}
+#example_index li:hover.level0{ border-left:2px solid #08c}
+#manual_index a.level0 ,#example_index a.level0 {margin-bottom:2px;}
+#manual_index a.level0 span{ font-size:14px; color:#74c544; font-weight:bold;}
+#example_index a.level0 span{ font-size:14px; color:#08c; font-weight:bold;}
 #manual_index a.level0 span:hover,#example_index a.level0 span:hover{ text-decoration:underline}
-#manual_index a.level1 span,#example_index a.level1 span{ font-size:13px; color:#333; padding:0 1px;}
-#manual_index a.level1 span:hover,#example_index a.level1 span:hover{ background:#74c544; color:#fff; text-decoration:none}
+#manual_index a.level1 span,#example_index a.level1 span{ font-size:14px; color:#333; padding:0 1px;}
+#manual_index a.level1 span:hover{ background:#74c544; color:#fff; text-decoration:none}
+#example_index a.level1 span:hover{ background:#08c; color:#fff; text-decoration:none}
 #manual_index a.level2 span,#example_index a.level2 span{ font-size:12px; color:#666;}
-#manual_index a.level2 span:hover,#example_index a.level2 span:hover{ color:#74c544; text-decoration:underline}
+#manual_index a.level2 span:hover{ color:#74c544; text-decoration:underline}
+#example_index a.level2 span:hover{ color:#08c; text-decoration:underline}
 #manual_index a.level3 span,#example_index a.level3 span{ font-size:12px; color:#666;}
-#manual_index a.level3 span:hover,#example_index a.level3 span:hover{ color:#74c544; text-decoration:underline}
+#manual_index a.level3 span:hover{ color:#74c544; text-decoration:underline}
+#example_index a.level3 span:hover{ color:#08c; text-decoration:underline}
 
 .titlebar{ background:url(../img/titlebg.jpg) repeat-x 0 0; height:36px; border-radius:5px 5px 0 0;}
 .doc_title{ font-size:18px; font-weight:bold; color:#484848; text-shadow:1px 1px 0 rgba(255,255,255,1); float:left;margin:5px 0 0 10px; background:url(../img/titleborder.gif) repeat-y right 0; height:25px; padding-right:36px;}
@@ -402,9 +408,9 @@ h1,h2,h3,h4,h5,h6{padding:0;margin:0;}
 .main h1 , .sourceViewer h1{border-left:3px solid #0090ff;padding:0 0 0 8px; margin:0; font-size: 2em; margin-bottom:8px;}
 .wholepath{ margin-bottom:8px;}
 .extensioninfo{margin-bottom:4px; font-size:12px;}
-.extensioninfo a{color:#0090ff;}
+.extensioninfo a{color:#ccc;}
 .extensioninfo a:hover{ text-decoration:underline}
-.docversion{ font-weight:bold; color:#F90;font-size:13px;}
+.docversion{color:#F90;font-size:13px;}
 /* */
 
 .noticeIcon {
