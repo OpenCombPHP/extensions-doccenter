@@ -8,7 +8,6 @@ use org\opencomb\platform\Platform;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\fs\FSO;
-use org\jecat\framework\fs\Folder;
 
 class FileInfo {
 	static public function create(TokenPool $aTokenPool, $sPath) {
@@ -129,4 +128,5 @@ class FileInfo {
 	private $nVersion;
 	private $sSourcePackageNamespace;
 	private $sSourceClass;
+	private $arrSourceClassNameList=array();
 }

@@ -27,7 +27,7 @@ class DocumentGenerator extends ControlPanel {
 			
 			foreach ( $arrGenerator as $aGenerator ) {
 				$arrGenerate = $aGenerator->generate ( $aTokenPool, $aFileInfo );
-				if (TRUE == $aGenerator->cleanInDB ( $arrGenerate, $aDB )) {
+				if (TRUE == $aGenerator->cleanInDB ( $aFileInfo, $aDB )) {
 					$aGenerator->saveInDB ( $arrGenerate, $aDB );
 				}
 			}

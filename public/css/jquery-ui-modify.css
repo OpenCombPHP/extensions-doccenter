@@ -1,0 +1,10 @@
+div .ui-accordion{margin-top:10px;}
+div .ui-widget{ font-size:1em;}
+
+div .ui-state-default,div .ui-widget-content .ui-state-default,div .ui-widget-header .ui-state-default{ font-weight:normal}
+
+div .ui-state-default a,div .ui-state-default a:link,div .ui-state-default a:visited{color:#999}
+div .ui-accordion .ui-accordion-header a{padding:0.3em 0.5em 0.3em 0.7em}
+div .ui-accordion-icons .ui-accordion-header a{padding-left:2.2em}
+
+div .ui-state-default a:hover{color:#EB8F00}

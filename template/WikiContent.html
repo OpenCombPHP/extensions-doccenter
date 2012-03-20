@@ -19,8 +19,8 @@
 	<div class="wholepath">
 		{? $sWholePath}
 		<foreach for='explode("/",$theParams->get("title"))' item='sPath' idx='nIdx'><if '$nIdx==0'>{? continue}</if>{?$sWholePath=$sWholePath.'/'.$sPath}/<a href='?c=org.opencomb.doccenter.WikiContent&title={=$sWholePath}'>{=$sPath}</a></foreach>
-		<span>来源: {=$theModel->childIterator()->current()->data('sourceClass')} </span>
-		<span>文件: {=$theController->getPath($theModel->childIterator()->current())} </span>
+		<span>来源: <em class="gray">{=$theModel->childIterator()->current()->data('sourceClass')} </em></span>
+		<span>文件: <em class="gray">{=$theController->getPath($theModel->childIterator()->current())} </em></span>
 	</div>
 	<div class='methodlist'>
 		<foreach for='$theModel->childIterator()' item='aContentModel'>

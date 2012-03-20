@@ -103,29 +103,27 @@ class ExampleGenerator implements IGenerator {
 		return $arrDoc;
 	}
 	
-	public function cleanInDB(array $arrGenerate, DB $aDB) {
-		foreach ( $arrGenerate as $generate ) {
-			$extension = $generate ['extension'];
-			$version = $generate ['version'];
-			$sourcePackageNamespace = $generate ['sourcePackageNamespace'];
-			$sourceClass = $generate ['sourceClass'];
-			$aDB->execute ( 'DELETE 
-						doccenter_example,
-						doccenter_example_class,
-						doccenter_example_method ,
-						doccenter_example_topic
-					FROM 
-						`doccenter_example`
-							LEFT JOIN `doccenter_example_class` ON `doccenter_example`.`eid` = `doccenter_example_class`.`eid`
-							LEFT JOIN `doccenter_example_method` ON `doccenter_example`.`eid` = `doccenter_example_method`.`eid`
-							LEFT JOIN `doccenter_example_topic` ON `doccenter_example`.`eid` = `doccenter_example_topic`.`eid`
-					WHERE (
-						`doccenter_example`.`extension` = "' . $extension . '"
-						AND `doccenter_example`.`version` = "' . $version . '"
-						AND `doccenter_example`.`sourcePackageNamespace` = "' . addslashes ( $sourcePackageNamespace ) . '"
-						AND `doccenter_example`.`sourceClass` = "' . addslashes ( $sourceClass ) . '"
-					)' );
-		}
+	public function cleanInDB(FileInfo $aFileInfo, DB $aDB) {
+		$extension = $aFileInfo->extension() ;
+		$version = $aFileInfo->version() ;
+		$sourcePackageNamespace = $aFileInfo->sourcePackageNamespace() ;
+		$sourceClass = $aFileInfo->sourceClass() ;
+		$aDB->execute ( 'DELETE 
+					doccenter_example,
+					doccenter_example_class,
+					doccenter_example_method ,
+					doccenter_example_topic
+				FROM 
+					`doccenter_example`
+						LEFT JOIN `doccenter_example_class` ON `doccenter_example`.`eid` = `doccenter_example_class`.`eid`
+						LEFT JOIN `doccenter_example_method` ON `doccenter_example`.`eid` = `doccenter_example_method`.`eid`
+						LEFT JOIN `doccenter_example_topic` ON `doccenter_example`.`eid` = `doccenter_example_topic`.`eid`
+				WHERE (
+					`doccenter_example`.`extension` = "' . $extension . '"
+					AND `doccenter_example`.`version` = "' . $version . '"
+					AND `doccenter_example`.`sourcePackageNamespace` = "' . addslashes ( $sourcePackageNamespace ) . '"
+					AND `doccenter_example`.`sourceClass` = "' . addslashes ( $sourceClass ) . '"
+				)' );
 		return TRUE;
 	}
 	

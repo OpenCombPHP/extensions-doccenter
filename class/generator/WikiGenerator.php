@@ -52,21 +52,19 @@ class WikiGenerator implements IGenerator {
 		return $arrWikis;
 	}
 	
-	public function cleanInDB(array $arrGenerate, DB $aDB) {
-		foreach ( $arrGenerate as $generate ) {
-			$extension = $generate ['extension'];
-			$version = $generate ['version'];
-			$sourcePackageNamespace = $generate ['sourcePackageNamespace'];
-			$sourceClass = $generate ['sourceClass'];
-			$aDB->execute ( 'DELETE FROM
-						doccenter_topic
-					WHERE (
-						`extension` = "' . $extension . '"
-						AND `version` = "' . $version . '"
-						AND `sourcePackageNamespace` = "' . addslashes ( $sourcePackageNamespace ) . '"
-						AND `sourceClass` = "' . addslashes ( $sourceClass ) . '"
-					)' );
-		}
+	public function cleanInDB(FileInfo $aFileInfo, DB $aDB) {
+		$extension = $aFileInfo->extension() ;
+		$version = $aFileInfo->version() ;
+		$sourcePackageNamespace = $aFileInfo->sourcePackageNamespace() ;
+		$sourceClass = $aFileInfo->sourceClass() ;
+		$aDB->execute ( 'DELETE FROM
+					doccenter_topic
+				WHERE (
+					`extension` = "' . $extension . '"
+					AND `version` = "' . $version . '"
+					AND `sourcePackageNamespace` = "' . addslashes ( $sourcePackageNamespace ) . '"
+					AND `sourceClass` = "' . addslashes ( $sourceClass ) . '"
+				)' );
 		return TRUE;
 	}
 	
