@@ -4,7 +4,7 @@ namespace org\opencomb\doccenter\generator;
 use org\jecat\framework\lang\compile\object\TokenPool;
 use org\opencomb\platform\ext\ExtensionManager;
 use org\jecat\framework\util\Version;
-use org\opencomb\platform\Platform;
+use org\opencomb\platform\service\Service;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\fs\FSO;
@@ -58,7 +58,7 @@ class FileInfo {
 				$aVersion = Version::FromString ( \org\jecat\framework\VERSION );
 				break;
 			case 'platform' :
-				$aVersion = Platform::singleton ()->version ();
+				$aVersion = Service::singleton ()->version ();
 				break;
 			default :
 				$aVersion = $aExtensionManager->extensionMetainfo ( $sExtensionName )->version ();
