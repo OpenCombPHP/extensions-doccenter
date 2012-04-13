@@ -25,7 +25,7 @@ class DocCenter extends Extension {
 		// 合并配置数组，增加菜单
 		BeanFactory::mergeConfig(
 				$arrConfig
-				, BeanFactory::singleton()->findConfig('widget/control-panel-frame-menu','version-repos-tool')
+				, BeanFactory::singleton()->findConfig('widget/control-panel-frame-menu','doccenter')
 		) ;
 	}
 }
