@@ -3,7 +3,7 @@
 	<name>doccenter</name>
 	<version>0.1</version>
 	<title>文档中心</title>
-
+	<description>生成文档,以及文档的显示</description>
 
 	<class>org.opencomb.doccenter.DocCenter</class>
 	<package folder="/class" namespace="org.opencomb.doccenter" />
