@@ -4,19 +4,18 @@ namespace org\opencomb\doccenter\generator;
 use org\jecat\framework\lang\compile\object\TokenPool;
 use org\opencomb\platform\ext\ExtensionManager;
 use org\jecat\framework\util\Version;
-use org\opencomb\platform\service\Service;
+use org\opencomb\platform\Platform;
 use org\jecat\framework\fs\Folder;
+use org\jecat\framework\fs\File;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\fs\FSO;
 
 class FileInfo {
 	static public function create(TokenPool $aTokenPool, $sPath) {
 		// file
-		$aFile = Folder::singleton ()->findFile ( $sPath );
-		if ($aFile === null)
-			return null;
-			
-			// fileInfo
+		$aFile = new File ( $sPath );
+		
+		// fileInfo
 		$aFileInfo = new FileInfo ();
 		
 		// path
@@ -58,10 +57,15 @@ class FileInfo {
 				$aVersion = Version::FromString ( \org\jecat\framework\VERSION );
 				break;
 			case 'platform' :
-				$aVersion = Service::singleton ()->version ();
+				$aVersion = Platform::singleton ()->version ();
 				break;
 			default :
-				$aVersion = $aExtensionManager->extensionMetainfo ( $sExtensionName )->version ();
+				$aExt = $aExtensionManager->extensionMetainfo ( $sExtensionName ) ;
+				if( $aExt ){
+					$aVersion = $aExt->version ();
+				}else{
+					$aVersion = Version::FromString ( "0.0.0" );
+				}
 				break;
 		}
 		$aFileInfo->nVersion = $aVersion->to32Integer ();
@@ -112,14 +116,17 @@ class FileInfo {
 		return $this->sSourceClass;
 	}
 	
+	public function sourceClassNameList(){
+		return $this->arrSourceClassNameList ;
+	}
+	
 	static private function isInFolder(FSO $aFSO, Folder $aFolder) {
-		while ( $aFSO !== null ) {
-			if ($aFSO === $aFolder) {
-				return true;
-			}
-			$aFSO = $aFSO->directory ();
+		$nLength = strlen( $aFolder->path() );
+		if( substr( $aFSO->path() , 0 , $nLength ) === $aFolder->path() ){
+			return true;
+		}else{
+			return false;
 		}
-		return false;
 	}
 	
 	private $sPath;

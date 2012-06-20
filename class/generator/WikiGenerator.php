@@ -3,7 +3,7 @@ namespace org\opencomb\doccenter\generator;
 
 use org\jecat\framework\lang\compile\object\TokenPool;
 use org\jecat\framework\db\DB;
-use org\jecat\framework\db\sql\StatementFactory;
+use org\jecat\framework\db\sql\Insert;
 
 class WikiGenerator implements IGenerator {
 	public function generate(TokenPool $aTokenPool, FileInfo $aFileInfo) {
@@ -72,9 +72,9 @@ class WikiGenerator implements IGenerator {
 		$arrKeyExample = array ('extension', 'version', 'title', 'index', 'text', 'sourcePackageNamespace', 'sourceClass', 'sourceLine' );
 		foreach ( $arrGenerate as $generate ) {
 			// wiki
-			$aWikiInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_topic' );
+			$aWikiInsert = new Insert ( 'doccenter_topic' );
 			foreach ( $arrKeyExample as $sKey ) {
-				$aWikiInsert->setData ( '`' . $sKey . '`', $generate [$sKey] );
+				$aWikiInsert->setData ( $sKey , $generate [$sKey] );
 			}
 			$aDB->execute ( $aWikiInsert );
 		}

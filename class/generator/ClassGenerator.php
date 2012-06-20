@@ -4,7 +4,7 @@ namespace org\opencomb\doccenter\generator;
 use org\jecat\framework\lang\compile\object\TokenPool;
 use org\jecat\framework\db\DB;
 use org\jecat\framework\lang\compile\object\NamespaceDeclare;
-use org\jecat\framework\db\sql\StatementFactory;
+use org\jecat\framework\db\sql\Insert;
 
 class ClassGenerator implements IGenerator {
 	public function generate(TokenPool $aTokenPool, FileInfo $aFileInfo) {
@@ -156,7 +156,7 @@ class ClassGenerator implements IGenerator {
 	public function saveInDB(array $arrGenerate, DB $aDB) {
 		try {
 			foreach ( $arrGenerate as $classInfo ) {
-				$aClassInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_class' );
+				$aClassInsert = new Insert ( 'doccenter_class' );
 				$aClassInsert->setData ( 'namespace', $classInfo ['namespace'] );
 				$aClassInsert->setData ( 'name', $classInfo ['name'] );
 				$aClassInsert->setData ( 'version', $classInfo ['version'] );
@@ -167,7 +167,7 @@ class ClassGenerator implements IGenerator {
 				
 				// insert function
 				foreach ( $classInfo ['functionlist'] as $functionInfo ) {
-					$aFunctionInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_method' );
+					$aFunctionInsert = new Insert ( 'doccenter_method' );
 					foreach ( $functionInfo as $key => $value ) {
 						if (! is_array ( $value )) {
 							$aFunctionInsert->setData ( $key, $value );
@@ -177,10 +177,10 @@ class ClassGenerator implements IGenerator {
 					
 					// insert param
 					foreach ( $functionInfo ['parameterlist'] as $paramInfo ) {
-						$aParamInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_parameter' );
+						$aParamInsert = new Insert ( 'doccenter_parameter' );
 						foreach ( $paramInfo as $key => $value ) {
 							if (! is_array ( $value )) {
-								$aParamInsert->setData ( '`' . $key . '`', $value );
+								$aParamInsert->setData ( $key , $value );
 							}
 						}
 						DB::singleton ()->execute ( $aParamInsert );

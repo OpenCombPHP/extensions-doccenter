@@ -32,16 +32,12 @@ class DocumentGenerator extends ControlPanel {
 				}
 			}
 		}
-		$this->mainView ()->disable ();
+		$this->view ()->disable ();
 	}
 	
 	private function getTokenPool($path) {
-		$aFile = Folder::singleton ()->findFile ( $path );
-		if ($aFile === null)
-			return null;
-		$aInputStream = $aFile->openReader ();
 		$aCompiler = CompilerFactory::singleton ()->create ();
-		$aTokenPool = $aCompiler->scan ( $aInputStream );
+		$aTokenPool = $aCompiler->scan ( $path );
 		$aCompiler->interpret ( $aTokenPool );
 		return $aTokenPool;
 	}

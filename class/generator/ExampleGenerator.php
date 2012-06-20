@@ -4,7 +4,7 @@ namespace org\opencomb\doccenter\generator;
 use org\jecat\framework\lang\compile\object\TokenPool;
 use org\jecat\framework\lang\compile\object\Token;
 use org\jecat\framework\db\DB;
-use org\jecat\framework\db\sql\StatementFactory;
+use org\jecat\framework\db\sql\Insert;
 
 class ExampleGenerator implements IGenerator {
 	public function generate(TokenPool $aTokenPool, FileInfo $aFileInfo) {
@@ -131,16 +131,16 @@ class ExampleGenerator implements IGenerator {
 		$arrKeyExample = array ('extension', 'version', 'title', 'name', 'index', 'code', 'sourcePackageNamespace', 'sourceClass', 'sourceLine' , 'sourceEndLine' );
 		foreach ( $arrGenerate as $generate ) {
 			// example
-			$aExampleInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_example' );
+			$aExampleInsert = new Insert ( 'doccenter_example' );
 			foreach ( $arrKeyExample as $sKey ) {
-				$aExampleInsert->setData ( '`' . $sKey . '`', $generate [$sKey] );
+				$aExampleInsert->setData ( $sKey , $generate [$sKey] );
 			}
 			$aDB->execute ( $aExampleInsert );
 			$eid = $aDB->lastInsertId ();
 			
 			// class
 			if (! empty ( $generate ['forclass'] )) {
-				$aExampleClassInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_example_class' );
+				$aExampleClassInsert = new Insert ( 'doccenter_example_class' );
 				$aExampleClassInsert->setData ( 'eid', $eid );
 				$aExampleClassInsert->setData ( 'class', $generate ['forclass'] );
 				$aDB->execute ( $aExampleClassInsert );
@@ -148,7 +148,7 @@ class ExampleGenerator implements IGenerator {
 			
 			// method
 			if (! empty ( $generate ['formethod'] )) {
-				$aExampleMethodInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_example_method' );
+				$aExampleMethodInsert = new Insert ( 'doccenter_example_method' );
 				$aExampleMethodInsert->setData ( 'eid', $eid );
 				$aExampleMethodInsert->setData ( 'method', $generate ['formethod'] );
 				$aDB->execute ( $aExampleMethodInsert );
@@ -157,7 +157,7 @@ class ExampleGenerator implements IGenerator {
 			// topic
 			if (! empty ( $generate ['forwiki'] )) {
 				foreach ( $generate ['forwiki'] as $sForWiki ) {
-					$aExampleTopicInsert = StatementFactory::singleton ()->createInsert ( 'doccenter_example_topic' );
+					$aExampleTopicInsert = new Insert ( 'doccenter_example_topic' );
 					$aExampleTopicInsert->setData ( 'eid', $eid );
 					$aExampleTopicInsert->setData ( 'topic_title', $sForWiki );
 					$aDB->execute ( $aExampleTopicInsert );

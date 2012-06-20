@@ -16,6 +16,12 @@
 	overflow: auto;
 	text-overflow: ellipsis;
 }
+.tip{
+	color:green;
+}
+.content{
+	color:red;
+}
 </style>
 
 <button id="createDoc">开始生成文档</button>
@@ -89,7 +95,13 @@ function postArrPath(arr){
 					if(sPre == sErrorPre){
 						path = arrError[i].substr(sPre.length,arrError[i].length);
 					}else{
-						jQuery("#generator_log").append('<p>error path:'+path+arrError[i]+'</p>');
+						jQuery("#generator_log").append(
+							'<div><div class="path"><span class="tip">error path : </span>'
+							+path
+							+'</div><div class="content">'
+							+arrError[i]
+							+'</div></div>'
+						);
 					}
 				}
 			}

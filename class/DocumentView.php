@@ -3,7 +3,7 @@ namespace org\opencomb\doccenter;
 
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\jecat\framework\mvc\model\db\orm\Prototype;
-use org\jecat\framework\mvc\model\db\Model;
+use org\jecat\framework\mvc\model\Model;
 
 // /?c=org.opencomb.doccenter.DocumentView&version=4194304&class=testCompiler1&ns=org\opencomb\doccenter
 
