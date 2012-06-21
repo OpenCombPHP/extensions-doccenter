@@ -9,10 +9,6 @@ use org\jecat\framework\fs\Folder;
 use org\jecat\framework\fs\FSIterator;
 
 class DocumentUpdater extends ControlPanel {
-	public function createBeanConfig() {
-		return array ('view:DocumentUpdater' => array ('template' => 'DocumentUpdater.html' ) );
-	}
-	
 	public function process() {
 		$aClassLoader = ClassLoader::singleton ();
 		$aPackageIterator = $aClassLoader->packageIterator (Package::source);
