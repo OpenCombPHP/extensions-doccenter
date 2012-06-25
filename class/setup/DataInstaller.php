@@ -15,19 +15,19 @@ class DataInstaller implements IExtensionDataInstaller
 		$aDB = DB::singleton() ;
 		
 		$aDB->execute(
-"CREATE TABLE IF NOT EXISTS `doccenter_class` (
+"CREATE TABLE IF NOT EXISTS `".$aDB->transTableName("doccenter:class")."` (
 `namespace` varchar(50) NOT NULL,
 `name` varchar(50) NOT NULL,
 `version` int(11) NOT NULL,
 `abstract` bool NOT NULL,
 `comment` TEXT,
 `extension` varchar(50) NOT NULL
-)"
+)ENGINE=MyISAM DEFAULT CHARSET=utf8"
 		);
-		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',"doccenter_class");
+		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',$aDB->transTableName("doccenter:class"));
 		
 		$aDB->execute(
-"CREATE TABLE IF NOT EXISTS `doccenter_method` (
+"CREATE TABLE IF NOT EXISTS `".$aDB->transTableName("doccenter:method")."` (
 `name` varchar(50) NOT NULL,
 `version` int(11) NOT NULL,
 `class` varchar(50) NOT NULL,
@@ -39,12 +39,12 @@ class DataInstaller implements IExtensionDataInstaller
 `returnType` varchar(20),
 `returnByRef` bool NOT NULL,
 `comment` TEXT
-)"
+)ENGINE=MyISAM DEFAULT CHARSET=utf8"
 		);
-		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',"doccenter_method");
+		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',$aDB->transTableName("doccenter:method"));
 		
 		$aDB->execute(
-"CREATE TABLE IF NOT EXISTS `doccenter_parameter` (
+"CREATE TABLE IF NOT EXISTS `".$aDB->transTableName("doccenter:parameter")."` (
 `version` int(11) NOT NULL,
 `namespace` varchar(50) NOT NULL,
 `class` varchar(50) NOT NULL,
@@ -55,12 +55,12 @@ class DataInstaller implements IExtensionDataInstaller
 `name` varchar(30) NOT NULL,
 `byRef` bool NOT NULL,
 `comment` TEXT
-)"
+)ENGINE=MyISAM DEFAULT CHARSET=utf8"
 		);
-		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',"doccenter_parameter");
+		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',$aDB->transTableName("doccenter:parameter"));
 		
 		$aDB->execute(
-"CREATE TABLE IF NOT EXISTS `doccenter_topic` (
+"CREATE TABLE IF NOT EXISTS `".$aDB->transTableName("doccenter:topic")."` (
 `extension` varchar(50) NOT NULL,
 `version` int(11) NOT NULL,
 `title` varchar(50) NOT NULL,
@@ -69,12 +69,12 @@ class DataInstaller implements IExtensionDataInstaller
 `sourcePackageNamespace` varchar(50) NOT NULL,
 `sourceClass` varchar(50) NOT NULL,
 `sourceLine` int(6) NOT NULL
-)"
+)ENGINE=MyISAM DEFAULT CHARSET=utf8"
 		);
-		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',"doccenter_topic");
+		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',$aDB->transTableName("doccenter:topic"));
 		
 		$aDB->execute(
-"CREATE TABLE IF NOT EXISTS `doccenter_example` (
+"CREATE TABLE IF NOT EXISTS `".$aDB->transTableName("doccenter:example")."` (
 `eid` int(11) NOT NULL AUTO_INCREMENT,
 `extension` varchar(50) NOT NULL,
 `version` int(11) NOT NULL,
@@ -87,33 +87,33 @@ class DataInstaller implements IExtensionDataInstaller
 `sourceLine` int(6) NOT NULL,
 `sourceEndLine` int(6) NOT NULL,
 PRIMARY KEY (`eid`)
-)"
+)ENGINE=MyISAM DEFAULT CHARSET=utf8"
 		);
-		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',"doccenter_example");
+		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',$aDB->transTableName("doccenter:example"));
 		
 		$aDB->execute(
-"CREATE TABLE IF NOT EXISTS `doccenter_example_class` (
+"CREATE TABLE IF NOT EXISTS `".$aDB->transTableName("doccenter:example_class")."` (
 `eid` int(11) NOT NULL,
 `class` varchar(50) NOT NULL
-)"
+)ENGINE=MyISAM DEFAULT CHARSET=utf8"
 		);
-		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',"doccenter_example_class");
+		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',$aDB->transTableName("doccenter:example_class"));
 		
 		$aDB->execute(
-"CREATE TABLE IF NOT EXISTS `doccenter_example_method` (
+"CREATE TABLE IF NOT EXISTS `".$aDB->transTableName("doccenter:example_method")."` (
 `eid` int(11) NOT NULL,
 `method` varchar(50) NOT NULL
-)"
+)ENGINE=MyISAM DEFAULT CHARSET=utf8"
 		);
-		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',"doccenter_example_method");
+		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',$aDB->transTableName("doccenter:example_method"));
 		
 		$aDB->execute(
-"CREATE TABLE IF NOT EXISTS `doccenter_example_topic` (
+"CREATE TABLE IF NOT EXISTS `".$aDB->transTableName("doccenter:example_topic")."` (
 `eid` int(11) NOT NULL,
 `topic_title` varchar(50) NOT NULL
-)"
+)ENGINE=MyISAM DEFAULT CHARSET=utf8"
 		);
-		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',"doccenter_example_topic");
+		$aMessageQueue->create(Message::success,'新建数据表： `%s`成功',$aDB->transTableName("doccenter:example_topic"));
 	}
 }
 
